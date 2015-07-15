@@ -55,7 +55,7 @@
 	<div class='form-group'>
 		<label class='col-sm-12' for='smsFrm_Title'>短信内容</label>
 		<div class='col-sm-12'>
-			<textarea class='form-control' rows='3' name='Content' id='smsFrm_content' placeholder=''></textarea>
+			<textarea class='form-control' rows='3' name='Content' id='smsFrm_content' placeholder='' required='required'></textarea>
 		</div>
 	</div>
 	<div class='form-group'>
@@ -129,10 +129,10 @@ $(function(){
 				<div class='modal-content'>
 					<div class='modal-header'>
 						<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-						<h4 class='modal-title'><b>提示</b></h4>
+						<h4 class='modal-title'><b id='alertModal_title'>提示</b></h4>
 					</div>
 					<div class='modal-body'>
-						<p>操作成功！</p>
+						<p id='alertModal_msg'>操作成功！</p>
 					</div>
 					<div class='modal-footer'>
 						<button type='button' class='btn btn-default' data-dismiss='modal'>关闭</button>
@@ -168,15 +168,34 @@ $(function(){
 <script type='text/javascript' src='http://www.foreworld.net/js/verybsie/1.0.0/js/bootstrap-verybsie.js'></script>
 <![endif]-->		<!-- Own -->
 		<script type='text/javascript'>
+
+			var msgs = {
+				'1': '账号或密码错误',
+				'2': '还没开通短信通道，充值即可开通',
+				'3': '短信内容含有敏感字符',
+				'4': '短信内容字数超过了限值',
+				'5': '手机号码有错误',
+				'6': '该通道余额不足，不能满足本次发送'
+			};
+
+
 			function showVali(valiResu){ }
 
 			$('#smsFrm_btn_sub').click(function(){
 				$('#smsFrm').olxForm('submit', [function(){
+					$('#smsFrm_btn_sub').attr('disabled', true);
 				}, function (valiResu){
+					$('#smsFrm_btn_sub').attr('disabled', !1);
 					showVali(valiResu);
 				}, function (data){
-					if(!data.success) return showVali(data.msg);
+					var code = data.code;
+					if(msgs[code]){
+						$('#alertModal_title').html('错误')
+						$('#alertModal_msg').html(msgs[code])
+					}
+
 					$('#alertModal').modal();
+					$('#smsFrm_btn_sub').attr('disabled', !1);
 				}]);
 			});
 		</script>

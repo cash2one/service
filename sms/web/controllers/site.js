@@ -28,7 +28,7 @@ exports.indexUI = function(req, res, next){
 
 exports.sendSMS = function(req, res, next){
 	var result = { success: false };
-	result.code = 1;
+	result.code = 2;
 	result.msg = '账号或密码错误';
 	res.send(result);
 };
