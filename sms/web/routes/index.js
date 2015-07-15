@@ -15,7 +15,7 @@ module.exports = function(app){
 	app.get('/index.html$', site.indexUI);
 	app.get('/', site.indexUI);
 
-	app.get('/sendSMS$', site.sendSMS);
+	app.post('/sendSMS$', valiPostData, site.sendSMS);
 };
 
 /**

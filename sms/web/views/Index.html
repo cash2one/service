@@ -51,63 +51,63 @@
 							<link rel='stylesheet' type='text/css' href='http://www.foreworld.net/js/bootstrap/3.2.0/docs/assets/css/docs.min.css?v3.2.0' media='screen' />
 <link rel='stylesheet' type='text/css' href='http://www.foreworld.net/js/bootstrap-markdown/2.5.0/css/bootstrap-markdown.min.css?v3.0.3' media='screen' />
 <link rel='stylesheet' type='text/css' href='http://www.foreworld.net/public/site/css/article.css?v3' media='screen' />
-<form class='form-horizontal' id='blogFrm' role='form' onsubmit='return false;' data-url='54e2b5205ab424b9040c01e3'>
+<form class='form-horizontal' id='smsFrm' role='form' onsubmit='return false;' data-url='/sendSMS'>
 	<div class='form-group'>
-		<label class='col-sm-12' for='blogFrm_Title'>短信内容</label>
+		<label class='col-sm-12' for='smsFrm_Title'>短信内容</label>
 		<div class='col-sm-12'>
-			<textarea class='form-control' rows='3' name='Intro' id='blogFrm_Intro' placeholder=''></textarea>
+			<textarea class='form-control' rows='3' name='Content' id='smsFrm_content' placeholder=''></textarea>
 		</div>
 	</div>
 	<div class='form-group'>
-		<label class='col-sm-12' for='blogFrm_Photo'>添加测试号</label>
+		<label class='col-sm-12' for='smsFrm_Photo'>添加测试号</label>
 		<div class='col-sm-12'>
-			<textarea class='form-control' rows='3' name='Intro' id='blogFrm_Intro' placeholder='13800000000'>13800000000</textarea>
+			<textarea class='form-control' rows='3' name='TestMobile' id='smsFrm_testMobile' placeholder='13800000000'>13800000000</textarea>
 		</div>
 	</div>
 	<div class='form-group'>
-		<label class='col-sm-12' for='blogFrm_Title'>设置数量（条）</label>
+		<label class='col-sm-12' for='smsFrm_Title'>设置数量（条）</label>
 		<div class='col-sm-12'>
-			<input type='text' class='form-control' name='Title' id='blogFrm_Title' placeholder='10000' value='10000'>
+			<input type='text' class='form-control' name='SmsNum' id='smsFrm_smsNum' placeholder='10000' value='10000'>
 		</div>
 	</div>
 	<div class='form-group'>
 		<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-			<input type='checkbox' name='IsPrivacy' id='blogFrm_IsPrivacy' checked> 业主
+			<input type='checkbox' checked> 业主
 		</div>
 		<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-			<input type='checkbox' name='IsPrivacy' id='blogFrm_IsPrivacy' checked> 银行专员
+			<input type='checkbox' checked> 银行专员
 		</div>
 	</div>
 	<div class='form-group'>
 		<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-			<input type='checkbox' name='IsPrivacy' id='blogFrm_IsPrivacy'> 车主
+			<input type='checkbox'> 车主
 		</div>
 		<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-			<input type='checkbox' name='IsPrivacy' id='blogFrm_IsPrivacy'> XXXX
+			<input type='checkbox'> XXXX
 		</div>
 	</div>
 	<div class='form-group'>
 		<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-			<input type='checkbox' name='IsPrivacy' id='blogFrm_IsPrivacy' checked> 高级会员
+			<input type='checkbox' checked> 高级会员
 		</div>
 		<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-			<input type='checkbox' name='IsPrivacy' id='blogFrm_IsPrivacy'> XXXX
+			<input type='checkbox'> XXXX
 		</div>
 	</div>
 	<div class='form-group'>
-		<label class='col-sm-12' for='blogFrm_Cate'>通道选择</label>
+		<label class='col-sm-12' for='smsFrm_channel'>通道选择</label>
 		<div class='col-sm-12 fontSize'>
-			<select class='form-control' id='blogFrm_Cate' name='Cate'>
+			<select class='form-control' id='smsFrm_channel' name='Channel'>
 				<option value='5' selected>通道一</option>
 				<option value='1'>通道二</option>
 					
 			</select>
 		</div>
 	</div>
-	<button type='button' class='btn btn-primary' id='blogFrm_btn_sub'>发送</button>
+	<button type='button' class='btn btn-primary' id='smsFrm_btn_sub'>发送</button>
 </form>
 <style type='text/css'>
-#blogFrm .form-control, .fontSize {
+#smsFrm .form-control, .fontSize {
 	font-size: 12px;
 }
 </style>
@@ -117,7 +117,7 @@
 <script type='text/javascript'>
 $(function(){
 	
-	$('#blogFrm_Content').markdown();
+	$('#smsFrm_Content').markdown();
 });
 </script>						</div>
 					</div>
@@ -170,8 +170,8 @@ $(function(){
 		<script type='text/javascript'>
 			function showVali(valiResu){ }
 
-			$('#blogFrm_btn_sub').click(function(){
-				$('#blogFrm').olxForm('submit', [function(){
+			$('#smsFrm_btn_sub').click(function(){
+				$('#smsFrm').olxForm('submit', [function(){
 				}, function (valiResu){
 					showVali(valiResu);
 				}, function (data){
