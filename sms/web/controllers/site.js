@@ -13,7 +13,7 @@ var fs = require('fs'),
 	qs = require('querystring'),
 	velocity = require('velocityjs');
 
-var title = '河南正森文化传播有限公司',
+var title = '郑州镭光科技发展有限公司',
 	virtualPath = '/';
 
 exports.indexUI = function(req, res, next){
