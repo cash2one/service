@@ -25,3 +25,10 @@ exports.indexUI = function(req, res, next){
 		cdn: conf.cdn
 	});
 };
+
+exports.sendSMS = function(req, res, next){
+	var result = { success: false };
+	result.code = 1;
+	result.msg = '账号或密码错误';
+	res.send(result);
+};
