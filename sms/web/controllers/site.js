@@ -26,12 +26,117 @@ exports.indexUI = function(req, res, next){
 	});
 };
 
-var sql = 'SELECT * FROM m_mobile WHERE id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT 3';
+var sql = 'SELECT * FROM m_mobile WHERE id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT ?';
 
 var http = require('http');
 var iconv = require('iconv-lite');
 var parseString = require('xml2js').parseString;
 // var urlencode = require('urlencode');
+
+function getSQL(num){
+	return sql;
+}
+
+function getSQLNum(num){
+	return Math.ceil(num*0.1);
+}
+
+String.prototype.replaceAll = function(s1, s2) {  
+    var demo = this  
+    while (demo.indexOf(s1) != - 1)  
+    demo = demo.replace(s1, s2);  
+    return demo;  
+}
+
+function getMobile(data, res){
+	var mobile = data.TestMobile.toString().replaceAll('\r\n', ',');
+	if(data.SmsNum <= 0){
+		// console.log(1)
+
+		startSend(data, res, mobile);
+
+	}else{
+		// console.log(2)
+		getMobilesFromDB(data, function (tels){
+			startSend(data, res, tels);
+		})
+	}
+	return mobile;
+}
+
+function getMobilesFromDB(data, cb){
+	pool.getConnection(function (err, conn) {
+		if(err) throw err;
+		conn.query(getSQL(data.SmsNum), [getSQLNum(data.SmsNum)], function (err, rows, fields){
+			if(err) throw err;
+
+			var r = [];
+
+			// console.log('--------')
+
+			for (var i in rows) {
+				// console.log(rows[i].mobile);
+				r.push(rows[i].mobile)
+			}
+
+			conn.release();
+
+			cb(r.join(','));
+		});
+	});
+}
+
+function startSend(data, res, mobiles){
+	var result = { success: false };
+
+	// console.log(mobiles);
+	// res.send(result);
+	// return;
+
+	var postData = require('querystring').stringify({
+		action: 'send',
+		userid: 766,
+		account: 'leiguang',
+		password: data.Password,
+		content: data.Content,
+		mobile: mobiles,
+		checkcontent: 0,
+		Channel: 5
+	});
+
+	var options = {
+		hostname: '114.215.196.225',
+		port: 9001,
+		path: '/sms.aspx?action=send',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'Content-Length': postData.length
+		}
+	};
+
+	var req = http.request(options, function (res1) {
+		// console.log('STATUS: '+ res.statusCode);
+		// console.log('HEADERS: '+ JSON.stringify(res.headers));
+		// res.setEncoding('utf8');
+		res1.on('data', function (chunk) {
+			result.code = 2;
+
+			parseString(chunk, function (err, resu) {
+				result.msg = resu;
+				res.send(result);
+			});
+		});
+	});
+
+	req.on('error', function (ex) {
+		console.log('problem with request: '+ ex.message);
+	});
+
+	// write data to request body
+	req.write(postData);
+	req.end();
+}
 
 exports.sendSMS = function(req, res, next){
 	var result = { success: false },
@@ -45,64 +150,66 @@ exports.sendSMS = function(req, res, next){
 	// 	Channel: '5'
 	// };
 
-	var postData = require('querystring').stringify({
-		action: 'send',
-		userid: 766,
-		account: 'leiguang',
-		password: 'zs818287',
-		content: data.Content,
-		mobile: '13837186852,18530053050',
-		checkcontent: 0,
-		Channel: 5
-	});
+	var mobiles = getMobile(data, res);
 
-	pool.getConnection(function (err, conn) {
-		if(err) throw err;
-		conn.query(sql, function (err, rows, fields){
-			if(err) throw err;
+	// var postData = require('querystring').stringify({
+	// 	action: 'send',
+	// 	userid: 766,
+	// 	account: 'leiguang',
+	// 	password: data.Password,
+	// 	content: data.Content,
+	// 	mobile: mobiles,
+	// 	checkcontent: 0,
+	// 	Channel: 5
+	// });
 
-			for (var i in rows) {
-				console.log(rows[i]);
-			}
+	// pool.getConnection(function (err, conn) {
+	// 	if(err) throw err;
+	// 	conn.query(sql, function (err, rows, fields){
+	// 		if(err) throw err;
 
-			conn.release();
+	// 		for (var i in rows) {
+	// 			console.log(rows[i]);
+	// 		}
 
-			/* http post */
+	// 		conn.release();
 
-			var options = {
-				hostname: '114.215.196.225',
-				port: 9001,
-				path: '/sms.aspx?action=send',
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Content-Length': postData.length
-				}
-			};
+	// 		/* http post */
 
-			var req = http.request(options, function (res1) {
-				// console.log('STATUS: '+ res.statusCode);
-				// console.log('HEADERS: '+ JSON.stringify(res.headers));
-				// res.setEncoding('utf8');
-				res1.on('data', function (chunk) {
-					result.code = 2;
+	// 		var options = {
+	// 			hostname: '114.215.196.225',
+	// 			port: 9001,
+	// 			path: '/sms.aspx?action=send',
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/x-www-form-urlencoded',
+	// 				'Content-Length': postData.length
+	// 			}
+	// 		};
 
-					parseString(chunk, function (err, resu) {
-						result.msg = resu;
-						res.send(result);
-					});
-				});
-			});
+	// 		var req = http.request(options, function (res1) {
+	// 			// console.log('STATUS: '+ res.statusCode);
+	// 			// console.log('HEADERS: '+ JSON.stringify(res.headers));
+	// 			// res.setEncoding('utf8');
+	// 			res1.on('data', function (chunk) {
+	// 				result.code = 2;
 
-			req.on('error', function (ex) {
-				console.log('problem with request: '+ ex.message);
-			});
+	// 				parseString(chunk, function (err, resu) {
+	// 					result.msg = resu;
+	// 					res.send(result);
+	// 				});
+	// 			});
+	// 		});
 
-			// write data to request body
-			req.write(postData);
-			req.end();
-		});
-	});
+	// 		req.on('error', function (ex) {
+	// 			console.log('problem with request: '+ ex.message);
+	// 		});
+
+	// 		// write data to request body
+	// 		req.write(postData);
+	// 		req.end();
+	// 	});
+	// });
 };
 
 var mysql = require('mysql');
