@@ -18,6 +18,8 @@
     "async": "0.9.0",
     "log4js": "0.6.21",
     "speedt-utils": "*",
+    "iconv-lite": "*",
+    "xml2js": "*",
     "eventproxy": "0.3.1"
   }
 }

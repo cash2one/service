@@ -29,20 +29,32 @@ exports.indexUI = function(req, res, next){
 var sql = 'SELECT * FROM m_mobile WHERE id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT 3';
 
 var http = require('http');
+var iconv = require('iconv-lite');
+var parseString = require('xml2js').parseString;
+// var urlencode = require('urlencode');
 
 exports.sendSMS = function(req, res, next){
 	var result = { success: false },
 		data = req._data;
 
-	data = {
-		Account: 'leiguang0371',
-		Password: '818287',
-		Content: '121',
-		Phones: '13837186852,18530053050',
-		Channel: '5'
-	};
+	// data = {
+	// 	Account: 'leiguang0371',
+	// 	Password: '818287',
+	// 	Content: '121',
+	// 	Phones: '13837186852,18530053050',
+	// 	Channel: '5'
+	// };
 
-	console.log(data)
+	var postData = require('querystring').stringify({
+		action: 'send',
+		userid: 766,
+		account: 'leiguang',
+		password: 'zs818287',
+		content: data.Content,
+		mobile: '13837186852,18530053050',
+		checkcontent: 0,
+		Channel: 5
+	});
 
 	pool.getConnection(function (err, conn) {
 		if(err) throw err;
@@ -55,83 +67,43 @@ exports.sendSMS = function(req, res, next){
 
 			conn.release();
 
-
 			/* http post */
 
-			// var opt = {
-			// 	host: '112.2.36.53',
-			// 	port: 8091,
-			// 	method: 'POST',
-			// 	path: '/SendSms.asp',
-			// 	headers: {
-			// 		'Content-Type': 'application/x-www-form-urlencoded',
-			// 		'Content-Length': data.length
-			// 	}
-			// }
-
-			// var body = '';
-			// var req = http.request(opt, function (res) {
-			// 	console.log('STATUS: ' + res.statusCode);
-			// 	console.log('HEADERS: ' + JSON.stringify(res.headers));
-			// 	res.setEncoding('utf8');
-			// 	res.on('data', function (chunk) {
-			// 		console.log('BODY: ' + chunk);
-			// 	});
-			// }).on('error', function (ex) {
-			// 	console.log("Got error: " + ex.message);
-			// })
-
-			// req.write(require('querystring').stringify(data));
-			// req.end();
-
-			/**/
-
-
-			var postData = require('querystring').stringify({
-				Account: 'leiguang0371',
-				Password: '818287',
-				Content: '龙湖名郡',
-				Phones: '13837186852,18530053050',
-				Channel: 5
-			});
-
 			var options = {
-			  hostname: '112.2.36.53',
-			  port: 8091,
-			  path: '/SendSms.asp',
-			  method: 'POST',
-			  headers: {
-			    'Content-Type': 'application/x-www-form-urlencoded',
-			    'Content-Length': postData.length
-			  }
+				hostname: '114.215.196.225',
+				port: 9001,
+				path: '/sms.aspx?action=send',
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Content-Length': postData.length
+				}
 			};
 
-			var req = http.request(options, function(res) {
-			  console.log('STATUS: ' + res.statusCode);
-			  console.log('HEADERS: ' + JSON.stringify(res.headers));
-			  res.setEncoding('utf8');
-			  res.on('data', function (chunk) {
-			    console.log('BODY: ' + chunk);
-			  });
+			var req = http.request(options, function (res1) {
+				// console.log('STATUS: '+ res.statusCode);
+				// console.log('HEADERS: '+ JSON.stringify(res.headers));
+				// res.setEncoding('utf8');
+				res1.on('data', function (chunk) {
+					result.code = 2;
+
+					parseString(chunk, function (err, resu) {
+						result.msg = resu;
+						res.send(result);
+					});
+				});
 			});
 
-			req.on('error', function(e) {
-			  console.log('problem with request: ' + e.message);
+			req.on('error', function (ex) {
+				console.log('problem with request: '+ ex.message);
 			});
 
 			// write data to request body
 			req.write(postData);
 			req.end();
-
-
-
-			result.code = 2;
-			result.msg = '账号或密码错误';
-			res.send(result);
 		});
 	});
 };
-
 
 var mysql = require('mysql');
 

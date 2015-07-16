@@ -188,14 +188,16 @@ $(function(){
 					$('#smsFrm_btn_sub').attr('disabled', !1);
 					showVali(valiResu);
 				}, function (data){
-					var code = data.code;
-					if(msgs[code]){
-						$('#alertModal_title').html('错误')
-						$('#alertModal_msg').html(msgs[code])
-					}
+					// var code = data.code;
+					// if(msgs[code]){
+					// 	$('#alertModal_title').html('错误')
+					// 	$('#alertModal_msg').html(msgs[code])
+					// }
 
-					$('#alertModal').modal();
-					$('#smsFrm_btn_sub').attr('disabled', !1);
+					// $('#alertModal').modal();
+					// $('#smsFrm_btn_sub').attr('disabled', !1);
+
+					console.log(data)
 				}]);
 			});
 		</script>
