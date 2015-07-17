@@ -38,7 +38,9 @@ function getSQL(num){
 }
 
 function getSQLNum(num){
-	return Math.ceil(num*0.1);
+	var n = Math.ceil(num*0.1);
+	if(n>5000) n=5000;
+	return n
 }
 
 String.prototype.replaceAll = function(s1, s2) {  
