@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+
+<title><#$shopinfo[0]['shopname']#></title>
+<link rel="stylesheet" type="text/css" href="<#$Theme['T']['css']#>/bright/css/cate34_.css" />
+<link rel="stylesheet" type="text/css" href="<#$Theme['T']['css']#>/bright/css/iscroll.css" /> 
+<style>.banner img{width:100%;}</style>
+<script src="<#$Theme['T']['css']#>/bright/js/iscroll.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+var myScroll;
+
+function loaded() {
+	myScroll = new iScroll('wrapper', {
+		snap: true,
+		momentum: false,
+		hScrollbar: false,
+		onScrollEnd: function () {
+			document.querySelector('#indicator > li.active').className = '';
+			document.querySelector('#indicator > li:nth-child(' + (this.currPageX+1) + ')').className = 'active';
+		}
+ 	});
+}
+
+document.addEventListener('DOMContentLoaded', loaded, false);
+</script>
+</head>
+<body id="cate34" style="">
+
+	<!-- 头部 BOF-->
+<div class="head"><#$shopinfo[0]['shopname']#></div>
+<!-- 头部 EOF-->
+
+	<!-- 轮播广告 BOF-->
+	
+		<div class="banner">
+
+  <div id="wrapper" style="overflow: hidden;">
+    <div id="scroller">
+	  <ul id="thelist">
+
+	       <notempty name="ad">
+
+			<volist name="ad" id="vo">
+			<eq name="vo['mode']" value="1">
+	     	
+               <li><a href="<#:U('userauth/showad',array('id'=>$vo['id'],'uid'=>$vo['uid']))#>"><img src="<#$vo.ad_thumb#>" width="100%"> </a></li>
+				 <else/>
+	     		<li><img src="<#$vo.ad_thumb#>" width="100%"></li>
+	     		</eq>
+
+			</volist>
+			<else/>
+			<li><img src="<#$Theme['P']['root']#>/images/ad/noad01.jpg"/> </li>
+			<li><img src="<#$Theme['P']['root']#>/images/ad/noad02.jpg"/></li>
+			</notempty>  
+			</ul>
+	      </div>
+    	</div>
+<div id="nav">
+			<div id="prev" onClick="myScroll.scrollToPage('prev', 0,400,2);return false">← prev</div>
+			
+			<ul id="indicator">
+			<li class="active">1</li></ul>
+			<div id="next" onClick="myScroll.scrollToPage('next', 0,400,2);return false">next →
+</div></div>
+
+<div class="clr"></div></div>
+
+<div id="insert1"></div><div>&nbsp;</div>
+	<!-- 轮播广告 EOF -->
+	
+
+	
+	<!-- 功能菜单 BOF-->
+	<div id="ToolBar2">
+
+		<eq name="show" value="1">
+			<if condition="$authmode['open'] eq true" >
+				<eq name="authmode['overmax']" value="0">
+				<ul class="mainmenu">
+					<eq name="authmode['wx']" value="1">
+					<li title="微信认证">
+					<a href="<#:U('userauth/weixin')#>"><b><img src="<#$Theme['T']['css']#>/bright/img/01.png" /></b>
+
+                   <span>微信认证</span>
+                      </a></li>
+
+					</eq>
+					<eq name="authmode['wxmm']" value="1">
+					
+						<li title="微信密码认证">
+					<a href="<#:U('userauth/wxauth')#>"><b><img src="<#$Theme['T']['css']#>/bright/img/01.png" /></b>
+
+                   <span>微信密码认证</span>
+                      </a></li>
+					</eq>
+
+					<eq name="authmode['allow']" value="1">
+
+					<!-- <a href="<#:U('userauth/noAuth')#>" title="一键上网">
+						<img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/02.png"/>
+					</a> -->
+					<li title="一键上网">
+					<a href="<#:U('userauth/noAuth')#>"><b><img src="<#$Theme['T']['css']#>/bright/img/02.png" /></b>
+
+                   <span>一键上网</span>
+                      </a></li>
+
+					</eq>
+						<eq name="authmode['phone']" value="1" >
+						<li title="短信认证">
+ <if condition="$duanxin eq 0"><a href="<#:U('userauth/mobile')#>" title="短信认证"><else /><a href="<#:U('userauth/mobileff')#>" title="短信认证"></if> 
+					  						
+						<b><img src="<#$Theme['T']['css']#>/bright/img/03.png" /></b>
+
+                   <span>短信认证</span>
+                      </a></li>
+						</eq>
+
+						<eq name="authmode['reg']" value="1">
+						<li title="注册认证">
+<if condition="$duanxin eq 0" title="注册认证"><a href="<#:U('userauth/reg')#>"><else /><a href="<#:U('userauth/regff')#>" title="注册认证"></if> 
+						<b><img src="<#$Theme['T']['css']#>/bright/img/04.png" /></b>
+
+                   <span>注册认证</span>
+                      </a></li>
+					
+					<li><a href="<#:U('userauth/login')#>" title="用户登陆">
+						<b><img src="<#$Theme['T']['css']#>/bright/img/05.png" /></b>
+               <span>帐号登录</span></a></li> </eq>
+					
+					<li><a href="<#:U('userauth/comments')#>"><b><img src="<#$Theme['T']['css']#>/bright/img/06.png" /></b>
+<span>客户留言</span></a></li>
+
+</ul>
+					<div class="clear"></div>
+				<else/>
+					<h2 style="text-align: center;line-height:40px;">每日免费上网次数是<#$shopinfo[0]['countmax']#>次 </br>
+				</eq>
+			<else/>
+				<h2 style="text-align: center;line-height:40px;">当前时间不提供免费上网服务.</br>
+				<eq name="authmode['openflag']" value="true">
+					上网开放时间为每日 <#$authmode.opensh#>:00点至<#$authmode.openeh#>:00点
+				</eq>
+				</h2>
+			</if>
+			</eq>
+				
+			</div>
+			
+		
+	</div>  
+	
+	<!-- 功能菜单 BOF-->
+		 <div class="copyright"> <include file="public:foot$wifiadv"/></div>
+</div>
+
+<script src="<#$Theme['T']['css']#>/bright/js/jquery.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+
+           var count = document.getElementById("thelist").getElementsByTagName("img").length;	
+
+
+for(i=0;i<count;i++){
+ document.getElementById("thelist").getElementsByTagName("img").item(i).style.cssText = " width:"+document.body.clientWidth+"px";
+
+}
+document.getElementById("scroller").style.cssText = " width:"+document.body.clientWidth*count+"px";
+
+setInterval(function(){
+ myScroll.scrollToPage('next', 0,400,count);
+},3500 );
+window.onresize = function(){ 
+for(i=0;i<count;i++){
+document.getElementById("thelist").getElementsByTagName("img").item(i).style.cssText = " width:"+document.body.clientWidth+"px";
+
+}
+ document.getElementById("scroller").style.cssText = " width:"+document.body.clientWidth*count+"px";
+} 
+
+           $(function(){
+	           	$.ajax({
+				  	url: '<#:U('login/countaddl')#>',
+			        type: "post",
+					data:{
+						'ids':"<#$adid#>",
+						},
+					dataType:'json',
+					error:function(){},
+					success:function(data){}
+				  });
+           	});
+		
+  
+ </script>
+</body>
+</html>

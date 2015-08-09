@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+
+<title><#$shopinfo[0]['shopname']#></title>
+<link href="<#$Theme['T']['css']#>/login.css" rel="stylesheet"/>
+<link href="<#$Theme['P']['js']#>/swiper2/idangerous.swiper.css" rel="stylesheet" />
+<link href="<#$Theme['T']['css']#>/media.css" rel="stylesheet"/>
+<link rel="stylesheet" href="<#$Theme['T']['css']#>/newadv/anew.css" type="text/css">
+
+
+</head>
+<body>
+	<!-- 头部 BOF-->
+<div class="header">  <div class="headbox"><#$shopinfo[0]['shopname']#></div> </div> 
+<!-- 头部 EOF-->
+
+	<!-- 轮播广告 BOF-->
+	
+		<div class="swiper-container">
+	      <div class="swiper-wrapper">
+	       <notempty name="ad">
+
+			<volist name="ad" id="vo">
+	     	<eq name="vo['mode']" value="1">
+
+				 <div onClick="location.href='<#:U('userauth/showad',array('id'=>$vo['id'],'uid'=>$vo['uid']))#>';" class="swiper-slide" style="background-repeat:repeat;background-size:100% 86%;background-image:url(<#$vo.ad_thumb#>)"></div>
+			<else/>
+
+<div class="swiper-slide" style="background-repeat:repeat;background-size:100% 86%;background-image:url(<#$vo.ad_thumb#>)"></div></eq>
+
+
+			</volist>
+			<else/>
+			<div class="swiper-slide" style="background-repeat:repeat;background-size:100% 86%;background-image:url(<#$Theme['P']['root']#>/images/ad/noad01.jpg)"></div>
+<div class="swiper-slide" style="background-repeat:repeat;background-size:100% 86%;background-image:url(<#$Theme['P']['root']#>/images/ad/noad02.jpg)"><a href="#" target="_blank"></a>
+</div>
+			</notempty>   		
+	      </div>
+    	</div>
+
+	<!-- 轮播广告 EOF -->
+	
+
+	
+	<!-- 功能菜单 BOF-->
+	<div id="ToolBar2">
+
+		<eq name="show" value="1">
+			<if condition="$authmode['open'] eq true" >
+				<eq name="authmode['overmax']" value="0">
+					<eq name="authmode['wx']" value="1">
+						<a href="<#:U('userauth/weixin')#>" title="微信认证">
+							<!-- <div class="btnbox">
+								<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/01.png"/>
+								<div class="btntitle">
+								微信认证
+								</div>
+							</div> -->
+							<img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/01.png"/>
+						</a>
+					</eq>
+					<eq name="authmode['wxmm']" value="1">
+						<a href="<#:U('userauth/wxauth')#>" title="微信密码认证">
+							<!-- <div class="btnbox">
+								<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/01.png"/>
+								<div class="btntitle">
+								微信密码认证
+								</div>
+							</div> -->
+							<img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/01.png"/>
+						</a>
+					</eq>
+					<eq name="authmode['allow']" value="1">
+					<a href="<#:U('userauth/noAuth')#>" title="一键上网">
+						<!-- <div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/02.png"/>
+							<div class="btntitle">
+							一键上网
+							</div>
+						</div> -->
+						<img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/02.png"/>
+					</a>
+					</eq>
+						<eq name="authmode['phone']" value="1" >
+ <if condition="$duanxin eq 0"><a href="<#:U('userauth/mobile')#>" title="短信认证"><else /><a href="<#:U('userauth/mobileff')#>" title="短信认证"></if> 
+					  
+					
+						<!-- <div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/03.png"/>
+							<div class="btntitle">
+							手机认证
+							</div>
+						</div> -->
+						<img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/03.png"/>
+					</a>
+						</eq>
+						<eq name="authmode['reg']" value="1">
+<if condition="$duanxin eq 0" title="注册认证"><a href="<#:U('userauth/reg')#>"><else /><a href="<#:U('userauth/regff')#>" title="注册认证"></if> 
+						<!-- <div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/04.png"/>
+							<div class="btntitle">
+							注册认证
+							</div>
+						</div> -->
+						<img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/04.png"/>
+					</a> 
+					
+					<a href="<#:U('userauth/login')#>" title="用户登陆">
+						<!-- <div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/05.png"/>
+							<div class="btntitle">
+							用户登录
+							</div>
+						</div> -->
+						<img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/05.png"/>
+					</a>
+					</eq>
+					<!-- <a href="<#:U('userauth/comments')#>">
+						<div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/06.png"/>
+							<div class="btntitle">
+							客户留言
+							</div>
+						</div>
+					</a> -->
+					<span class="khly"><a href="javascript:void(0);" title="客户留言"><img style="padding: 0px 5px 0px;" width="50" height="50" src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/06.png"/></a></span>
+					<div class="clear"></div>
+				<else/>
+					<h2 style="text-align: center;line-height:40px;">每日免费上网次数是<#$shopinfo[0]['countmax']#>次 </br>
+				</eq>
+			<else/>
+				<h2 style="text-align: center;line-height:40px;">当前时间不提供免费上网服务.</br>
+				<eq name="authmode['openflag']" value="true">
+					上网开放时间为每日 <#$authmode.opensh#>:00点至<#$authmode.openeh#>:00点
+				</eq>
+				</h2>
+			</if>
+			</eq>
+				
+			</div>
+			
+		
+	</div>  
+	
+	<!-- 功能菜单 BOF-->
+		<include file="public:foot$wifiadv"/>
+</div>
+
+<script type="text/javascript" src="<#$Theme['P']['js']#>/swiper2/idangerous.swiper.min.js"></script>
+<script type="text/javascript" src="<#$Theme['P']['js']#>/swiper2/jquery-1.10.1.min.js"></script>
+<div id="remarkform">
+  <dl><div class="tipbox" id="tips"></div>
+<a class="cancelthisform" title="取消发言">取消发言</a> 
+<a class="submitethisform" href="javascript:void(0);" title="确信发送" id="btn_content">确定发送</a>
+  </dl><form><textarea placeholder="发布您的留言!" name="content" id="content"></textarea><p>文明发言，遵守“七条底线”!</p></form>
+  
+  </div>
+<script type="text/javascript">
+
+           var mySwiper = new Swiper('.swiper-container',{
+        	    loop:true,
+        	    grabCursor: true,
+        	    paginationClickable: true,
+        	   
+        		autoplay:3000,
+        	  });
+           $(function(){
+	           	$.ajax({
+				  	url: '<#:U('login/countaddl')#>',
+			        type: "post",
+					data:{
+						'ids':"<#$adid#>",
+						},
+					dataType:'json',
+					error:function(){},
+					success:function(data){}
+				  });
+           	});
+		function Tips(el,msg,state,time){
+	var cname=state?"onError":"onSuccess";
+	$('#'+el+"").html('').show().html('<div class="'+cname+'">'+msg+'</div>');
+    setTimeout("$('#" + el + "').hide()", time);
+}
+
+	  $(document).ready(function(){
+		if(document.height<window.innerHeight){
+       document.height=window.innerHeight; }
+	    });
+   $(function(){
+	/**登录**/
+	$("#login_out i.login,.yhdl a").click(function(){
+		$("#Loginform").animate({top:"80px"},{queue:false, duration:500});
+		$("#shadelayer").fadeIn(300);
+		$(".Cancel").css("transition","All 1.4s ease");
+		$(".Cancel").css("transform","rotate(360deg)");
+		$(".Cancel").css("-webkit-transition","All 1.4s ease");
+		$(".Cancel").css("-webkit-transform","rotate(360deg)");
+		$(".Cancel").css("-moz-transition","All 1.4s ease");
+		$(".Cancel").css("-moz-transform","rotate(360deg)");		
+		$(".Cancel").css("-o-transition","All 1.4s ease");
+		$(".Cancel").css("-o-transform","rotate(360deg)");
+	});
+	$(".Cancel, #shadelayer").click(function(){
+		$("#Loginform").animate({top:"-300px"},{queue:false, duration:500});
+		$("#remarkform").animate({bottom:"-240px"},{queue:false, duration:500});
+		$("#shadelayer").fadeOut(300);
+		$(".Cancel").css("transition","All 1.4s ease");
+		$(".Cancel").css("transform","rotate(0deg)");
+		$(".Cancel").css("-webkit-transition","All 1.4s ease");
+		$(".Cancel").css("-webkit-transform","rotate(0deg)");
+		$(".Cancel").css("-moz-transition","All 1.4s ease");
+		$(".Cancel").css("-moz-transform","rotate(0deg)");		
+		$(".Cancel").css("-o-transition","All 1.4s ease");
+		$(".Cancel").css("-o-transform","rotate(0deg)");
+	});
+	/***发表评论 **/
+	$(".khly a").click(function(){
+		$("#remarkform").animate({bottom:"0"},{queue:false, duration:500});
+		$("#shadelayer").fadeIn(300);
+		
+	});
+	$(".cancelthisform,.swiper-container").click(function(){
+		$("#remarkform").animate({bottom:"-240px"},{queue:false, duration:500});
+		$("#shadelayer").fadeOut(300);
+		
+	});
+})
+
+
+	var bajax=false;
+	$(document).ready(function(){
+		 
+		$("#btn_content").bind('click',function(){
+			var u="匿名客户";
+			
+			var m="13999999999";
+			var q=$('#content').val();
+			 
+			  if (q == "") {
+				 
+				  Tips("tips", "请输入留言内容", true, 2000);
+			        return false;
+			  }
+			
+			  if(q.length>200){
+				  
+				  Tips("tips", "留言内容不能超过200个字符", true, 2000);
+			      return false;
+			   }
+			   if(bajax){
+				   Tips("tips", "正在提交中，请稍候..", true, 2000);
+			        return false;
+				  }
+			  bajax=true;
+			  $.ajax({
+				  	url: '/index.php/api/userauth/addmsg.html',
+			        type: "post",
+					data:{
+						'user':u,
+						'phone':m,
+						'content':q,
+						'__hash__':$('input[name="__hash__"]').val()
+						},
+					dataType:'json',
+					error:function(){
+							bajax=false;
+							 Tips("tips", "服务器忙，请稍候再试", true, 1500);
+							},
+					success:function(data){
+								bajax=false;
+							if(data.error==0){
+								$('#content').val('');
+								Tips("tips", "提交留言成功", false, 1500);
+								
+							}else{
+								Tips("tips", data.msg, true, 1500);
+							}
+					}
+				  });
+
+		});
+		
+	});
+ </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title><#:C('sitename')#>--会员中心</title>
+<meta name="keywords" content="<#:C('keyword')#>"/>
+<meta name="description" content="<#:C('content')#>"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<include file="Pub:Css"/>
+<link rel="stylesheet" href="<#$Theme['P']['root']#>/matrix/css/datepicker.css" />
+
+</head>
+<body>
+   <include file="Pub:top"/>
+   <include file="Pub:nav"/>
+<div id="content">
+  <div id="content-header">
+    <div id="breadcrumb"> <a href="<#:U('user/index')#>" title="返回首页" class="tip-bottom"><i class="icon-home"></i>首页</a> <a href="#" class="current">用户统计</a> </div>
+    <h1>黑名单管理</h1>
+ 
+  </div>
+  <div class="container-fluid">
+    <hr>
+	  <div class="">
+	           <a href="/index.php/user/addbwlist.html" class="btn btn-danger" title="添加mac黑白名单">添加mac黑白名单</a>&nbsp;
+                <a href="/index.php/user/blacklist.html" class="btn btn-success" title="黑名单管理">黑名单管理</a>&nbsp;
+                
+                <a href="/index.php/user/whitelist.html" class="btn btn-primary" title="白名单管理">白名单管理</a>&nbsp;
+            </div>
+
+    <div class="row-fluid">
+      <div class="span12">
+
+	  <form action ="" method ="get"> 
+
+
+            
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-th"></i></span>
+            <h5>黑名单列表</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                		<th>编号</th>
+	        			<th>用户名</th>
+	        			<th>手机号码</th>
+	        			<th>MAC地址</th>
+	        			<th>添加时间</th>
+						<th>状态</th>
+	        			<th>操作</th>
+	        		
+                </tr>
+              </thead>
+              <tbody>
+           	<volist name="lists" id="vo">
+        				<tr>
+	        			<td><#$i#></td>
+						
+                           <switch name="vo.phone">
+						   <case value="13666666666">
+						       <td>微信临时用户</td>
+							  <td>---</td> </case>
+							 <case value="1399999999">
+						       <td>一键认证用户</td>
+							  <td>---</td> </case>
+							  <case value="13888888888">
+						       <td>微信关注认证用户</td>
+							  <td>---</td> </case>
+							  <default /> 
+							  <td><#$vo.user#></td>
+							  <td><#$vo.phone#></td>
+							   </switch>
+						
+	        			<td><#$vo.mac#></td>
+	        			<td><empty name="vo['add_date']"><else/><#$vo.add_date|date='Y-m-d H:i:s',####></empty></td>
+						<td> <eq name="vo.state" value="1"> 白名单 <else />黑名单</eq>  </td>
+	        		
+						<td> <a href="<#:U('recoveruser',array('id'=>$vo['id'],'shopid'=>$vo['shopid'],'state'=>0))#>" class="btn btn-primary btn-mini">恢复正常</a> </td>
+	        			</tr>
+        		</volist>
+               
+              </tbody>
+            </table>
+          </div>
+        
+        </div>
+        
+         <div class="pagination pull-right">
+          	<#$page#>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+   <include file="Pub:foot"/>
+<script src="<#$Theme['P']['root']#>/matrix/js/jquery.min.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/jquery.ui.custom.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/bootstrap.min.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/matrix.js"></script> 
+
+<script src="<#$Theme['P']['root']#>/matrix/js/common.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/bootstrap-datepicker.js"></script> 
+<script>
+
+
+var lines;
+
+$(function () {
+	
+	var stack = 0, bars = true, lines = false, steps = false;
+	
+	    
+	 $('.datepicker').datepicker();
+  	   	
+
+  		$("#query").bind("click",function(){
+			var st=new Date($("#sdate").val());	
+			var et=new Date($("#edate").val());	
+			if(st.getTime()>et.getTime()){
+				AlertTips("开始日期不能大于结束日期",2000);
+					return;
+			}
+
+			 $.ajax({
+	  			  url: '<#:U('xxxxx')#>',
+	  		        type: "get",
+	  				data:{
+	  					'mode':'query',
+	  					'sdate':$("#sdate").val(),
+	  					'edate':$("#edate").val(),
+	  					},
+	  				dataType:'json',
+	  				error:function(){
+	  						AlertTips("服务器忙，请稍候再试",2000);
+	  						},
+	  				success:function(data){
+	  						$('#btnkey').val('query');
+	  						$('#btnkey').attr('sdate',$("#sdate").val());
+	  						$('#btnkey').attr('edate',$("#edate").val());
+	  						var bt=[];
+	  						var templist=[];
+	  						
+	  						data=eval(data)  ;
+	  						for(var vo in data){
+	  							templist.push([data[vo].t,data[vo].td]);
+	  							bt.push([data[vo].t,data[vo].ct]);
+	  						}
+	  						 var plot= $.plot($("#placeholder"), [ bt ], {xaxis:{ticks:templist},  grid: { hoverable: true, clickable: true, borderColor:'#000',borderWidth:1}, series:{lines:{fill:true, show: true}, points:
+	  						    { show: true,
+	  						    	  }}});
+	  					
+	  						
+	  				}
+	  			  });
+  	  	});
+  		
+});
+
+
+</script>
+<script>
+
+</script>
+</body>
+</html>

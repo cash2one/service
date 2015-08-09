@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content=" initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title><#$shopinfo[0]['shopname']#></title>
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/css.css"><!--风格-->
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/media.css"><!--自适应-->
+
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/form.css"><!--自适应-->
+</head>
+<body>
+<include  file="public:head$wifiadv"/>
+<div class="mainbox bgform clearfix">
+<div class="formbox">
+
+<form name="regform">
+
+ <label class="lb_title mr-tb-5" >请关注微信公众号:&nbsp;&nbsp;<#$wxname#></br>微信名称：&nbsp;&nbsp;<#$wxpwd#></br>回复:"上网" &nbsp;即可获取上网密码</label>
+  <br>
+ <center><img src="<#$wxewm#>" width="250" height="250"></center>
+<div class="">
+</div>
+ <label class="lb_title mr-tb-5"  for="password">上网密码:</label>
+	<div class="iptbox corner-all-4 mr-tb-5 ">
+	<input class="ipt" type="password" name="password" id="password"  placeholder="请输入微信验证密码" value="" autocomplete="off">
+</div>
+   <div class="tips" id="tips"></div>
+    <div class="tips mr-tb-5" id="scode"   >
+  		<div class="onSuccess" id="scodetext">请打开微信，搜索或扫一扫(截图本屏并扫一扫相册里的文件）以上微信公众号关注后并回复:"上网"，在<#$temptime#>分钟内完成微信认证
+</div>
+<a  class="btn_base corner-all-10 t-wh c-wifiadv uba mr-tb-10" href="javascript:void(0);" id="btn_reg">确认登录</a>
+<if condition="$weixint eq 1"> <a  class="btn_base corner-all-10 t-wh c-wifiadv uba mr-tb-10" href="javascript:launch_app();" id="btn_reg">点击打开微信</a></if>
+<a  class="btn_base corner-all-10 c-eee  t-333  uba b-wh  " href="javascript:void(0);" id="btn_back">返回首页</a>
+</div>
+
+
+	</form>
+	<div class="blockdiv"></div>
+</div>
+
+<script type="text/javascript" src="<#$Theme['P']['js']#>/jquery.js"></script>
+<script type="text/javascript" src="<#$Theme['T']['js']#>/api.js"></script>
+<script>
+
+//launch client app
+    function launch_app() {
+        if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {　　　　　　　　　　　 // 判断useragent，当前设备为ios设备
+            var loadDateTime = new Date();　　　　　　　　　　　　 // 设置时间阈值，在规定时间里面没有打开对应App的话，直接去App store进行下载。
+            window.setTimeout(function() {
+                    var timeOutDateTime = new Date();
+                    if (timeOutDateTime - loadDateTime < 5000) {
+                        window.location = "weixin:";
+                    } else {
+                        window.close();
+                    }
+                },
+                25);
+            window.location = "weixin:";　　 // ios端URL Schema
+        } else if (navigator.userAgent.match(/android/i)) {　　　　　　　　　　　　 // 判断useragent，当前设备为andriod设备
+            　　　　　　　　　　　　
+            window.open('http://weixin.qq.com/r/RHU6NQjE1japhxlWnyBg', 'newwindow', '');　　　　　　　　　
+        } else {
+            // 判断useragent为桌面环境
+            //window.location= "http://www.baidu.com";
+            alert("Are  You PC Browser ?!");
+        }　　　　　　　
+    }
+    </script>
+
+<script>
+	$(document).ready(function(){
+		  $("input").each(function(){
+				$(this).bind("focusin",function(){
+
+					$(this).parent().addClass('us-input-focus');
+				});
+				$(this).bind("focusout",function(){
+					$(this).parent().removeClass('us-input-focus');
+
+				});
+			  });
+		$("#btn_reg").bind('click',function(){
+		
+			var p=$('#password').val();
+			 
+			  if (p == "") {
+				  Tips("tips", "请填写认证密码", true, 1000);
+			        return false;
+			  }  
+			  $.ajax({
+				  	url: '<#:U('userauth/dowxauth')#>',
+			        type: "post",
+					data:{
+					
+						'password':p,
+						
+						},
+					dataType:'json',
+					error:function(){
+							 Tips("tips", "服务器忙，请稍候再试", true, 1500);
+							
+							},
+					success:function(data){
+							if(data.error==0){
+								Tips("tips", "认证成功", false, 1500);
+								setTimeout("goUrl('"+data.url+"')",1500);
+							}else{
+								Tips("tips", data.msg, true, 2000);
+							}
+					}
+				  });
+
+		});
+		
+		$('#btn_back').bind('click',function(){
+				history.go(-1);
+			});
+	});
+
+	function goUrl(url){
+		location.href=url;
+	}
+</script>
+</body>
+</html>

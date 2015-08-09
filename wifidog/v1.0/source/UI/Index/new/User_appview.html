@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title><#:C('sitename')#>--会员中心</title>
+<meta name="keywords" content="<#:C('keyword')#>"/>
+<meta name="description" content="<#:C('content')#>"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<include file="Pub:Css"/>
+<link rel="stylesheet" href="<#$Theme['P']['root']#>/matrix/css/uniform.css" />
+<link rel="stylesheet" href="<#$Theme['P']['root']#>/matrix/css/select2.css" />
+</head>
+<body>
+   <include file="Pub:top"/>
+   <include file="Pub:nav"/>
+
+<div id="content">
+<div id="content-header">
+  <div id="breadcrumb"> <a href="<#:U('user/index')#>" title="返回首页" class="tip-bottom"><i class="icon-home"></i>首页</a>  <a href="#" class="current">配置明细</a> </div>
+  <h1>配置明细</h1> 
+</div>
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-eye-open"></i> </span>
+          <h5>配置明细</h5>
+        </div>
+           <font size=3>
+		    <table cellSpacing=0 cellPadding=6   border=0>
+			<tr><td>认证模式:</td><td>&nbsp&nbsp&nbsp</td><td>
+			<volist name="authmode" id="vo">
+
+			<php>if((strpos($info['authmode'],"#".$vo['key']."#")>-1)||(strpos($info['authmode'],"#".$vo['key']."=")>-1)){echo $vo['txt']."|" ;} 
+			
+			</php> 
+			</volist>
+			</tr>
+             <tr><td>手机认证方式:</td><td>&nbsp&nbsp&nbsp</td><td><php> if(substr($info['authmode'],-1)=="0"){echo "虚拟信息认证";} else { echo "短信认证";}
+			 </php></td></tr>
+
+           <tr><td>每日短信认证发送条数 :</td><td>&nbsp&nbsp&nbsp</td><td><#$info.smscount#></td> </tr>
+       <php>  if(strpos($info['authmode'],"#3=")>-1 || strpos($info['authmode'],"#4=")>-1) {</php>	
+             <tr><td>微信公众号 :</td><td>&nbsp&nbsp&nbsp</td><td><#:echojsonkey(showauthdata($ma,$info['authmode']),'user')#></td> </tr>
+               <tr><td>微信名称 :</td><td>&nbsp&nbsp&nbsp</td><td><#:echojsonkey(showauthdata($ma,$info['authmode']),'pwd')#></td> </tr>
+			   <tr><td>微信原始ID :</td><td>&nbsp&nbsp&nbsp</td><td><#:echojsonkey(showauthdata($ma,$info['authmode']),'ysid')#></td> </tr>
+			   <php> if(strpos($info['authmode'],"#4=")>-1){ </php>
+			   <tr><td>微信认证密码 :</td><td>&nbsp&nbsp&nbsp</td><td><#:echojsonkey(showauthdata('4',$info['authmode']),'pass')#></td> </tr><php> }</php>
+			   <tr><td>微信二维码 :</td><td>&nbsp&nbsp&nbsp</td><td> <img src="<#$info['wxewm']#>" style="width:150px;"></td> </tr> 
+            <tr><td>微信认证接口 :</td><td>&nbsp&nbsp&nbsp</td><td><textarea class="span11" rows="4"><a href="<#:C('siteurl')#>/weixin?token=<#$info.token#>">点击上网</a></textarea></td> </tr>
+              <tr><td>微信认证教程 :</td><td>&nbsp&nbsp&nbsp</td><td>请将以上连接复制到公众号内设置自动回复。<br>关注微信后回复"上网" 点击链接即可验证通过</td> </tr>
+			  <tr><td>微信绑定教程下载：</td><td>&nbsp&nbsp&nbsp</td><td><a href="http://pan.baidu.com/s/1o66yuL0" target="_blank">点击下载</a></td></tr>
+			     <php> if($info['wxrzfs']==1) {</php>
+                 <tr><td>微信对接接口URL为：</td><td>&nbsp&nbsp&nbsp</td><td> <textarea class="span11" rows="2"><#:C('siteurl')#>/wxmm?token=<#$info.token#></textarea></td></tr>
+				 <tr><td>微信对接接口TOKEN为：</td><td>&nbsp&nbsp&nbsp</td><td><input type="text" class="span11" value="<#$info.token#>"></td></tr>
+				 <tr><td>微信认证成功提示：</td><td>&nbsp&nbsp&nbsp</td><td> <#$info['wxsuccess']#></td></tr>
+				 <tr><td>关注微信后的提示：</td><td>&nbsp&nbsp&nbsp</td><td> <#$info['wxgzts']#></td></tr>
+				 <tr><td>微信公众号appID：</td><td>&nbsp&nbsp&nbsp</td><td> <php> $appid=explode('=',$info['wxappid']); echo $appid[0];</php></td></tr>
+				 <tr><td>关注公众号appsecret：</td><td>&nbsp&nbsp&nbsp</td><td><php> $appid=explode('=',$info['wxappid']); echo $appid[1];</php></td></tr>
+				 <tr><td>第三方微信平台URL ：</td><td>&nbsp&nbsp&nbsp</td><td> <#$info['threadurl']#></td></tr>
+				 
+				   <php>}</php>
+			  <php> }</php>
+			  
+
+             <tr><td>上网时段控制 :</td><td>&nbsp&nbsp&nbsp</td><td><#$info['sh']#>点 到 <#$info['eh']#>点</td> </tr>
+             <tr><td>上网限制 :</td><td>&nbsp&nbsp&nbsp</td><td><php> if($info['countflag']==1){echo "启用";} else { echo "停用";}
+			 </php></td></tr>
+           <eq name="info.countflag" value='1'><tr><td>每日上网允许认证次数 :</td><td>&nbsp&nbsp&nbsp</td><td><#$info['countmax']#></td> </tr></eq>
+          <tr><td>认证后上网时间限制 :</td><td>&nbsp&nbsp&nbsp</td><td><php> if($info['timelimit']==0){echo "不限制";}else{echo $info['timelimit']."分钟";}</php></td> </tr>
+
+		   <tr><td>临时上网时间限制 :</td><td>&nbsp&nbsp&nbsp</td><td><php> if($info['temptime']==0){echo "不限制";}else{echo $info['temptime']."分钟";}</php></td> </tr>
+
+           <tr><td>认证后上网流量限制 :</td><td>&nbsp&nbsp&nbsp</td><td><php> if($info['ratelimit']==0){echo "不限制";}else{echo $info['ratelimit']."兆";}</php></td> </tr>
+		    <tr><td>倒计时模板上网倒计时 :</td><td>&nbsp&nbsp&nbsp</td><td><#$info['djs']#>秒</td> </tr>
+
+          
+           <tr><td>认证后行为 :</td><td>&nbsp&nbsp&nbsp</td><td>
+		   <php>  if($info['authaction']==1){echo "跳转到指定网页: ".$info['jumpurl'];} 
+		   
+		       elseif($info['authaction']==0){ echo "不跳转";}
+			   elseif($info['authaction']==2){ echo "跳转请求网页";}
+			   else {echo "跳转到微官网";}
+		   
+		      		   
+			   </php></td> </tr>
+                <tr><td>&nbsp&nbsp&nbsp</td><td>&nbsp&nbsp&nbsp</td><td>&nbsp&nbsp&nbsp</td></tr>
+				
+			</table> </font>
+              
+          
+			 
+			
+        </div>
+      </div>
+      
+      
+    </div>
+    
+  </div>
+  
+</div>
+   <include file="Pub:foot"/>
+
+
+</body>
+</html>

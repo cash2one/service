@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title><#:C('sitename')#>--代理商平台</title>
+<meta name="keywords" content="<#:C('keyword')#>"/>
+<meta name="description" content="<#:C('content')#>"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/bootadmin/css/elements.css" />
+<include file="Pub:Css"/>
+</head>
+<body>
+<include file="Pub:top"/>
+<include file="Pub:nav"/>
+<!--main-container-part-->
+<div id="content">
+  <!--breadcrumbs-->
+  <div id="content-header">
+    <div id="breadcrumb"> <a href="<#:U('index/index')#>" title="返回首页" class="tip-bottom"><i class="icon-home"></i>首页</a><a href="#" class="current">路由监控</a> </div>
+    <h1>在线路由统计</h1>
+  </div>
+  <!--End-breadcrumbs-->
+  
+            <div id="pad-wrapper">
+                            	<div class="btn-group pull-right">
+                            	 <button class="hide " id="today"></button>
+                            <button class="glow left " id="live">在线路由</button>
+                            <button class="glow right" id="die">离线路由</button>
+                        </div>
+                    </div>
+                    <div class="row span11">
+                        <div id="placeholder" style="height:300px;"></div></div> 
+					
+
+		 <div class="table-wrapper orders-table section">
+             
+
+                
+                    <div class="pull-left">
+                  <h4>统计列表</h4>
+                
+                </div>
+				
+                <div class="span8">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                               <th>ID</th>
+	        				   <th>路由商家</th>
+	        				   <th>最后在线时间</th>
+                               
+                            </tr>
+                        </thead>
+                         <tbody id="gridbox">
+                        	
+                           
+                        </tbody>
+                    </table>
+                    <div id="ajaxpage" class="pagination pull-right">
+            		
+            		</div>
+                </div>
+            
+            	
+            </div>
+</div>
+
+
+</div>
+ <script src="<#$Theme['P']['js']#>/jquery.min.js"></script>
+<script src="<#$Theme['P']['root']#>/bootadmin/js/bootstrap.min.js"></script>
+
+    <script src="<#$Theme['P']['root']#>/bootadmin/js/theme.js"></script>
+  <script src="<#$Theme['P']['root']#>/bootadmin/js/common.js"></script>
+<script src="<#$Theme['P']['js']#>/flot/jquery.flot.js"></script> 
+<script src="<#$Theme['P']['js']#>/flot/jquery.flot.pie.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/matrix.js"></script> 
+<script>
+
+
+function AjaxPage(obj){
+	var url=$(obj).attr('jump');
+	$.getJSON(url,function(data){
+		data=eval(data)  ;
+		
+		 rendertable(data);
+	});
+}
+
+$(function () {
+	
+	var stack = 0, bars = true, lines = false, steps = false;
+	
+	    
+	
+  	  $("#today").bind("click",function(){
+		  $.ajax({
+			  url: '<#:U('index/routerp')#>',
+		        type: "get",
+				data:{
+					'mode':'today',
+					
+					},
+				dataType:'json',
+				error:function(){
+						AlertTips("服务器忙，请稍候再试",2000);
+						},
+				success:function(jsondata){
+						var json=eval(jsondata);
+						
+						var dataset=[];
+						var piedata = [];
+						
+						piedata.push({ label: "在线路由:"+json[0].livecount+"台", data: Math.floor(json[0].livecount) });
+								
+						
+										
+						piedata.push({label:"离线路由:"+json[0].diecount+"台",data:Math.floor(json[0].diecount)});
+
+						
+
+						
+
+						 $.plot($("#placeholder"), piedata, { 
+
+							series: {
+								pie: { 
+									show: true,
+									 
+								}
+						 
+							},
+							legend: {
+						            show: false
+						     },
+							}
+							
+						 );
+					
+						
+				}
+			  });
+  	  	  });
+
+  	$("#live").bind("click",function(){
+		  $.ajax({
+			  url: '<#:U('index/routerp')#>',
+		        type: "get",
+				data:{
+					'flag':'a',
+					'info':1
+					},
+				dataType:'json',
+				error:function(){
+						AlertTips("服务器忙，请稍候再试",2000);
+						},
+				success:function(data){
+						var bt=[];
+						data=eval(data)  ;
+						
+						 rendertable(data);
+				}
+			  });
+	  	  });
+  	$("#die").bind("click",function(){
+		  $.ajax({
+			  url: '<#:U('index/routerp')#>',
+		        type: "get",
+				data:{
+					'flag':'d',
+					'info':1
+					},
+				dataType:'json',
+				error:function(){
+						AlertTips("服务器忙，请稍候再试",2000);
+						},
+				success:function(data){
+						var bt=[];
+						data=eval(data)  ;
+						
+						 rendertable(data);
+				}
+			  });
+	  	  });
+		$("#today").trigger("click");
+  	 
+  	doRef();
+});
+function doRef(){
+	setTimeout(function(){
+		$("#today").trigger("click");
+		},30000);
+	
+}
+function rendertable(data){
+	
+	$("#gridbox").empty();
+	$("#ajaxpage").empty();
+	var trHtml="";
+	var sumshow=0;
+	var sumhit=0;
+	var dt=data.list;
+	for(var vo in dt){
+		trHtml+="<tr>";
+		trHtml+="<td>"+dt[vo].id+"</td>";
+
+		trHtml+="<td>"+dt[vo].shopname+"</td>";
+		trHtml+="<td>"+dt[vo].last_heartbeat_time+"</td>";
+		trHtml+="</tr>";
+		
+
+	}
+	
+	$("#gridbox").append(trHtml);
+	$("#ajaxpage").append(data.pg);
+}
+
+
+</script>
+</body>
+</html>

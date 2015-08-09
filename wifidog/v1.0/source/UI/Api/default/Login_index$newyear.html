@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+
+<title><#$shopinfo[0]['shopname']#></title>
+<link rel="stylesheet" href="<#$Theme['T']['css']#>/newyear/css/fcwwei.css" type="text/css" media="all" />
+
+<script src="<#$Theme['T']['css']#>/newyear/js/jquery-1.9.0.min.js"></script> 
+<script src="<#$Theme['T']['css']#>/newyear/js/ezy_page.js"></script> 
+<script src="<#$Theme['T']['css']#>/newyear/js/mobi_comm.js"></script> 
+<script src="<#$Theme['T']['css']#>/newyear/js/jquery.tab.min.js"></script>
+<script src="<#$Theme['T']['css']#>/newyear/js/swipe.min.js"></script>
+<script src="<#$Theme['T']['css']#>/newyear/js/jquery.unveil.min.js"></script>
+
+
+</head>
+<body style="zoom: 1;">
+
+
+	<!-- 头部 BOF-->
+<div class="container">
+
+<div class="header">
+
+<a id="logo"><#$shopinfo[0]['shopname']#></a>
+
+</div>
+
+<div id="slider" class="slide-auto" style="overflow: hidden;">
+<!-- 头部 EOF-->
+
+	<!-- 轮播广告 BOF-->
+
+	<ul id="thelist">
+
+		       <notempty name="ad">
+		
+			<volist name="ad" id="vo">
+	     	<eq name="vo['mode']" value="1">
+             <li><a href="<#:U('userauth/showad',array('id'=>$vo['id'],'uid'=>$vo['uid']))#>"><img src="<#$vo.ad_thumb#>" width="100%"> </a></li>
+               <else/>
+	     		<li><img src="<#$vo.ad_thumb#>" width="100%"></li>
+	     		</eq>
+				
+			</volist>
+			<else/>
+			<li><img src="<#$Theme['P']['root']#>/images/ad/noad01.jpg" width="100%"></li>
+			<li><img src="<#$Theme['P']['root']#>/images/ad/noad02.jpg" width="100%"></li>
+           </notempty></ul>
+		   <div id="position" class="position"><em class="on"></em></div>
+ <div class="note"><#$shopinfo[0]['shopname']#>为您提供安全可靠的上网服务! <br> <img src="<#$Theme['T']['css']#>/newyear/img/index_12.jpg" width="30" height="22" style="vertical-align:middle" /> 同意 <span class="spink">Wifi使用须知</span></div>
+
+	    
+
+	<!-- 轮播广告 EOF -->
+	
+
+	
+	<!-- 功能菜单 BOF-->
+
+		<eq name="show" value="1">
+			<if condition="$authmode['open'] eq true" >
+				<eq name="authmode['overmax']" value="0">
+
+				 <eq name="authmode['allow']" value="1">
+	  
+	  <a href="<#:U('userauth/noAuth')#>" class="deOnline">
+	  <img title="一键上网" src="<#$Theme['T']['css']#>/newyear/img/index_16.jpg" /></a> 
+	  </eq>
+				<ul class="MainIconArea">
+				
+					<eq name="authmode['wx']" value="1">
+					  <li>
+						<a href="<#:U('userauth/weixin')#>" >
+						<i>
+	             <img src="<#$Theme['T']['css']#>/newyear/img/index_20.jpg" /></i>
+	                 <span>微信认证</span></a></li>
+					  							
+					</eq>
+					<eq name="authmode['wxmm']" value="1">
+						
+						 <li>
+						<a href="<#:U('userauth/wxauth')#>" >
+						<i>
+	             <img src="<#$Theme['T']['css']#>/newyear/img/index_20.jpg" /></i>
+	                 <span>微信密码认证</span></a></li>	
+					</eq>
+
+					
+						<eq name="authmode['phone']" value="1" title="短信认证">
+					<li>
+ <if condition="$duanxin eq 0">
+ <a href="<#:U('userauth/mobile')#>" title="短信认证"><else /><a href="<#:U('userauth/mobileff')#>" title="短信认证"></if> 
+
+						<i><img src="<#$Theme['T']['css']#>/newyear/img/index_22.jpg" /></i>
+						<span>短信认证</span></a></li> 
+						</eq>
+
+						<eq name="authmode['reg']" value="1">
+                  <li>
+<if condition="$duanxin eq 0"><a href="<#:U('userauth/reg')#>" title="注册认证"><else /><a href="<#:U('userauth/regff')#>" title="注册认证"></if> 
+					<i><img src="<#$Theme['T']['css']#>/newyear/img/index_24.jpg" /></i>
+	           <span>注册认证</span></a></li> 
+	  
+	       <li><a href="<#:U('userauth/login')#>"><i><img src="<#$Theme['T']['css']#>/newyear/img/index_24.jpg" /></i>
+	         <span>登录认证</span></a></li> 
+			 
+			 </eq>
+	 <li class="khly"><a href="javascript:void(0);"> <i><img src="<#$Theme['T']['css']#>/newyear/img/index_26.jpg" /></i>
+	  <span>客户留言</span></a></li>
+	  </ul>
+					
+					<div class="clear"></div>
+				<else/>
+					<h2 style="text-align: center;line-height:40px;">每日免费上网次数是<#$shopinfo[0]['countmax']#>次 </br>
+				</eq>
+			<else/>
+				<h2 style="text-align: center;line-height:40px;">当前时间不提供免费上网服务.</br>
+				<eq name="authmode['openflag']" value="true">
+					上网开放时间为每日 <#$authmode.opensh#>:00点至<#$authmode.openeh#>:00点
+				</eq>
+				</h2>
+			</if>
+			</eq>
+				
+			</div>
+			
+	 
+	<dl style="clear:both; width:100%; height:1px;"></dl>
+<div class="SafeWap"><ul><li><i class="aq"></i><span>WiFi安全上网</span></li>
+<li><i class="kx"></i><span>CNNIC可信网站</span></li>
+</ul>
+</div>
+<div class="footer">     <dl class="line1"></dl>     <dl class="line2"></dl>      <p>智能云路由：<#:C('fwrx')#></p>     <p>&copy; Copyright &copy; 2014 ZHINENG All rights reserved.</p> </div> 
+	
+	<!-- 功能菜单 BOF-->
+	
+</div>
+<script type="text/javascript" src="<#$Theme['T']['css']#>/newyear/js/api.js"></script> 
+
+<div id="remarkform">
+  <dl><div class="tipbox" id="tips"></div>
+<a class="cancelthisform" title="取消发言">取消发言</a> 
+<a class="submitethisform" href="javascript:void(0);" title="确定发送" id="btn_content">确定发送</a>
+  </dl><form><textarea placeholder="发布您的留言!" name="content" id="content"></textarea><p>文明发言，遵守“七条底线”!</p></form>
+  
+  </div>
+  <div id="shadelayer"></div>
+<script type="text/javascript">
+
+           $(document).ready(function(){
+        var slider = new Swipe(document.getElementById('slider'), {
+            speed: 500,
+            auto: 1500,
+            callback: function (e, pos) {
+                var i = bullets.length;
+                while (i--) {
+                    bullets[i].className = ' ';
+                }
+                bullets[pos].className = 'on';
+            }
+        }),
+        bullets = document.getElementById('position').getElementsByTagName('em');
+      });
+           $(function(){
+	           	$.ajax({
+				  	url: '<#:U('login/countaddl')#>',
+			        type: "post",
+					data:{
+						'ids':"<#$adid#>",
+						},
+					dataType:'json',
+					error:function(){},
+					success:function(data){}
+				  });
+           	});
+		function Tips(el,msg,state,time){
+	var cname=state?"onError":"onSuccess";
+	$('#'+el+"").html('').show().html('<div class="'+cname+'">'+msg+'</div>');
+    setTimeout("$('#" + el + "').hide()", time);
+}
+
+	  $(document).ready(function(){
+		if(document.height<window.innerHeight){
+       document.height=window.innerHeight; }
+	    });
+	$(".khly a").click(function(){
+		$("#remarkform").animate({bottom:"0"},{queue:false, duration:500});
+		$("#shadelayer").fadeIn(300);
+		
+	});
+	$(".cancelthisform,.swiper-container").click(function(){
+		$("#remarkform").animate({bottom:"-240px"},{queue:false, duration:500});
+		$("#shadelayer").fadeOut(300);
+		
+	});
+
+  var bajax=false;
+	$(document).ready(function(){
+		 
+		$("#btn_content").bind('click',function(){
+			var u="匿名客户";
+			
+			var m="13999999999";
+			var q=$('#content').val();
+			 
+			  if (q == "") {
+				 
+				  Tips("tips", "请输入留言内容", true, 2000);
+			        return false;
+			  }
+			
+			  if(q.length>200){
+				  
+				  Tips("tips", "留言内容不能超过200个字符", true, 2000);
+			      return false;
+			   }
+			   if(bajax){
+				   Tips("tips", "正在提交中，请稍候..", true, 2000);
+			        return false;
+				  }
+			  bajax=true;
+			  $.ajax({
+				  	url: '/index.php/api/userauth/addmsg.html',
+			        type: "post",
+					data:{
+						'user':u,
+						'phone':m,
+						'content':q,
+						'__hash__':$('input[name="__hash__"]').val()
+						},
+					dataType:'json',
+					error:function(){
+							bajax=false;
+							 Tips("tips", "服务器忙，请稍候再试", true, 1500);
+							},
+					success:function(data){
+								bajax=false;
+							if(data.error==0){
+								$('#content').val('');
+								Tips("tips", "提交留言成功", false, 1500);
+								
+							}else{
+								Tips("tips", data.msg, true, 1500);
+							}
+					}
+				  });
+
+		});
+	});
+		
+ </script>
+</body>
+</html>

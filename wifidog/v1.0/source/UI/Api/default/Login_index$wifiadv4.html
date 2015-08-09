@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+
+<title><#$shopinfo[0]['shopname']#></title>
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/css.css"><!--风格-->
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/media.css"><!--自适应-->
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/form.css"><!--自适应-->
+
+<link href="<#$Theme['P']['js']#>/swiper/swiper.css" rel="stylesheet" />
+<script type="text/javascript" src="<#$Theme['P']['js']#>/jquery.js"></script>
+
+<style type="text/css">
+
+
+  .info{width:100%;text-align: left;display: block;height: auto;line-height: 27px;background-color: #ffffff;}   
+
+
+
+</style>
+</head>
+<body>
+	<!-- 头部 BOF-->
+	<include file="public:head$wifiadv"/>
+	<!-- 头部 EOF-->
+<div class="mainbox bgindex clearfix">
+	<!-- 轮播广告 BOF-->
+	<div class="focus">
+		<div class="swiper-container">
+	      <div class="swiper-wrapper">
+	       <notempty name="ad">
+			<volist name="ad" id="vo">
+	     		<div  class="swiper-slide">
+	     		<eq name="vo['mode']" value="1">
+	     		<a href="<#:U('userauth/showad',array('id'=>$vo['id'],'uid'=>$vo['uid']))#>"><img src="<#$vo.ad_thumb#>" width="100%"></a>
+	     		<else/>
+	     		<img src="<#$vo.ad_thumb#>" width="100%">
+	     		</eq>
+	     		</div>
+			</volist>
+			<else/>
+			<div  class="swiper-slide">
+	     		<img src="<#$Theme['P']['root']#>/images/ad/noad01.jpg" width="100%">
+	     		</div>
+				<div  class="swiper-slide">
+	     		<img src="<#$Theme['P']['root']#>/images/ad/noad02.jpg" width="100%">
+	     		</div>
+			</notempty>   		
+	      </div>
+    	</div>
+	</div>
+	<!-- 轮播广告 EOF -->
+	
+		
+		<div id="info" class="info" >	
+		
+								  
+
+<div style="background-color:#f99c00;"><font  size=4>&nbsp&nbsp&nbsp<#$shopxinxi['shopname']#>欢迎您使用本店免费WIFI</font><hr size=1 color="#909092"></div>
+
+<div style="padding-left:10px;height:auto; "> 
+
+    
+<label class="lb_title mr-tb-5" >请关注微信公众号:&nbsp;&nbsp;<#$wxname#></br>微信名称：&nbsp;&nbsp;<#$wxpwd#></br>回复:"上网" &nbsp;即可一键认证上网</label>
+
+ <center><img src="<#$wxewm#>" width="200" height="200"></center>
+       
+
+    </div>
+
+
+</div>  
+	<div class="tips" id="tips"></div>
+
+	<a  class="btn_base corner-all-10 t-wh c-wifiadv uba mr-tb-10" href="javascript:void(0);" id="btn_reg">立即认证</a>
+	<a  class="btn_base corner-all-10 t-wh c-wifiadv uba mr-tb-10" href="javascript:void(0);" id="btn_reg2" style="display:none">请稍候...</a>
+	
+	
+	<!-- 功能菜单 BOF-->
+		<include file="public:foot$wifiadv"/>
+</div>
+
+
+<script type="text/javascript" src="<#$Theme['P']['js']#>/swiper/swiper.js"></script>
+<script type="text/javascript" src="<#$Theme['P']['js']#>/jquery.js"></script>
+<script type="text/javascript" src="<#$Theme['T']['js']#>/api.js"></script>
+<script type="text/javascript">
+
+           var mySwiper = new Swiper('.swiper-container',{
+        	    loop:true,
+        	    grabCursor: true,
+        	    paginationClickable: true,
+        	    calculateHeight:true,
+        		autoplay:3000,
+        	  });
+           $(function(){
+	           	$.ajax({
+				  	url: '<#:U('login/countad')#>',
+			        type: "post",
+					data:{
+						'ids':"<#$adid#>",
+						},
+					dataType:'json',
+					error:function(){},
+					success:function(data){}
+				  });
+           	});
+ </script>
+ <script>
+ 
+
+	var bajax=false;
+	var blive=false;
+	var dcount=1*30;
+	function ChangeLive(){
+		dcount--;
+		if(dcount<=0){
+			if(blive){
+				blive=false;
+			}
+		}else{
+			setTimeout("ChangeLive()",1000);
+		}
+	}
+	$(document).ready(function(){
+		  $("input").each(function(){
+				$(this).bind("focusin",function(){
+				
+					$(this).parent().addClass('us-input-focus');
+				});
+				$(this).bind("focusout",function(){
+					$(this).parent().removeClass('us-input-focus');
+				
+				});
+			  });
+		 
+		  
+		$("#btn_reg").bind('click',function(){
+
+		       document.getElementById('btn_reg').style.display='none';
+			   document.getElementById('btn_reg2').style.display='';
+		
+			
+			  $.ajax({
+				  	url: '<#:U('userauth/doweixin')#>',
+			        
+					dataType:'json',
+					error:function(){
+					      Tips("tips", "服务器忙，请稍候再试！", true, 10000);
+							
+							
+							},
+					success:function(data){
+					         if(data.error==0){
+								Tips("tips", "临时认证成功", false, 5000);
+								 $('#scode').show();
+								$('#scodetext').html(data.msg);
+
+								
+								//btn.style.display='none';
+								//btn2.style.display='';
+								//btn2.href=data.url;
+							
+
+								setTimeout("goUrl('"+data.url+"')",1000);
+							}else{
+								Tips("tips", data.msg, true, 2000);
+							}
+
+							
+					}
+				  });
+
+		});
+		$('#btn_back').bind('click',function(){
+			history.go(-1);
+		});
+	});
+
+	function goUrl(url){
+		location.href=url;
+	}
+</script>
+</body>
+</html>

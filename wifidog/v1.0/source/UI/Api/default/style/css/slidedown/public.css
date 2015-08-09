@@ -1,0 +1,149 @@
+﻿@CHARSET "UTF-8";
+
+body {
+	margin: 0px;
+	padding: 0px;
+	font-family: "微软雅黑", Georgia, Serif;
+}
+a{
+	text-decoration:none;
+}
+.hide{
+	display:none;
+}
+.ugbox {
+	display: -webkit-box;
+	display: box;
+	text-align: center;
+	cursor: pointer;
+}
+
+.ugbox2 {
+	width: 90%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.ugbox-son {
+	text-align: center;
+	-moz-box-flex: 1.0; /* Firefox */
+	-webkit-box-flex: 1.0; /* Safari 和 Chrome */
+	box-flex: 1;
+	padding: 0.5em;
+}
+
+/*按钮*/
+.btn_base {
+	text-shadow: none;
+	text-align: center;
+	text-decoration: none;
+	-webkit-appearance: none;
+	display: inline-block;
+	line-height: 1.8em;
+	height: 1.8em;
+	font-size: 1.5em;
+	padding: 8px 0;
+	width: 60%;
+	border-radius: 5px;
+	color: #fff;
+}
+
+.btn_bg_b {
+	width: 100%;
+	border-radius: 5px;
+	padding: 10px 0;
+	color: #fff;
+	background-color: #202020;
+}
+
+.wx {
+	background-color: #2ACB72;
+}
+
+.wxmm{
+	background-color: #E2AAD7;
+}
+.ok {
+	background-color: #3A92E2;
+}
+.sns{
+	background-color: #006400;
+}
+
+.sns img{
+	padding: 0 0.6em;
+	width: 1.6em;
+}
+.mb {
+	background-color: #E65042;
+}
+
+.msg {
+	background-color: #FFC840;
+}
+.msg1 {
+	background-color: #CD00CD;
+}
+.protocol {
+	margin: 0.2em;
+	display: -webkit-box !important;
+	display: box !important;
+	position: relative;
+}
+
+.protocol-text {
+	padding:0.4em;
+	-moz-box-flex: 2.0; /* Firefox */
+	-webkit-box-flex: 2.0; /* Safari 和 Chrome */
+	box-flex: 2.0;
+	line-height: 1.5em;
+	font-size: 1em;
+	height:auto;
+	text-align:center;
+}
+
+
+.protocol-ms {
+	text-align: center;
+	padding: 0 15px;
+	font-size: 0.8em;
+	color: #666;
+}
+
+.protocol-img {
+	width: 30%;
+	min-width: 3em;
+	height: 4em;
+	background: url(../../style/images/logo.jpg) no-repeat 50% 50%;
+	-moz-background-size: contain;
+	-o-background-size: contain;
+	background-size: contain;
+	-moz-box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	box-flex: 1;
+	float: left;
+}
+
+.loginbox {
+	border-top: 3px solid #E6E6E6;
+	border-bottom: 3px solid #E6E6E6;
+	background-color: #f2f2f2;
+	padding: 0.5em;
+}
+
+#dd {
+	color: #308af9;
+	width: 100%;
+}
+
+#ddbox {
+	text-align: center;
+	font-size: 1.5em;
+}
+
+#ss {
+	display: inline-block;
+	width: 1.5em;
+	text-shadow: 0 0 5px #ccc;
+	font-size: 2em;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<title><empty name="siteinfo.shopname"> <#$info['wxname']#><else/> <#$siteinfo.shopname#></empty></title>
+<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta charset="utf-8">
+<link href="<#$Theme['P']['root']#>/wap/css/ktv/style.css" rel="stylesheet" type="text/css">
+<link type="text/css" rel="stylesheet" href="<#$Theme['P']['root']#>/wap/css/ktv/style01.css">
+<script type="text/javascript" charset="utf-8" src="<#$Theme['P']['root']#>/wap/js/ktv/page_context.js"></script>
+
+</head>
+
+<body screen_capture_injected="true">
+<div>
+	<ul class="mainmenu2 radius margin10">
+		
+		<volist name="listinfo" id="so">
+		<li class="radius_top border-top-none">
+			<div class="menubtn">
+			<if condition="$so['linkurl']">
+			<a href="<#$so['linkurl']#>">
+			<else />
+			<a href="<#:U('Wap/info',array('sid'=>$so['uid'],'cid'=>$so['cid'],'id'=>$so['id']))#>">
+			</if>
+				<h2 class="menutitle"><#$so['title']#></h2>
+				<p class="menudesc"><#$so['desc']#></p>
+				</a> <span class="icon">&nbsp;</span> </div>
+		</li>
+		</volist>
+	</ul>
+	<div class="pagelist">
+<eq name="p" value="1"><else/><a  href="/index.php?g=Api&m=Wap&a=lists&cid=<#$wechaid#>&classid=<php>echo $_GET['classid'];</php>&token=<#$info['token']#>&p=<php>echo $p-1;</php>">上一页</a></eq>
+	<?php
+
+	if($p<$page){
+
+		echo '<a  href="/index.php?g=Api&m=Wap&a=lists&cid='.$wechaid.'&classid='.(int)$_GET['classid'].'&token='.$info['token'].'&p='.($p+1).'">下一页</a>';
+
+	}else{
+
+		
+
+	}
+
+?>
+</div>
+</div>
+
+<eq name="copyright" value="0">
+<div class="copyright"  >
+<empty name="siteinfo.shopname"> <#$info['wxname']#><else/> <#$siteinfo.shopname#></empty>
+</div>
+</eq>
+<div style="display:none"></div>
+</body>
+</html>

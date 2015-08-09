@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><#:C('sitename')#>-管理后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<include file="Pub:style"/>
+	<!-- libraries -->
+<link href="<#$Theme['P']['root']#>/bootadmin/css/compiled/tables.css" type="text/css" rel="stylesheet"  />
+<link rel="stylesheet" href="<#$Theme['P']['root']#>/bootadmin/css/lib/bootstrap.datepicker.css" />
+<body>
+<include file="Pub:Nav"/>
+   <include file="Pub:Sidebar"/>
+
+	<!-- main container -->
+    <div class="content" style="height: 100%;">
+  
+      <div id="pad-wrapper">
+          <!-- orders table -->
+            <div class="table-wrapper orders-table section">
+                <div class="row head">
+                    <div class="col-md-12">
+                        <h4>微信用户</h4>
+                    </div>
+                </div>
+		<form method="post">
+                <div class="row-fluid form-page">
+                   
+                  <div class="form-wrapper">
+                  <div class="span6 column">
+                  	
+                  	<div>
+                  	<div class="span6">
+                  			 <label class="span3">开始时间:</label>
+ <input type="text" id="sdate" value="<php>echo date("Y-m-01")</php>" data-date-format="yyyy-mm-dd" class="pull-left datepicker" name="sdate" readonly="readonly">
+ 
+                  		</div>
+                  		<div class="span6">
+                  			<label class="span3">结束时间:</label>
+   <input type="text" id="edate" value="<php>echo date("Y-m-d")</php>" data-date-format="yyyy-mm-dd" class="pull-left  datepicker" name="edate" readonly="readonly">
+    	
+                  		</div>
+                  	</div>
+                  		
+                  	
+                                   		
+                  </div>
+                  
+                  </div>
+                 
+                  <div class="span2">
+                  	<div><br><br>
+                  		 	<input  type="submit" class=" span6 btn btn-success" value="查询">
+                  	</div>
+                  	
+                  
+                  </div>
+                  </div>
+                    		</form>	
+                            
+                         </div><div>
+                            今日&nbsp&nbsp关注：<font size=4 color=red><eq name='gztoday.gzl' value=''>0<else/><#$gztoday['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gztoday.qxl' value=''>0<else/><#$gztoday['qxl']#></eq></font>人 &nbsp &nbsp|
+昨日&nbsp&nbsp关注：<font size=4 color=red><eq name='gzyestoday.0.gzl' value=''>0<else/><#$gzyestoday[0]['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gzyestoday.0.qxl' value=''>0<else/><#$gzyestoday[0]['qxl']#></eq></font>人&nbsp &nbsp|
+本周&nbsp&nbsp关注：<font size=4 color=red><eq name='gzweek.0.gzl' value=''>0<else/><#$gzweek[0]['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gzweek.0.qxl' value=''>0<else/><#$gzweek[0]['qxl']#></eq></font>人 &nbsp &nbsp|
+本月&nbsp&nbsp关注：<font size=4 color=red><eq name='gzyue.0.gzl' value=''>0<else/><#$gzyue[0]['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gzyue.0.qxl' value=''>0<else/><#$gzyue[0]['qxl']#></eq></font>人&nbsp &nbsp| 总微信人数：<font size=4 color=red><eq name='count' value=''>0<else/><#$count#></font>人</eq>
+<br><br>
+							</div>
+
+                <div class="">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-md-1">
+                                   		 编号
+                                </th>
+                                <th class="col-md-2">
+                                    <span class="line"></span>
+                                   	微信昵称
+                                </th>
+                                  <th class="col-md-2">
+                                    <span class="line"></span>
+                                    	性别
+                                </th>
+                                <th class="col-md-2">
+                                    <span class="line"></span>
+                                    	省份
+                                </th>
+                                <th class="col-md-2">
+                                    <span class="line"></span>
+                                    	城市
+                                </th>
+                                <th class="col-md-1">
+                                    <span class="line"></span>
+                                  		头像
+                                </th>
+                                <th class="col-md-2">
+                                    <span class="line"></span>
+                                   		关注时间
+                                </th>
+                                   <th class="col-md-2">
+                                    <span class="line"></span>
+                                   		 所属商户
+                                </th>
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	<volist name="lists" id="vo">
+                        		<!-- row -->
+                            <tr class="<eq name="i" value="1">first</eq>">
+                                <td>
+                                   <#$i#>
+                                </td>
+                                <td>
+                                   <#$vo.nickname#>
+                                </td>
+                                  <td>
+                                  <php> if ($vo['sex']==1) {echo "男";}else if($vo['sex']==2) {echo "女";}</php>
+                                </td>
+                                <td>
+                                    <#$vo.province#>
+                                </td>
+
+                                <td>
+                                  <#$vo.city#>
+                                </td>
+                                 <td>
+                                 <img src="<#$vo.headimgurl#>" style="height:50px;width:50px;">
+                                </td>
+                                 <td>
+                                  <#$vo.subscribe_time|date='Y-m-d ',####>
+                                </td>
+                                  <td>
+								  <volist name="shopname" id="vo1">
+								  <php>if($vo1['id']==$vo['shopid']){ echo $vo1['shopname'];break; }</php>
+                                   </volist>
+                                </td>
+                               
+                            </tr>
+                        	</volist>
+                           
+                        </tbody>
+                    </table>
+                </div>
+            
+            	<div class="pagination pull-right">
+            		<#$page#>
+            	</div>
+            </div>
+            <!-- end orders table -->
+          </div>
+    </div>
+
+
+	<!-- scripts -->
+ <script src="<#$Theme['P']['js']#>/jquery.js"></script>
+    <script src="<#$Theme['P']['root']#>/bootadmin/js/bootstrap.min.js"></script>
+    <script src="<#$Theme['P']['root']#>/bootadmin/js/theme.js"></script>
+  <script src="<#$Theme['P']['root']#>/bootadmin/js/jquery.uniform.min.js"></script>
+      <script src="<#$Theme['P']['root']#>/bootadmin/js/bootstrap.datepicker.js"></script> 
+  <script src="<#$Theme['P']['root']#>/bootadmin/js/common.js"></script>
+  <script type="text/javascript">
+                     
+
+                        $(function () {
+                        	 $('.datepicker').datepicker();
+                            // add uniform plugin styles to html elements
+                            $("input:checkbox, input:radio").uniform();
+
+                        });
+                    </script>
+
+
+
+
+
+
+</body>
+</html>

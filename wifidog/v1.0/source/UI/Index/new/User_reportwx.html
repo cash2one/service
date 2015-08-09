@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title><#:C('sitename')#>--会员中心</title>
+<meta name="keywords" content="<#:C('keyword')#>"/>
+<meta name="description" content="<#:C('content')#>"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<include file="Pub:Css"/>
+<link rel="stylesheet" href="<#$Theme['P']['root']#>/matrix/css/datepicker.css" />
+
+</head>
+<body>
+   <include file="Pub:top"/>
+   <include file="Pub:nav"/>
+<div id="content">
+  <div id="content-header">
+    <div id="breadcrumb"> <a href="<#:U('user/index')#>" title="返回首页" class="tip-bottom"><i class="icon-home"></i>首页</a> <a href="#" class="current">用户统计</a> </div>
+    <h1>微信用户统计</h1>
+   &nbsp&nbsp注：如果没有绑定微信公众号统计不到数据，如果微信公众号没有微信认证，则微信统计列表得不到微信用户详细数据！
+  </div>
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+
+	  <form action ="<#:U('user/reportwx')#>" method ="get"> 
+<div class="controls controls-row span8">
+ 	
+			<label class="control-label span1">开始日期</label>
+   <input type="text" id="sdate" name="sdate" value="<php>echo date("Y-m-01")</php>" data-date-format="yyyy-mm-dd" class="span2 datepicker" style="width:90px;">
+     <label class="control-label span1">结束日期</label>
+   <input type="text" id="edate" name="edate" value="<php>echo date("Y-m-d")</php>" data-date-format="yyyy-mm-dd" class="span2 datepicker" style="width:90px;">
+   &nbsp &nbsp <input  type ="submit" value="查询" class="btn btn-success btn-primary"/> 
+  </form>  </div>
+
+<div class="controls controls-row span12"> 
+
+今日&nbsp&nbsp关注：<font size=4 color=red><eq name='gztoday.gzl' value=''>0<else/><#$gztoday['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gztoday.qxl' value=''>0<else/><#$gztoday['qxl']#></eq></font>人 &nbsp &nbsp|
+昨日&nbsp&nbsp关注：<font size=4 color=red><eq name='gzyestoday.0.gzl' value=''>0<else/><#$gzyestoday[0]['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gzyestoday.0.qxl' value=''>0<else/><#$gzyestoday[0]['qxl']#></eq></font>人&nbsp &nbsp|
+本周&nbsp&nbsp关注：<font size=4 color=red><eq name='gzweek.0.gzl' value=''>0<else/><#$gzweek[0]['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gzweek.0.qxl' value=''>0<else/><#$gzweek[0]['qxl']#></eq></font>人 &nbsp &nbsp|
+本月&nbsp&nbsp关注：<font size=4 color=red><eq name='gzyue.0.gzl' value=''>0<else/><#$gzyue[0]['gzl']#></eq></font>人 &nbsp取消关注：<font size=4 color=blue><eq name='gzyue.0.qxl' value=''>0<else/><#$gzyue[0]['qxl']#></eq></font>人&nbsp &nbsp| 
+
+
+</div>
+            
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-th"></i></span>
+            <h5>微信统计列表 &nbsp &nbsp &nbsp 总关注人数：<font size=4 color=red><eq name='count' value=''>0<else/><#$count#></font>人</eq></h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                		<th>编号</th>
+	        			<th>微信昵称</th>
+	        			<th>性别</th>
+	        			<th>省份</th>
+	        			<th>城市</th>
+	        			<th>头像</th>
+	        			<th>关注时间</th>
+	        		
+                </tr>
+              </thead>
+              <tbody>
+           	<volist name="lists" id="vo">
+        				<tr>
+	        			<td><#$i#></td>
+	        			<td><#$vo.nickname#> </td>
+	        			<td><php> if ($vo['sex']==1) {echo "男";}else if($vo['sex']==2) {echo "女";}</php></td>
+	        			<td><#$vo.province#></td>
+						<td><#$vo.city#></td>
+						<td><img src="<#$vo.headimgurl#>" style="height:50px;width:50px;"></td>
+
+	        			<td><#$vo.subscribe_time|date='Y-m-d ',####></td>
+	        			
+	        			</tr>
+        		</volist>
+               
+              </tbody>
+            </table>
+          </div>
+        
+        </div>
+        
+         <div class="pagination pull-right">
+          	<#$page#>
+          </div>
+        
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+   <include file="Pub:foot"/>
+<script src="<#$Theme['P']['root']#>/matrix/js/jquery.min.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/jquery.ui.custom.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/bootstrap.min.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/matrix.js"></script> 
+
+<script src="<#$Theme['P']['root']#>/matrix/js/common.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/bootstrap-datepicker.js"></script> 
+<script>
+
+
+var lines;
+
+$(function () {
+	
+	var stack = 0, bars = true, lines = false, steps = false;
+	
+	    
+	 $('.datepicker').datepicker();
+  	   	
+
+  		$("#query").bind("click",function(){
+			var st=new Date($("#sdate").val());	
+			var et=new Date($("#edate").val());	
+			if(st.getTime()>et.getTime()){
+				AlertTips("开始日期不能大于结束日期",2000);
+					return;
+			}
+
+			 $.ajax({
+	  			  url: '<#:U('xxxxx')#>',
+	  		        type: "get",
+	  				data:{
+	  					'mode':'query',
+	  					'sdate':$("#sdate").val(),
+	  					'edate':$("#edate").val(),
+	  					},
+	  				dataType:'json',
+	  				error:function(){
+	  						AlertTips("服务器忙，请稍候再试",2000);
+	  						},
+	  				success:function(data){
+	  						$('#btnkey').val('query');
+	  						$('#btnkey').attr('sdate',$("#sdate").val());
+	  						$('#btnkey').attr('edate',$("#edate").val());
+	  						var bt=[];
+	  						var templist=[];
+	  						
+	  						data=eval(data)  ;
+	  						for(var vo in data){
+	  							templist.push([data[vo].t,data[vo].td]);
+	  							bt.push([data[vo].t,data[vo].ct]);
+	  						}
+	  						 var plot= $.plot($("#placeholder"), [ bt ], {xaxis:{ticks:templist},  grid: { hoverable: true, clickable: true, borderColor:'#000',borderWidth:1}, series:{lines:{fill:true, show: true}, points:
+	  						    { show: true,
+	  						    	  }}});
+	  					
+	  						
+	  				}
+	  			  });
+  	  	});
+  		
+});
+
+
+</script>
+<script>
+$(document).ready(function(){
+	$('#urpt').trigger('click');
+});
+</script>
+</body>
+</html>

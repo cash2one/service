@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title><#:C('sitename')#>--会员中心</title>
+<meta name="keywords" content="<#:C('keyword')#>"/>
+<meta name="description" content="<#:C('content')#>"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<include file="Pub:Css"/>
+<link rel="stylesheet" href="<#$Theme['P']['root']#>/matrix/css/uniform.css" />
+<link rel="stylesheet" href="<#$Theme['P']['root']#>/matrix/css/select2.css" />
+</head>
+<body>
+   <include file="Pub:top"/>
+   <include file="Pub:nav"/>
+
+<div id="content">
+<div id="content-header">
+  <div id="breadcrumb"> <a href="<#:U('user/index')#>" title="返回首页" class="tip-bottom"><i class="icon-home"></i>首页</a>  <a href="#" class="current">应用设置</a> </div>
+  <h1>应用设置</h1> 
+</div>
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>编辑</h5>
+        </div>
+        <div class="widget-content nopadding">
+        <form name='form' action="index.php?m=User&a=doapp" method="post" class="form-horizontal" enctype="multipart/form-data">
+ 		
+        	 
+       		
+			<div class="control-group">
+              <label class="control-label">认证模式:</label>
+              <div class="controls">
+                <volist name="authmode" id="vo">
+              
+                <label>
+                  <input type="checkbox" value="<#$vo.key#>" name="authmode[]" <#:showauthcheck($vo['key'],$info['authmode'])#>/>
+                  <#$vo.txt#></label>
+                                       </volist>
+               
+             </div>
+			  
+ 	 
+            </div>
+           <div class="control-group"  >
+                   <label class="control-label">手机认证短信选择：</label>
+				   <div class="controls">  
+				                       <label> <input type="radio" value="0" name="renzheng" <php> if(substr($info['authmode'],-1)=="0"){echo "checked";}</php>>虚拟信息认证 </label>
+			                            <label> <input type="radio" value="1" name="renzheng" <php> if(substr($info['authmode'],-1)=="1"){echo "checked";}</php> >短信认证 </label>
+										<span class="help-block">请选择手机信息认证方式</span>
+                     </div>
+					  <label class="control-label">短信认证内容：</label>
+              <div class="controls">
+                <textarea rows="3" class="span11" name="duanxin" ><#$info.duanxin#></textarea>
+             <span class="help-block">短信认证模板，不要超过64个字，验证码位置请用"$code"代替！</span>
+              </div>
+                <label class="control-label">每日短信认证发送条数 :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder="请输入条数"  name="smscount" id="countmax" value="<#$info['smscount']#>"/>
+              <span class="help-block">本日允许通过发送短信认证条数</span>
+              </div>
+			</div>
+
+            <div class="control-group"  id="wxacc" style="display:none;">
+              <label class="control-label">微信公众号 :</label>
+              <div class="controls">
+                <input type="text" class="span11" placeholder="微信号"  name="wx" id="wx" value="<#:echojsonkey(showauthdata($ma,$info['authmode']),'user')#>" />
+              	 <span class="help-block">请输入您想让用户关注的微信公众号</span>
+              </div>
+            </div>
+            <div class="control-group" id="wxauth" style="display:none;">
+              <label class="control-label">微信名称 :</label>
+              <div class="controls">
+                <input type="text" class="span11" placeholder="输入微信名称" name="wxauthpwd" id="wxauthpwd" value="<#:echojsonkey(showauthdata($ma,$info['authmode']),'pwd')#>"/>
+               <span class="help-block">输入微信名称</span>
+              </div>
+			  <label class="control-label">微信原始ID号 :</label>
+              <div class="controls">
+                <input type="text" class="span11" placeholder="输入微信原始ID号" name="wxysid" id="wxysid" value="<#:echojsonkey(showauthdata($ma,$info['authmode']),'ysid')#>"/>
+               <span class="help-block">输入微信原始ID号</span>
+              </div>
+			 </div>
+			 <div class="control-group" id="wxmima" style="display:none;">
+			  <label class="control-label">微信认证密码 :</label>
+              <div class="controls">
+                <input type="text" class="span11" placeholder="输入微信认证密码" name="wxpass" id="wxpass" value="<#:echojsonkey(showauthdata('4',$info['authmode']),'pass')#>"/>
+               <span class="help-block">输入微信认证密码</span>
+              </div>
+			</div>
+			<div class="control-group" id="wxewm" style="display:none;">
+            <label class="control-label">微信二维码:</label>
+              <div class="controls">
+                <img src="<#$info['wxewm']#>" style="width:150px;"/>
+				
+              </div>
+
+       <label class="control-label">上传图片:</label>
+              <div class="controls">
+                 <input type="file"  name="img">
+				                
+              </div>
+              <div class="controls">
+              <span class="help-block blue span8">建议上传图片规格:200*200</span>
+                
+              </div>
+			  <label class="control-label">微信认证方式选择：</label>
+              <div class="controls">
+               <div style="float:left;"> 
+			     <label> <input type="radio" value="0" name="wxrzfs" <php> if($info['wxrzfs']=="0"){echo "checked";}</php>>自动回复一键认证 </label>
+			                            <label> <input type="radio" value="1" name="wxrzfs" <php> if($info['wxrzfs']=="1"){echo "checked";}</php> >回复验证码认证（取消关注会断网） </label>   
+				 <span class="help-block">选择一种微信认证方式，自动回复一键认证和回复验证码认证。</span>
+				 <label><br></label> 
+			   </div> 
+         
+              </div>
+			
+
+			  <label class="control-label">微信认证成功提示：</label>
+              <div class="controls">
+                <textarea rows="3" class="span11" name="wxsuccess" ><#$info.wxsuccess#></textarea>
+             <span class="help-block">商家的微信公众平台绑定本网站指定的URL和TOKEN后认证成功的提示，取消关注会断网！</span>
+              </div>
+
+			  <label class="control-label">关注微信后的提示：</label>
+              <div class="controls">
+                <textarea rows="3" class="span11" name="wxgzts" ><#$info.wxgzts#></textarea>
+             <span class="help-block">商家的微信公众平台绑定本网站指定的URL和TOKEN后关注后的提示（如果设置了第三方微信平台URL此功能无效），取消关注会断网！</span>
+              </div>
+
+			   <label class="control-label">微信公众号的AppID和appsecret :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder=""  name="wxappid" id="wxappid" value="<#$info['wxappid']#>"/>
+              <span class="help-block">微信公众号的AppID和appsecret，请以"＝"号为分隔（即"appid=appsecret"），不设置或设置错误拉取不到关注粉丝数据（微信公众号必须通过微信认证)。</span>
+              </div>
+
+			    <label class="control-label">第三方微信平台URL :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder=""  name="threadurl" id="threadurl" value="<#$info['threadurl']#>"/>
+              <span class="help-block">第三方微信平台的URL，设置后可对接第三方微信平台。</span>
+              </div>
+
+
+            </div>
+
+             <div class="control-group">
+              <label class="control-label">上网时段控制 :</label>
+              <div class="controls">
+                  <select name="sh" id="sh" class="span3">
+                  <for start="0" end="24">
+					<option value="<#$i#>" <eq name="info['sh']" value="$i">selected</eq>><#$i#>:00点</option>
+					</for>
+					                  
+                  </select>
+                  <label class="span1">到</label>
+                  <select name="eh" id="eh" class="span3">
+                  	<for start="0" end="24">
+					<option value="<#$i#>" <eq name="info['eh']" value="$i">selected</eq>><#$i#>:00点</option>
+					</for>
+                  </select>
+                  <div class="span5"></div>
+              	<span class="span12 help-block">允许用户上网的时间范围。0到23点代表全天开放 0到0点代表全天不开放</span>
+              </div>
+            </div>
+			 <div class="control-group">
+			   <label class="control-label">上网限制 :</label>
+              <div class="controls">
+                 <label>
+                <input type="radio" value="1" name="countflag" <eq name="info['countflag']" value="1">checked</eq>>启用
+                 </label>  
+                 <label> 
+                  <input type="radio" value="0" name="countflag" <eq name="info['countflag']" value="0">checked</eq>>停用 
+    		</label>
+              <span class="help-block">上网限制,可有效防止员工长时间占用无线网络</span>
+              </div>
+			 </div>
+			<div class="control-group">
+			   <label class="control-label">上网允许认证次数 :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder="请输入认证次数"  name="countmax" id="countmax" value="<#$info['countmax']#>"/>
+              <span class="help-block">本日允许使用wifi的次数（在启用上网限制功能后有效）</span>
+              </div>
+			 </div>
+			  <div class="control-group">
+              <label class="control-label">临时上网时间限制 :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder="请输入时间(单位:分钟)"  name="temptime" id="temptime" value="<#$info['temptime']#>"/>
+              <span class="help-block">允许用户临时上网的时间，以用于微信认证(单位:分钟)。注:不限制时间请填:0</span>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">上网时间限制 :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder="请输入时间(单位:分钟)"  name="timelimit" id="timelimit" value="<#$info['timelimit']#>"/>
+              <span class="help-block">允许用户上网的时间(单位:分钟)。注:不限制时间请填:0</span>
+              </div>
+            </div>
+			
+              <div class="control-group">
+              <label class="control-label">上网流量限制 :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder="请输入限制流量(单位:M)"  name="ratelimit" id="ratelimit" value="<#$info['ratelimit']#>"/>
+              <span class="help-block">允许用户的下载流量(单位:M)。注:不限制流量请填:0</span>
+              </div>
+            </div>
+
+			<div class="control-group">
+              <label class="control-label">上网倒计时 :</label>
+              <div class="controls">
+                <input type="text"  class="span11" placeholder="请输入倒计时间(单位:秒)"  name="djs" id="djs" value="<#$info['djs']#>"/>
+              <span class="help-block">使用倒计时模板时，倒计时时间（单位为:秒）</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">认证后行为:</label>
+              <div class="controls">
+               
+              
+                <label>
+                <input type="radio" value="1" name="authaction" <eq name="info['authaction']" value="1">checked</eq>>跳转指定网页
+                 </label>  
+                 <label> 
+                  <input type="radio" value="0" name="authaction" <eq name="info['authaction']" value="0">checked</eq>>不跳转
+    		</label>
+      				 <label>
+      				 <input type="radio" value="2" name="authaction" <eq name="info['authaction']" value="2">checked</eq>>跳转请求网页
+				 </label>       
+                <label>
+      				 <input type="radio" value="3" name="authaction" <eq name="info['authaction']" value="3">checked</eq>>跳转到微官网
+				 </label>   
+				  <span class="help-block">用户通过认证后引导用户行为选择。</span> 
+              </div>
+            </div>
+             
+            <div class="control-group">
+              <label class="control-label">指定跳转URL :</label>
+              <div class="controls">
+                <input type="text" class="span11" placeholder="跳转网页地址 " name="jumpurl" id="jumpurl" value="<#$info['jumpurl']#>"/>
+              </div>
+            </div>
+			<div class="control-group">
+       		<div class="span1"></div>
+       			<div class="alert alert-block span10 hide" id="msgbox"> 
+              <h4 class="alert-heading">提示信息</h4>
+             <div id="alertmsg"></div>
+              </div>
+       		</div>
+       
+            <div class="form-actions">
+              <input type="submit" class="btn btn-success" name="sub" value="保存"/>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      
+    </div>
+    
+  </div>
+  
+</div></div>
+   <include file="Pub:foot"/>
+<script src="<#$Theme['P']['root']#>/matrix/js/jquery.min.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/jquery.ui.custom.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/bootstrap.min.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/matrix.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/jquery.uniform.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/select2.min.js"></script> 
+<script src="<#$Theme['P']['root']#>/matrix/js/common.js"></script> 
+<script>
+$(document).ready(function(){
+	$('input[type=checkbox],input[type=radio],input[type=file]').uniform();
+	
+	$('select').select2();
+
+	$("input[name='authmode[]']").each(function(){
+		if($(this).attr('checked')&&$(this).val()==3){
+			$('#wxauth').show();
+			$('#wxacc').show();
+			$('#wxewm').show();
+		}
+		if($(this).attr('checked')&&$(this).val()==4){
+			$('#wxauth').show();
+			$('#wxacc').show();
+			$('#wxewm').show();
+			$('#wxmima').show();
+
+		}
+		$(this).bind('click',function(){
+				
+				if($(this).attr('checked')&&$(this).val()==3){
+						$('#wxauth').show();
+						$('#wxacc').show();
+						$('#wxewm').show();
+				}else if($(this).attr('checked')&&$(this).val()==4){
+						$('#wxauth').show();
+						$('#wxacc').show();
+						$('#wxewm').show();
+						$('#wxmima').show();
+				}else if(!$(this).attr('checked')&&$(this).val()==3)
+				{
+						$('#wxauth').hide();
+						$('#wxacc').hide();
+						$('#wxewm').hide();
+				}else if(!$(this).attr('checked')&&$(this).val()==4)
+				{
+						$('#wxauth').hide();
+						$('#wxacc').hide();
+						$('#wxewm').hide();
+						$('#wxmima').hide();
+				}
+		});
+	});
+
+	$("input[name='sub']").bind('click',function(){
+		var rs=true;
+		
+		
+		
+		$("input[name='authmode[]']").each(function(){
+			if($(this).attr('checked')&&$(this).val()==3){
+				
+				 var v=$('#wxauthpwd').val();  
+						
+					 if (v == "") {
+						
+						 AlertTips("请输入微信名称",2000);
+					        rs= false;
+					 }
+					 /* if(!isaccount(v)){
+						
+						 AlertTips("请输入微信认证密码",2000);
+					        rs= false;
+					 }   */
+					 var wx=$('#wx').val();
+						
+					 if (wx == "") {
+						
+						 AlertTips("请输入微信公众号",2000);
+					        rs= false;
+					 }
+				
+				}
+			if($(this).attr('checked')&&$(this).val()==4){
+				
+				 var v=$('#wxpass').val();  
+						
+					 if (v == "") {
+						
+						 AlertTips("请输入微信认证密码",2000);
+					        rs= false;
+					 }
+					  if(!isaccount(v)){
+						
+						 AlertTips("请输入微信认证密码",2000);
+					        rs= false;
+					 }   
+					 var wx=$('#wx').val();
+						
+					 if (wx == "") {
+						
+						 AlertTips("请输入微信公众号",2000);
+					        rs= false;
+					 }
+					 var v1=$('#wxauthpwd').val();  
+						
+					 if (v1 == "") {
+						
+						 AlertTips("请输入微信名称",2000);
+					        rs= false;
+					 }
+				
+				}
+		});
+			
+		return rs;
+	});
+});
+</script>
+</body>
+</html>

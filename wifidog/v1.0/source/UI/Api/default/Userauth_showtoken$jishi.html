@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+ <meta http-equiv="refresh" content="<#$waitsecond#>;URL=<#$wifiurl#>">
+ <title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+
+<link  href="<#$Theme['T']['css']#>/login.css"  rel="stylesheet"/>
+<link href="<#$Theme['P']['js']#>/swiper2/idangerous.swiper.css" rel="stylesheet" />
+<link href="<#$Theme['T']['css']#>/media.css" rel="stylesheet"/>
+<link rel="stylesheet" href="<#$Theme['T']['css']#>/newadv/anew.css" type="text/css">
+<STYLE>
+.rel {
+	position:relative;
+}
+
+.abs1 {
+	Z-INDEX: 1; POSITION: absolute;  
+}
+.abs2 {
+	Z-INDEX: 2; width:100%;position:absolute;left:0;bottom:0;background:rgba(0,0,0,0.5);text-align:center;padding:0.5em;color:#a09d9d;text-align:center;
+}
+.abs3{
+ Z-INDEX: 3; position:absolute;right:1.8em;top:1.7em;width:13%;margin:0 auto;height:2.3em;line-height:2.3em;border-radius:0.3em;background:white;opacity:0.50;filter:alpha(opacity=50);-moz-opacity:0.50;text-shadow: 1px 1px 3px rgba(0,0,0,0.6); font-size:1.0em; color:black;
+
+}
+
+</STYLE>
+</head>
+<body>
+
+
+<if condition="C('OPENPUSH') eq 1">
+
+
+<div class="swiper-container rel">
+	      <div class="swiper-wrapper abs1">
+
+     		
+			 <div onClick="location.href='<#:U('userauth/showdlgg',array('id'=>$adsone['id']))#>';" class="swiper-slide" style="background-repeat:repeat;background-size:100% 100%;background-image:url(<#$adsone.pic#>)"></div>
+
+     		     		
+     		
+     		
+     		<volist name="ad" id="vo">
+     		
+                   <div onClick="location.href='<#:U('userauth/showdlgg',array('id'=>$vo['id']))#>';" class="swiper-slide " style="background-repeat:repeat;background-size:100% 100%;background-image:url(<#$vo.pic#>)"></div>
+
+     		     		
+     		
+     		  </volist>   		
+     	
+      	   
+            </div>    
+			
+			<div class="abs2"><include file="public:foot$wifiadv"/> </div>
+            <div id="loadtext" class="abs3"></div>
+    </div>
+   
+
+</if>
+
+
+
+</body>
+<script type="text/javascript" src="<#$Theme['P']['js']#>/swiper2/idangerous.swiper.min.js"></script>
+<script type="text/javascript" src="<#$Theme['P']['js']#>/swiper2/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+             var mySwiper = new Swiper('.swiper-container',{
+        	    loop:true,
+        	    grabCursor: true,
+        	    paginationClickable: true,
+        	   
+        		autoplay:3000,
+        	  });
+  var secs =<#$waitsecond#>; //倒计时的秒数 
+function load(){
+    for(var i=secs;i>=0;i--) 
+    { 
+        window.setTimeout('doUpdate(' + i + ')', (secs-i) * 1000); 
+    } 
+}
+
+function doUpdate(num){ 
+  if(num==0){
+    document.getElementById('loadtext').innerHTML = '认证中......' ;
+  }else{
+    document.getElementById('loadtext').innerHTML = '<font size=5>'+num+'</font>' ;
+  }
+}
+load();
+ </script>
+
+</html>

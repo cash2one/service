@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+
+<title><#$shopinfo[0]['shopname']#></title>
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/css.css"><!--风格-->
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/media.css"><!--自适应-->
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/form.css"><!--自适应-->
+
+<link href="<#$Theme['P']['js']#>/swiper/swiper.css" rel="stylesheet" />
+<script type="text/javascript" src="<#$Theme['P']['js']#>/jquery.js"></script>
+
+<style type="text/css">
+
+
+  .info{width:100%;text-align: left;display: block;height: auto;line-height: 27px;background-color: #ffffff;}   
+
+
+
+</style>
+</head>
+<body>
+	<!-- 头部 BOF-->
+	<include file="public:head$wifiadv"/>
+	<!-- 头部 EOF-->
+<div class="mainbox bgindex clearfix">
+	<!-- 轮播广告 BOF-->
+	<div class="focus">
+		<div class="swiper-container">
+	      <div class="swiper-wrapper">
+	       <notempty name="ad">
+			<volist name="ad" id="vo">
+	     		<div  class="swiper-slide">
+	     		<eq name="vo['mode']" value="1">
+	     		<a href="<#:U('userauth/showad',array('id'=>$vo['id'],'uid'=>$vo['uid']))#>"><img src="<#$vo.ad_thumb#>" width="100%"></a>
+	     		<else/>
+	     		<img src="<#$vo.ad_thumb#>" width="100%">
+	     		</eq>
+	     		</div>
+			</volist>
+			<else/>
+			<div  class="swiper-slide">
+	     		<img src="<#$Theme['P']['root']#>/images/ad/noad01.jpg" width="100%">
+	     		</div>
+				<div  class="swiper-slide">
+	     		<img src="<#$Theme['P']['root']#>/images/ad/noad02.jpg" width="100%">
+	     		</div>
+			</notempty>   		
+	      </div>
+    	</div>
+	</div>
+	<!-- 轮播广告 EOF -->
+	
+	
+		
+		<div id="info" class="info" >	
+		
+								  
+
+<div style="background-color:#f99c00;"><font  size=4>&nbsp&nbsp&nbsp<#$shopxinxi['shopname']#>欢迎您使用本店免费WIFI</font><hr size=1 color="#909092"></div>
+
+
+<div style="padding-left:10px;height:60px; "> 
+
+    <div style="width:100%px;height:50px;float:left;"><img src="<#$Theme['P']['root']#>/images/telzhu.png" width="60" height="60"  /></div> 
+
+    
+<div style="width:100%px;height:50px;line-height:26px;"> 
+
+        <p>&nbsp&nbsp&nbsp<font size=4>为了向您提供安全可靠的免费Wi-Fi服务，您需要登录确认！</font></p> 
+
+       
+
+    </div>
+
+    
+	</div> 
+	<div class="tips" id="tips"></div>
+<div style="padding-left:10px";>
+	<label class="lb_title mr-tb-5" for="txt_user">手机号码:</label>
+
+	<div class="iptbox corner-all-4 mr-tb-5 ">
+ <input type="tel" class="ipt" name="txt_user" id="txt_user" placeholder="输入手机号码" value="" maxlength="11">
+	</div>
+
+	<label class="lb_title mr-tb-5"  for="password">验证码:</label>
+	
+	<div class="ugbox">
+		<div style="width:8em;" >
+			<div class="iptbox corner-all-4 mr-tb-5 ">
+		 		<input type="tel" class="ipt"  name="smscode" id="smscode"  placeholder="输入验证码" value="">
+			</div>
+		</div>
+	<div class="boxf1" style="padding:0em .5em;">
+		<a  class="btn_base2 corner-all-10  c-eee  t-333  uba b-wh " href="javascript:void(0);" id="btn_getcode">获取验证码</a>
+	</div>
+	</div>  </div><br>
+
+</div>  
+	
+
+	
+	
+	<div align="center"> <input type="image" id="btn_reg"  value="点击免费上网" href="javascript:void(0);" src="<#$Theme['P']['root']#>/images/wang.png" width="95%px" height="54px" > </div>
+	
+	<!-- 功能菜单 BOF-->
+		<include file="public:foot$wifiadv"/>
+</div>
+
+
+<script type="text/javascript" src="<#$Theme['P']['js']#>/swiper/swiper.js"></script>
+<script type="text/javascript" src="<#$Theme['P']['js']#>/jquery.js"></script>
+<script type="text/javascript" src="<#$Theme['T']['js']#>/api.js"></script>
+<script type="text/javascript">
+
+         var mySwiper = new Swiper('.swiper-container',{
+        	    loop:true,
+        	    grabCursor: true,
+        	    paginationClickable: true,
+        	    calculateHeight:true,
+        		autoplay:3000,
+        	  });
+           $(function(){
+	           	$.ajax({
+				  	url: '<#:U('login/countad')#>',
+			        type: "post",
+					data:{
+						'ids':"<#$adid#>",
+						},
+					dataType:'json',
+					error:function(){},
+					success:function(data){}
+				  });
+           	});
+ </script>
+
+ <script>
+
+  var speed = 1000; // 速度 一般不用修改		
+var djwait = 120; // 停留时间 单位：秒				
+
+function updateinfo(){					
+	if(djwait == 0){
+		$("#btn_getcode").html ( "获取验证码");
+	     djwait = 120;
+		
+	}else{
+	   $("#btn_getcode").html (djwait);
+		djwait--;
+		window.setTimeout("updateinfo()",speed);
+	}
+}
+
+ var smscode=document.getElementById('smscode');
+
+	var bajax=false;
+	var blive=false;
+	var dcount=1*30;
+	function ChangeLive(){
+		dcount--;
+		if(dcount<=0){
+			if(blive){
+				blive=false;
+			}
+		}else{
+			setTimeout("ChangeLive()",1000);
+		}
+	}
+	$(document).ready(function(){
+		  $("input").each(function(){
+				$(this).bind("focusin",function(){
+				
+					$(this).parent().addClass('us-input-focus');
+				});
+				$(this).bind("focusout",function(){
+					$(this).parent().removeClass('us-input-focus');
+				
+				});
+			  });
+		 
+		  
+		$("#btn_getcode").bind('click',function(){
+		var u=$('#txt_user').val();
+			if(bajax){
+				Tips("tips", "请耐心等待...", true, 1000);
+				return false;
+			}
+			if(blive){
+				Tips("tips", dcount+"秒后可以再试获取验证码", true, 1000);
+				return false;
+			}
+			var u=$('#txt_user').val();
+			if(u==""){
+				Tips("tips", "请输入手机号码", true, 1000);
+				
+				 return false;
+			}
+			bajax=true;
+			dcount=1*120;
+			$.ajax({
+			  	url: '<#:U('userauth/smssendtelzhu')#>',
+		        type: "post",
+				data:{
+					'phone':u,
+					},
+				dataType:'json',
+				error:function(){
+						 bajax=false;
+						 Tips("tips", "服务器忙，请稍候再试", true, 1500);
+						
+				},
+				success:function(data){
+							bajax=false;
+							
+							if(data.error==0){
+
+							  if(data.info==0){
+
+							  smscode.value=data.msg;
+
+							  }else{
+
+							  Tips("tips", data.msg, false, 1500);
+							  
+							  }		
+														
+
+								blive=true;
+								setTimeout("ChangeLive()",1000);
+								updateinfo();
+							}else{
+								Tips("tips", data.msg, true, 1500);
+							}
+						
+						
+				}
+			  });
+			
+			
+		});
+		
+		$("#btn_reg").bind('click',function(){
+			
+			var u=$('#txt_user').val();
+			var p=$('#smscode').val();
+			 if (u == "") {
+			        Tips("tips", "请输入手机号码", true, 1000);
+			      return false;
+			 }
+			  if (p == "") {
+				  Tips("tips", "请填写验证码", true, 1000);
+			        return false;
+			  }
+			  if(p.length!=6){
+				  Tips("tips", "验证码位数必须是6位", true, 1000);
+			      return false;
+			}
+			  $.ajax({
+				  	url: '<#:U('userauth/smslogin')#>',
+			        type: "post",
+					data:{
+						'user':u,
+						'smscode':p,
+						'__hash__':$('input[name="__hash__"]').val()
+						},
+					dataType:'json',
+					error:function(){
+							 Tips("tips", "服务器忙，请稍候再试", true, 1500);
+							},
+					success:function(data){
+							if(data.error==0){
+								Tips("tips", "操作成功", false, 1500);
+								setTimeout("goUrl('"+data.url+"')",1500);
+							}else{
+								Tips("tips", data.msg, true, 2500);
+							}
+					}
+				  });
+
+		});
+		$('#btn_back').bind('click',function(){
+			history.go(-1);
+		});
+	});
+
+	function goUrl(url){
+		location.href=url;
+	}
+</script>
+</body>
+</html>

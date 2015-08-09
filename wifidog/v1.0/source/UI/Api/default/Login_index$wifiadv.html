@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
+
+<title><#$shopinfo[0]['shopname']#></title>
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/css.css"><!--风格-->
+<link rel="stylesheet" type="text/css" href="<#$Theme['P']['root']#>/tmpl/wifiadv/css/media.css"><!--自适应-->
+
+<link href="<#$Theme['P']['js']#>/swiper/swiper.css" rel="stylesheet" />
+<script type="text/javascript" src="<#$Theme['P']['js']#>/jquery.js"></script>
+<style>
+.btnbox img {
+	width: 70px;
+}
+#bbox {
+	margin-top: -20px
+}
+</style>
+</head>
+<body>
+	<!-- 头部 BOF-->
+	<include file="public:head$wifiadv"/>
+	<!-- 头部 EOF-->
+<div class="mainbox bgindex clearfix">
+	<!-- 轮播广告 BOF-->
+	<div class="focus">
+		<div id='aaa' class="swiper-container" style='height:350px'>
+	      <div id='bbb' class="swiper-wrapper" style='height:350px'>
+	       <notempty name="ad">
+			<volist name="ad" id="vo">
+	     		<div id='ccc' class="swiper-slide" style='height:350px'>
+	     		<eq name="vo['mode']" value="1">
+	     		<a href="<#:U('userauth/showad',array('id'=>$vo['id'],'uid'=>$vo['uid']))#>"><img src="<#$vo.ad_thumb#>" style='height:350px;width:100%'></a>
+	     		<else/>
+	     		<img src="<#$vo.ad_thumb#>" style='height:350px;width:100%'>
+	     		</eq>
+	     		</div>
+			</volist>
+			<else/>
+			<div  class="swiper-slide">
+	     		<img src="<#$Theme['P']['root']#>/images/ad/noad01.jpg" width="100%">
+	     		</div>
+				<div  class="swiper-slide">
+	     		<img src="<#$Theme['P']['root']#>/images/ad/noad02.jpg" width="100%">
+	     		</div>
+			</notempty>   		
+	      </div>
+    	</div>
+	</div>
+	<!-- 轮播广告 EOF -->
+
+<!-- <div class="wifinote">
+		<#$shopxinxi['shopname']#>欢迎您使用本店免费WIFI222 </div> -->
+		
+	
+	<!-- 功能菜单 BOF-->
+	<div class="bbox"  id="bbox" >
+			<div class="boxcontent">
+			<eq name="show" value="1">
+			<if condition="$authmode['open'] eq true" >
+				<eq name="authmode['overmax']" value="0">
+					<eq name="authmode['wx']" value="1">
+						<a href="<#:U('userauth/weixin')#>"><!-- <a href="<#:U('userauth/wxauth')#>"> -->
+							<div class="btnbox">
+								<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/01.png"/>
+								<div class="btntitle">
+								微信认证
+								</div>
+							</div>
+						</a>
+					</eq>
+					<eq name="authmode['wxmm']" value="1">
+						<a href="<#:U('userauth/wxauth')#>">
+							<div class="btnbox">
+								<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/01.png"/>
+								<div class="btntitle">
+								微信密码认证
+								</div>
+							</div>
+						</a>
+					</eq>
+					<eq name="authmode['allow']" value="1">
+					<a href="<#:U('userauth/noAuth')#>">
+						<div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/02.png"/>
+							<div class="btntitle">
+							一键上网
+							</div>
+						</div>
+					</a>
+					</eq>
+						<eq name="authmode['phone']" value="1">
+ <if condition="$duanxin eq 0"><a href="<#:U('userauth/mobile')#>"><else /><a href="<#:U('userauth/mobileff')#>"></if> 
+					  
+					
+						<div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/03.png"/>
+							<div class="btntitle">
+							手机认证
+							</div>
+						</div>
+					</a>
+						</eq>
+						<eq name="authmode['reg']" value="1">
+<if condition="$duanxin eq 0"><a href="<#:U('userauth/reg')#>"><else /><a href="<#:U('userauth/regff')#>"></if> 
+						<div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/04.png"/>
+							<div class="btntitle">
+							注册认证
+							</div>
+						</div>
+					</a> 
+					
+					<a href="<#:U('userauth/login')#>">
+						<div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/05.png"/>
+							<div class="btntitle">
+							用户登录
+							</div>
+						</div>
+					</a>
+					</eq>
+					<a href="<#:U('userauth/comments')#>">
+						<div class="btnbox">
+							<img src="<#$Theme['P']['root']#>/tmpl/wifiadv/img/06.png"/>
+							<div class="btntitle">
+							客户留言
+							</div>
+						</div>
+					</a>
+					<div class="clear"></div>
+				<else/>
+					<h2 style="text-align: center;line-height:40px;">每日免费上网次数是<#$shopinfo[0]['countmax']#>次 </br>
+				</eq>
+			<else/>
+				<h2 style="text-align: center;line-height:40px;">当前时间不提供免费上网服务.</br>
+				<eq name="authmode['openflag']" value="true">
+					上网开放时间为每日 <#$authmode.opensh#>:00点至<#$authmode.openeh#>:00点
+				</eq>
+				</h2>
+			</if>
+			</eq>
+				
+			</div>
+			
+		
+	</div>  
+	
+	<!-- 功能菜单 BOF-->
+		<include file="public:foot$wifiadv"/>
+</div>
+
+
+<script type="text/javascript" src="<#$Theme['P']['js']#>/swiper/swiper.js"></script>
+<script type="text/javascript">
+var btn1=document.getElementById('button1');
+var box1=document.getElementById('bbox');
+var info1=document.getElementById('info');
+function button()
+
+{
+if(btn1.value=="点击免费上网"){box1.style.display='';info1.style.display='none';btn1.value="点击免费上网 ";
+	}else{box1.style.display='none';btn1.value="点击免费上网";info1.style.display='';}
+//$(".bbox").show();
+
+
+}
+           var mySwiper = new Swiper('.swiper-container',{
+        	    loop:true,
+        	    grabCursor: true,
+        	    paginationClickable: true,
+        	    calculateHeight:true,
+        		autoplay:3000,
+        	  });
+           $(function(){
+	           	$.ajax({
+				  	url: '<#:U('login/countad')#>',
+			        type: "post",
+					data:{
+						'ids':"<#$adid#>",
+						},
+					dataType:'json',
+					error:function(){},
+					success:function(data){}
+				  });
+           	});
+ </script>
+ 
+<style>
+#aaa #bbb #ccc{
+	width: 100%
+}
+</style>
+<script>
+function adapt(){ 
+var tableWidth = $("#imgTable").width(); //表格宽度 
+var img = new Image(); 
+img.src =$('#imgs').attr("src") ; 
+var imgWidth = img.width; //图片实际宽度 
+if(imgWidth<tableWidth){ 
+$('#imgs').attr("style","width: auto"); 
+}else{ 
+$('#imgs').attr("style","width: 100%"); 
+} 
+} 
+</script>
+</body>
+</html>
