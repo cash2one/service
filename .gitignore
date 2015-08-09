@@ -27,3 +27,5 @@ build/Release
 node_modules
 
 wifidog/v1.0/source/Runtime/Cache/
+wifidog/v1.0/source/Runtime/Logs/
+wifidog/v1.0/source/Runtime/Temp/
