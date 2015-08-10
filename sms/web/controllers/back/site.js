@@ -1,11 +1,13 @@
 /*!
- * zswhcb-portal
- * Copyright(c) 2015 zswhcb-portal <3203317@qq.com>
+ * blog
+ * Copyright(c) 2015 foreworld.net <3203317@qq.com>
  * MIT Licensed
  */
 'use strict';
 
-var conf = require('../settings');
+var conf = require('../../settings');
+
+var util = require('speedt-utils');
 
 var fs = require('fs'),
 	path = require('path'),
@@ -13,16 +15,26 @@ var fs = require('fs'),
 	qs = require('querystring'),
 	velocity = require('velocityjs');
 
-var title = '郑州镭光科技发展有限公司',
-	virtualPath = '/';
+/**
+ * 
+ * @params
+ * @return
+ */
+function getTopMessage(){
+	var t = new Date();
+	var y = t.getFullYear();
+	var m = util.padLeft(t.getMonth() + 1, '0', 2);
+	var d = util.padLeft(t.getDate(), '0', 2);
+	return '欢迎您。今天是'+ y +'年'+ m +'月'+ d +'日。';
+};
 
 exports.indexUI = function(req, res, next){
-	res.render('Index', {
-		title: title,
+	res.render('back/Index', {
+		conf: conf,
+		title: conf.corp.name,
+		topMessage: getTopMessage(),
 		description: '',
-		keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
-		virtualPath: virtualPath,
-		cdn: conf.cdn
+		keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5'
 	});
 };
 

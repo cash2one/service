@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+	<head>
+		#parse('front/_pagelet/Common.IndexHeader.html')
+		<link rel='stylesheet' type='text/css' href='$!{conf.html.external_res}assets/css/olx/olx.css?v3' media='screen' />
+	</head>
+	<body>
+		#parse('back/_pagelet/Side.TopBanner.html')
+		<header id='header'></header>
+		<div class='container'>
+			<div class='row'>
+				<div class='col-sm-12 col-md-12'>
+					#parse('front/_pagelet/Side.TopMessage.html')
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-12 col-md-12'>
+					<div class='panel panel-default'>
+						<div class='panel-body'>
+							<ol class='breadcrumb'>
+								<li>
+									<i class='fa fa-home fa-fw'></i>
+									<a href='/'>SMS 短信</a></li>
+								<li class='active'><a href='javascript:;'>发送短信</a></li>
+							</ol>
+							<form class='form-horizontal' id='editFrm' role='form' onsubmit='return false;' data-url=''>
+								<div class='form-group'>
+									<label class='col-sm-12' for='smsFrm_Title'>短信内容</label>
+									<div class='col-sm-12'>
+										<textarea class='form-control' rows='3' name='Content' id='smsFrm_content' placeholder='' required='required'></textarea>
+									</div>
+								</div>
+								<div class='form-group'>
+									<label class='col-sm-12' for='smsFrm_Photo'>添加测试号（<span style='color:red'>号码之间按回车</span>）</label>
+									<div class='col-sm-12'>
+										<textarea class='form-control' rows='3' name='TestMobile' id='smsFrm_testMobile' placeholder='13837186852'>13837186852</textarea>
+									</div>
+								</div>
+								<div class='form-group'>
+									<label class='col-sm-12' for='smsFrm_Title'>设置数量（条）</label>
+									<div class='col-sm-12'>
+										<input type='text' class='form-control' name='SmsNum' id='smsFrm_smsNum' placeholder='0' value='0'>
+									</div>
+								</div>								
+								<div class='form-group'>
+									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+										<input type='checkbox' checked> 业主
+									</div>
+									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+										<input type='checkbox' checked> 银行专员
+									</div>
+								</div>
+								<div class='form-group'>
+									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+										<input type='checkbox'> 车主
+									</div>
+									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+										<input type='checkbox'> XXXX
+									</div>
+								</div>
+								<div class='form-group'>
+									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+										<input type='checkbox' checked> 高级会员
+									</div>
+									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+										<input type='checkbox'> XXXX
+									</div>
+								</div>
+								<div class='form-group'>
+									<label class='col-sm-12' for='smsFrm_channel'>通道选择</label>
+									<div class='col-sm-12 fontSize'>
+										<select class='form-control' id='smsFrm_channel' name='Channel'>
+											<option value='5' selected>通道一</option>
+											<option value='1'>通道二</option>
+										</select>
+									</div>
+								</div>
+								<div class='form-group'>
+									<label class='col-sm-12' for='smsFrm_Title' style='color: red'>校验密码</label>
+									<div class='col-sm-12'>
+										<input type='password' class='form-control' name='Password' id='smsFrm_password' placeholder='必填'>
+									</div>
+								</div>
+								<div class='form-group'>
+									<div class='col-sm-12'>
+										<button id='editFrm_btn_sub' type='button' class='btn btn-primary'>发送</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		#parse('front/_pagelet/Side.IndexFooter.html')
+		#parse('front/_pagelet/Side.BackTop.html')
+		#parse('front/_pagelet/Common.IndexJs.html')
+		#parse('front/_pagelet/Common.LastJs.html')
+	</body>
+</html>
