@@ -79,7 +79,11 @@ exports.login_success = function(req, res, next){
  */
 exports.login_validate = function(req, res, next){
 	if(2 === req.session.lv) return next();
-	if(req.xhr) return next(new Error('无权访问'));
+	var result = { success: false };
+	if(req.xhr){
+		result.status = 'timeout';
+		return res.send(result);
+	}
 	res.redirect('/user/login?refererUrl='+ req.url);
 };
 

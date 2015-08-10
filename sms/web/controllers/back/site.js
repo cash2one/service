@@ -21,7 +21,7 @@ var biz = {
 };
 
 /**
- * 
+ *
  * @params
  * @return
  */
@@ -57,7 +57,13 @@ exports.indexUI = function(req, res, next){
 
 	biz.zone.findCitys('3', function (err, docs){
 		if(err) return ep.emit('error', err);
-		ep.emit('citys', docs);
+		var citys = docs;
+		var city_1 = citys[0];
+		biz.zone.findRegions(city_1.id, function (err, docs){
+			if(err) return ep.emit('error', err);
+			city_1.children = docs;
+			ep.emit('citys', citys);
+		});
 	});
 };
 
@@ -178,6 +184,11 @@ function startSend(data, res, mobiles){
 exports.sendSMS = function(req, res, next){
 	var result = { success: false },
 		data = req._data;
+	// console.log(data)
+
+	result.data = data;
+	result.success = true;
+	res.send(result);
 
 	// data = {
 	// 	Account: 'leiguang0371',
@@ -187,7 +198,7 @@ exports.sendSMS = function(req, res, next){
 	// 	Channel: '5'
 	// };
 
-	var mobiles = getMobile(data, res);
+	// var mobiles = getMobile(data, res);
 
 	// var postData = require('querystring').stringify({
 	// 	action: 'send',

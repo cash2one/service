@@ -3,7 +3,7 @@
 	<head>
 		#parse('front/_pagelet/Common.IndexHeader.html')
 		<link rel='stylesheet' type='text/css' media='screen' href='$!{conf.html.cdn}bootstrap/3.2.0/docs/assets/css/docs.min.css?v3.2.0' />
-		<link rel='stylesheet' type='text/css' href='$!{conf.html.external_res}assets/css/olx/olx.css?v3' media='screen' />
+		<link rel='stylesheet' type='text/css' media='screen' href='$!{conf.html.external_res}assets/css/olx/olx.css?v3' />
 		<style type='text/css'>
 		.bs-callout {
 			padding: 0 20px;
@@ -37,157 +37,42 @@
 									<a href='/'>SMS 短信</a></li>
 								<li class='active'><a href='javascript:;'>发送短信</a></li>
 							</ol>
-							<form class='form-horizontal' id='editFrm' role='form' onsubmit='return false;' data-url=''>
+							<form class='form-horizontal' id='smsFrm' role='form' onsubmit='return false;' data-url='/sendSMS'>
 								<div class='form-group'>
-									<label class='col-sm-12' for='smsFrm_Title'>短信内容（还可以录入<span style='color:red'>70</span>个字）</label>
+									<label class='col-sm-12' for='smsFrm_content'>短信内容（还可以录入<span style='color:red'>70</span>个字）</label>
 									<div class='col-sm-12'>
 										<textarea class='form-control' rows='3' name='Content' id='smsFrm_content' placeholder='' required='required'></textarea>
 									</div>
 								</div>
 								<div class='form-group'>
-									<label class='col-sm-12' for='smsFrm_Photo'>添加测试号（<span style='color:red'>号码之间按回车</span>）</label>
+									<label class='col-sm-12' for='smsFrm_testMobile'>添加测试号（<span style='color:red'>号码之间按回车</span>）</label>
 									<div class='col-sm-12'>
-										<textarea class='form-control' rows='3' name='TestMobile' id='smsFrm_testMobile' placeholder='13837186852'>13837186852</textarea>
+										<textarea class='form-control' rows='3' name='TestMobile' id='smsFrm_testMobile' placeholder='138371xxxx1'></textarea>
 									</div>
-								</div><!-- 选择地区 -->
+								</div>
 								<div class='form-group'>
-									<label class='col-sm-12' for='smsFrm_channel'>选择地区</label>
+									<label class='col-sm-12' for='smsFrm_zone'>选择地区</label>
 									<div class='col-sm-12 fontSize'>
-										<select class='form-control' id='smsFrm_channel' name='Channel'>
+										<select class='form-control' id='smsFrm_zone' name='Zone'>
 											#foreach($city in $data.citys)
-											<option value='$!{city.id}'>$!{city.ZONE_NAME}</option>
+											<option value='$!{city.id}'#if($velocityCount == 1) selected#end>$!{city.ZONE_NAME}</option>
 											#end
 										</select>
 									</div>
 								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 金水区
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 二七区
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 中原区
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 管城区
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 惠济区
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 新郑市
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 新密市
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 巩义市
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 登封市
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 中某县
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 上街区
-									</div>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 荥阳市
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
-										<input type='checkbox' checked> 其他
-									</div>
-								</div><!-- 号码筛选 -->
+								<span id='span_zone_regions'>
+								</span><!-- 选择地区 -->
 								<div class='form-group'>
 									<label class='col-sm-12'>号码筛选</label>
 								</div>
-								<div class='bs-callout bs-callout-info'>
-									<h6>汽车车主</h6>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 20万以下 <span class="badge">34,543</span>
-									</div>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 20万-50万 <span class="badge">34,543</span>
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 50万以上 <span class="badge">34,543</span>
-									</div>
-								</div>
-								<div class='bs-callout bs-callout-danger'>
-									<h6>金融产品用户</h6>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 银行 <span class="badge">34,543</span>
-									</div>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 保险理财 <span class="badge">34,543</span>
-									</div>
-								</div>
-								<div class='bs-callout bs-callout-warning'>
-									<h6>其他</h6>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 商超会员 <span class="badge">34,543</span>
-									</div>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 房屋业主 <span class="badge">56,564</span>
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 餐饮业客户 <span class="badge">34,543</span>
-									</div>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 娱乐业客户 <span class="badge">56,564</span>
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 医院登记 <span class="badge">34,543</span>
-									</div>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 美容美体客户 <span class="badge">56,564</span>
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 珠宝业客户 <span class="badge">34,543</span>
-									</div>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 服饰业客户 <span class="badge">56,564</span>
-									</div>
-								</div>
-								<div class='form-group zone'>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 私营业主 <span class="badge">34,543</span>
-									</div>
-									<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-										<input type='checkbox'> 国企职工 <span class="badge">56,564</span>
-									</div>
-								</div>
+								<span id='span_code_filter'>
+								</span><!-- 号码筛选 -->
 								<div class='form-group'>
 									<label class='col-sm-12'>当前已选中（<span style='color:red'>50,000</span>）个号码</label>
 								</div>
 								<div class='form-group'>
 									<div class='col-sm-12'>
-										<button id='editFrm_btn_sub' type='button' class='btn btn-primary'>发送短信</button>
+										<button id='smsFrm_btn_sub' type='button' class='btn btn-primary'>发送短信</button>
 									</div>
 								</div>
 							</form>
@@ -200,5 +85,259 @@
 		#parse('front/_pagelet/Side.BackTop.html')
 		#parse('front/_pagelet/Common.IndexJs.html')
 		#parse('front/_pagelet/Common.LastJs.html')
+		<span style='display:none;' id='span_zone_regions_1'>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 金水区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 二七区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 中原区
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 管城区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 惠济区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 新郑市
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 新密市
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 巩义市
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 登封市
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 中牟县
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 上街区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 荥阳市
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 其他
+				</div>
+			</div>
+		</span>
+		<span style='display:none;' id='span_zone_regions_2'>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 涧西区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 西工区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 洛龙区
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 老城区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 栾川县
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 伊川县
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 瀍河回族区
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 宜阳县
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 新安县
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 偃师市
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 孟津县
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 高新区
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 汝阳县
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 洛宁县
+				</div>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 吉利区
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-4 col-md-4 col-xs-4 fontSize'>
+						<input type='checkbox' checked> 涧西区
+				</div>
+			</div>
+		</span>
+		<span style='display:none;' id='span_code_filter_1'>
+			<div class='bs-callout bs-callout-info'>
+				<h6>汽车车主</h6>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 20万以下 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 20万-50万 <span class="badge">34,543</span>
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 50万以上 <span class="badge">34,543</span>
+				</div>
+			</div>
+			<div class='bs-callout bs-callout-danger'>
+				<h6>金融产品用户</h6>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 银行 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 保险理财 <span class="badge">34,543</span>
+				</div>
+			</div>
+			<div class='bs-callout bs-callout-warning'>
+				<h6>其他</h6>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 商超会员 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 房屋业主 <span class="badge">56,564</span>
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 餐饮业客户 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 娱乐业客户 <span class="badge">56,564</span>
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 医院登记 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 美容美体客户 <span class="badge">56,564</span>
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 珠宝业客户 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 服饰业客户 <span class="badge">56,564</span>
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 私营业主 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 国企职工 <span class="badge">56,564</span>
+				</div>
+			</div>
+		</span>
+		<span style='display:none;' id='span_code_filter_2'>
+			<div class='bs-callout bs-callout-info'>
+				<h6>汽车车主</h6>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 20万以下 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 20万-50万 <span class="badge">34,543</span>
+				</div>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 50万以上 <span class="badge">34,543</span>
+				</div>
+			</div>
+			<div class='bs-callout bs-callout-danger'>
+				<h6>金融产品用户</h6>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 银行 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 保险理财 <span class="badge">34,543</span>
+				</div>
+			</div>
+			<div class='bs-callout bs-callout-warning'>
+				<h6>其他</h6>
+			</div>
+			<div class='form-group zone'>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 商超会员 <span class="badge">34,543</span>
+				</div>
+				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
+					<input type='checkbox'> 房屋业主 <span class="badge">56,564</span>
+				</div>
+			</div>
+		</span>
+		<script type='text/javascript'>
+		(function(){
+			var p1 = $('#smsFrm_zone').children('option:selected').val();
+			$('#span_zone_regions').html($('#span_zone_regions_'+ p1).html());
+			// code filter
+			$('#span_code_filter').html($('#span_code_filter_'+ p1).html());
+		})();
+
+		$('#smsFrm_zone').change(function(){
+			var p1 = $(this).children('option:selected').val();
+			$('#span_zone_regions').html($('#span_zone_regions_'+ p1).html());
+			// code filter
+			$('#span_code_filter').html($('#span_code_filter_'+ p1).html());
+		});
+
+		$('#smsFrm_btn_sub').click(function(){
+			$('#smsFrm').olxForm('submit', [function(){
+				// TODO
+			}, function (valiResu){
+				// TODO
+			}, function (data){
+				if(!data.success){
+					if('timeout' === data.status){
+						return location.reload();
+					}
+				}
+			}]);
+		});
+		</script>
 	</body>
 </html>
