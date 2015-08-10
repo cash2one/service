@@ -7,13 +7,18 @@
 
 var conf = require('../../settings');
 
-var util = require('speedt-utils');
+var util = require('speedt-utils'),
+	EventProxy = require('eventproxy');
 
 var fs = require('fs'),
 	path = require('path'),
 	cwd = process.cwd(),
 	querystring = require('querystring'),
 	velocity = require('velocityjs');
+
+var biz = {
+	zone: require('../../biz/zone')
+};
 
 /**
  * 
@@ -30,16 +35,29 @@ function getTopMessage(req){
 };
 
 exports.indexUI = function(req, res, next){
-	res.render('back/Index', {
-		conf: conf,
-		title: conf.corp.name,
-		topMessage: getTopMessage(req),
-		description: '',
-		keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
-		loginState: 2 === req.session.lv,
-		data: {
-			user: req.session.user
-		}
+
+	var ep = EventProxy.create('citys', function (citys){
+
+		res.render('back/Index', {
+			conf: conf,
+			title: conf.corp.name,
+			topMessage: getTopMessage(req),
+			description: '',
+			keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
+			loginState: 2 === req.session.lv,
+			data: {
+				citys: citys
+			}
+		});
+	});
+
+	ep.fail(function (err){
+		next(err);
+	});
+
+	biz.zone.findCitys('3', function (err, docs){
+		if(err) return ep.emit('error', err);
+		ep.emit('citys', docs);
 	});
 };
 

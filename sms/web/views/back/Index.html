@@ -54,8 +54,9 @@
 									<label class='col-sm-12' for='smsFrm_channel'>选择地区</label>
 									<div class='col-sm-12 fontSize'>
 										<select class='form-control' id='smsFrm_channel' name='Channel'>
-											<option value='5' selected>郑州市</option>
-											<option value='1'>洛阳市</option>
+											#foreach($city in $data.citys)
+											<option value='$!{city.id}'>$!{city.ZONE_NAME}</option>
+											#end
 										</select>
 									</div>
 								</div>
