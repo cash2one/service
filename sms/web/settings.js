@@ -23,5 +23,11 @@ module.exports = {
 		external_res: 'http://www.foreworld.net/public/',
 		pagesize: 10,
 		cache_time: 1000 * 60 * 60
-	}
+	}, sms: [{
+		account: 'leiguang',
+		password: 'password'
+	}, {
+		account: 'leiguang0371',
+		password: '818287'
+	}]
 };

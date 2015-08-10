@@ -12,7 +12,7 @@ var util = require('speedt-utils');
 var fs = require('fs'),
 	path = require('path'),
 	cwd = process.cwd(),
-	qs = require('querystring'),
+	querystring = require('querystring'),
 	velocity = require('velocityjs');
 
 /**
@@ -20,21 +20,26 @@ var fs = require('fs'),
  * @params
  * @return
  */
-function getTopMessage(){
+function getTopMessage(req){
+	var user = req.session.user;
 	var t = new Date();
 	var y = t.getFullYear();
 	var m = util.padLeft(t.getMonth() + 1, '0', 2);
 	var d = util.padLeft(t.getDate(), '0', 2);
-	return '欢迎您。今天是'+ y +'年'+ m +'月'+ d +'日。';
+	return '欢迎您，'+ user.CORP_NAME +'。今天是'+ y +'年'+ m +'月'+ d +'日。';
 };
 
 exports.indexUI = function(req, res, next){
 	res.render('back/Index', {
 		conf: conf,
 		title: conf.corp.name,
-		topMessage: getTopMessage(),
+		topMessage: getTopMessage(req),
 		description: '',
-		keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5'
+		keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
+		loginState: 2 === req.session.lv,
+		data: {
+			user: req.session.user
+		}
 	});
 };
 
@@ -235,3 +240,55 @@ var pool = mysql.createPool({
 	database: 'sms',
 	port: 22306
 });
+
+
+
+
+
+function startSend_1(content, cb){
+	var result = { success: false };
+
+	var postData = querystring.stringify({
+		action: 'send',
+		userid: 766,
+		account: 'leiguang',
+		password: 'password',
+		content: content,
+		mobile: mobiles,
+		checkcontent: 0,
+		Channel: 5
+	});
+
+	var options = {
+		hostname: '114.215.196.225',
+		port: 9001,
+		path: '/sms.aspx?action=send',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'Content-Length': postData.length
+		}
+	};
+
+	var req = http.request(options, function (res1) {
+		// console.log('STATUS: '+ res.statusCode);
+		// console.log('HEADERS: '+ JSON.stringify(res.headers));
+		// res.setEncoding('utf8');
+		res1.on('data', function (chunk) {
+			result.code = 2;
+
+			parseString(chunk, function (err, resu) {
+				result.msg = resu;
+				res.send(result);
+			});
+		});
+	});
+
+	req.on('error', function (ex) {
+		console.log('problem with request: '+ ex.message);
+	});
+
+	// write data to request body
+	req.write(postData);
+	req.end();
+}
