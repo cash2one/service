@@ -15,6 +15,7 @@ var str1 = '参数异常';
 module.exports = function(app){
 	/* back */
 	app.get('/', back.user.login_validate, back.site.indexUI);
+	app.get('/changeZone/:zone_code', back.user.login_validate, back.site.changeZone);
 
 	app.post('/sendSMS$', valiPostData, back.user.login_validate, back.site.sendSMS);
 
