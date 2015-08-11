@@ -19,6 +19,7 @@ var fs = require('fs'),
 var macros = require('../../lib/macro');
 
 var biz = {
+	send_plan: require('../../biz/send_plan'),
 	mobile_type: require('../../biz/mobile_type'),
 	zone: require('../../biz/zone')
 };
@@ -44,7 +45,7 @@ function getTopMessage(req){
  */
 exports.indexUI = function(req, res, next){
 
-	var ep = EventProxy.create('citys', function (citys){
+	var ep = EventProxy.create('citys', 'send_plan', function (citys, send_plan){
 
 		res.render('back/Index', {
 			conf: conf,
@@ -54,6 +55,7 @@ exports.indexUI = function(req, res, next){
 			keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
 			loginState: 2 === req.session.lv,
 			data: {
+				send_plan: send_plan,
 				citys: citys
 			}
 		});
@@ -79,6 +81,14 @@ exports.indexUI = function(req, res, next){
 		// 	docs = treeNode(docs);
 		// 	ep.emit('mobile_type', docs);
 		// });
+	});
+
+	var user = req.session.user;
+
+	biz.send_plan.findFirstByUser(user.id, function (err, doc){
+		if(err) return ep.emit('error', err);
+		doc = doc || { PLAN_NUM: 0 };
+		ep.emit('send_plan', doc);
 	});
 };
 

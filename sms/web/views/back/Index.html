@@ -51,9 +51,9 @@
 									</div>
 								</div>
 								<div class='form-group'>
-									<label class='col-sm-12' for='smsFrm_smsNum'>今日您的预约发送量为<span style='color:red'>#num2Money(15000)</span>条</label>
+									<label class='col-sm-12' for='smsFrm_smsNum'>今日您的预约发送量为<span style='color:red'>#num2Money($!{data.send_plan.PLAN_NUM})</span>条</label>
 									<div class='col-sm-12'>
-										<input type='text' class='form-control' name='SmsNum' id='smsFrm_smsNum' placeholder='0' value='15000' readonly>
+										<input type='text' class='form-control' name='SmsNum' id='smsFrm_smsNum' placeholder='0' value='$!{data.send_plan.PLAN_NUM}' readonly>
 									</div>
 								</div>
 								<div class='form-group'>
