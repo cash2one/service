@@ -74,7 +74,7 @@
 								<span id='span_code_filter'>
 								</span><!-- 号码筛选 -->
 								<div class='form-group'>
-									<label class='col-sm-12'>当前已选中（<span style='color:red'>50,000</span>）个号码</label>
+									<label class='col-sm-12'>当前已选中（<span style='color:red' id='calcNum'>0</span>）个号码</label>
 								</div>
 								<div class='form-group'>
 									<div class='col-sm-12'>
@@ -104,7 +104,7 @@
 		(function(){
 			var p1 = $('#smsFrm_zone').children('option:selected').val();
 			changeZone(p1);
-			// // code filter
+			// code filter
 			$('#span_code_filter').html($('#span_code_filter_'+ p1).html());
 		})();
 
@@ -131,6 +131,7 @@
 		}
 
 		$('#smsFrm_zone').change(function(){
+			$('#calcNum').html(0);
 			var p1 = $(this).children('option:selected').val();
 			changeZone(p1);
 			// // code filter
@@ -150,6 +151,27 @@
 				}
 			}]);
 		});
+
+		function currencyformat(num){
+			num = num || 0;
+			num = num + '';
+			var re = /(-?\d+)(\d{3})/;
+			while(re.test(num)){
+				num = num.replace(re, '$1,$2');
+			}
+			return num;
+		}
+
+		function calcCount(src){
+			var num = parseInt($('#calcNum').html().replace(/,/gm,''));
+			var n = 0;
+			if(src.checked){
+				n = num + parseInt(src.value);
+			}else{
+				n = num - src.value;
+			}
+			$('#calcNum').html(currencyformat(n));
+		}
 		</script>
 	</body>
 </html>

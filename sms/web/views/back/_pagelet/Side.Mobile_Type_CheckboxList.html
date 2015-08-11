@@ -11,13 +11,13 @@
 		#end
 		#if($!velocityCount % 2 == 0)
 				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}'> $type.TYPE_NAME <span class="badge">#num2Money($type.TYPE_COUNT)</span>
+					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}' value='$type.TYPE_COUNT' onclick='calcCount(this);'> $type.TYPE_NAME <span class="badge">#num2Money($type.TYPE_COUNT)</span>
 				</div>
 			</div>
 			<div class='form-group zone'>
 		#else
 				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}'> $type.TYPE_NAME <span class="badge">#num2Money($type.TYPE_COUNT)</span>
+					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}' value='$type.TYPE_COUNT' onclick='calcCount(this);'> $type.TYPE_NAME <span class="badge">#num2Money($type.TYPE_COUNT)</span>
 				</div>
 		#end
 		#if($velocityCount == $size)
