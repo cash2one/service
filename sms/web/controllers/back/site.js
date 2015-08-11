@@ -19,6 +19,7 @@ var fs = require('fs'),
 var macros = require('../../lib/macro');
 
 var biz = {
+	mobile_type: require('../../biz/mobile_type'),
 	zone: require('../../biz/zone')
 };
 
@@ -36,9 +37,14 @@ function getTopMessage(req){
 	return '欢迎您，'+ user.CORP_NAME +'。今天是'+ y +'年'+ m +'月'+ d +'日。';
 };
 
+/**
+ *
+ * @params
+ * @return
+ */
 exports.indexUI = function(req, res, next){
 
-	var ep = EventProxy.create('citys', function (citys){
+	var ep = EventProxy.create('citys', 'mobile_type', function (citys, mobile_type){
 
 		res.render('back/Index', {
 			conf: conf,
@@ -48,7 +54,8 @@ exports.indexUI = function(req, res, next){
 			keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
 			loginState: 2 === req.session.lv,
 			data: {
-				citys: citys
+				citys: citys,
+				mobile_type: mobile_type
 			}
 		});
 	});
@@ -66,9 +73,20 @@ exports.indexUI = function(req, res, next){
 			city_1.regions = docs;
 			ep.emit('citys', citys);
 		});
+
+		biz.mobile_type.findByZone(city_1.id, function (err, docs){
+			if(err) return ep.emit('error', err);
+			docs = treeNode(docs);
+			ep.emit('mobile_type', docs);
+		});
 	});
 };
 
+/**
+ *
+ * @params
+ * @return
+ */
 exports.changeZone = function(req, res, next){
 	var result = { success: false };
 	var zone_code = req.params.zone_code;
@@ -102,6 +120,11 @@ exports.changeZone = function(req, res, next){
 	});
 };
 
+/**
+ *
+ * @params
+ * @return
+ */
 (function (exports){
 	var temp = null;
 
@@ -121,6 +144,32 @@ exports.changeZone = function(req, res, next){
 		});
 	};
 })(exports);
+
+/**
+ *
+ * @params
+ * @return
+ */
+function treeNode(docs){
+	var tree = [];
+
+	for(var i in docs){
+		var doc = docs[i];
+		if('0' === doc.PID){
+			doc.children = [];
+			tree.push(doc);
+
+			for(var j in docs){
+				var docc = docs[j];
+				if(docc.PID === doc.id){
+					doc.children.push(docc);
+				}
+			}
+		}
+	}
+
+	return tree;
+}
 
 var sql = 'SELECT * FROM m_mobile WHERE id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT ?';
 
