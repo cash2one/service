@@ -92,50 +92,34 @@
 		#parse('front/_pagelet/Common.IndexJs.html')
 		#parse('front/_pagelet/Common.LastJs.html')
 
-		<span style='display:none;' id='span_span_zone_regions'>
-			#parse('back/_pagelet/Side.Zone_CheckboxList.html')
-		</span>
-
-		<span style='display:none;' id='span_span_code_filter'>
-			#parse('back/_pagelet/Side.Mobile_Type_CheckboxList.html')
-		</span>
-
 		<script type='text/javascript'>
 		(function(){
 			var p1 = $('#smsFrm_zone').children('option:selected').val();
 			changeZone(p1);
-			// code filter
-			$('#span_code_filter').html($('#span_code_filter_'+ p1).html());
 		})();
 
 		function changeZone(p1){
-			if(1 === $('#span_zone_regions_'+ p1).length){
-				$('#span_zone_regions').html($('#span_zone_regions_'+ p1).html());
-			}else{
-				$.ajax({
-					url: '/changeZone/'+ p1,
-					type: 'GET',
-					dataType: 'json'
-				}).done(function (data){
-					if(!data.success){
-						if('timeout' === data.status){
-							return location.reload();
-						}
+			$.ajax({
+				url: '/changeZone/'+ p1,
+				type: 'GET',
+				dataType: 'json'
+			}).done(function (data){
+				if(!data.success){
+					if('timeout' === data.status){
+						return location.reload();
 					}
-					$('#span_span_zone_regions').append(data.data);
-					$('#span_zone_regions').html($('#span_zone_regions_'+ p1).html());
-				}).complete(function(){
-					// TODO
-				});
-			}
+				}
+				$('#span_zone_regions').html(data.data[0]);
+				$('#span_code_filter').html(data.data[1]);
+			}).complete(function(){
+				// TODO
+			});
 		}
 
 		$('#smsFrm_zone').change(function(){
 			$('#calcNum').html(0);
 			var p1 = $(this).children('option:selected').val();
 			changeZone(p1);
-			// // code filter
-			$('#span_code_filter').html($('#span_code_filter_'+ p1).html());
 		});
 
 		$('#smsFrm_btn_sub').click(function(){

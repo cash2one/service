@@ -44,7 +44,7 @@ function getTopMessage(req){
  */
 exports.indexUI = function(req, res, next){
 
-	var ep = EventProxy.create('citys', 'mobile_type', function (citys, mobile_type){
+	var ep = EventProxy.create('citys', function (citys){
 
 		res.render('back/Index', {
 			conf: conf,
@@ -54,8 +54,7 @@ exports.indexUI = function(req, res, next){
 			keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
 			loginState: 2 === req.session.lv,
 			data: {
-				citys: citys,
-				mobile_type: mobile_type
+				citys: citys
 			}
 		});
 	});
@@ -68,17 +67,18 @@ exports.indexUI = function(req, res, next){
 		if(err) return ep.emit('error', err);
 		var citys = docs;
 		var city_1 = citys[0];
-		biz.zone.findRegions(city_1.id, function (err, docs){
-			if(err) return ep.emit('error', err);
-			city_1.regions = docs;
-			ep.emit('citys', citys);
-		});
+		ep.emit('citys', citys);
+		// biz.zone.findRegions(city_1.id, function (err, docs){
+		// 	if(err) return ep.emit('error', err);
+		// 	city_1.regions = docs;
+		// 	ep.emit('citys', citys);
+		// });
 
-		biz.mobile_type.findByZone(city_1.id, function (err, docs){
-			if(err) return ep.emit('error', err);
-			docs = treeNode(docs);
-			ep.emit('mobile_type', docs);
-		});
+		// biz.mobile_type.findByZone(city_1.id, function (err, docs){
+		// 	if(err) return ep.emit('error', err);
+		// 	docs = treeNode(docs);
+		// 	ep.emit('mobile_type', docs);
+		// });
 	});
 };
 
@@ -91,32 +91,54 @@ exports.changeZone = function(req, res, next){
 	var result = { success: false };
 	var zone_code = req.params.zone_code;
 
-	biz.zone.findRegions(zone_code, function (err, docs){
-		if(err){
-			result.msg = err;
-			return res.send(result);
-		}
+	var ep = EventProxy.create('citys', 'mobile_type', 'template1', 'template2', function (citys, mobile_type, template1, template2){
 
-		exports.getTemplate(function (err, template){
-			if(err){
-				result.msg = err;
-				return res.send(result);
+		var html1 = velocity.render(template1, {
+			conf: conf,
+			data: {
+				citys: citys
 			}
+		}, macros);
 
-			var html = velocity.render(template, {
-				conf: conf,
-				data: {
-					citys: [{
-						id: zone_code,
-						regions: docs
-					}]
-				}
-			}, macros);
+		var html2 = velocity.render(template2, {
+			conf: conf,
+			data: {
+				mobile_type: mobile_type
+			}
+		}, macros);
 
-			result.success = true;
-			result.data = html;
-			res.send(result);
-		});
+		result.success = true;
+		result.data = [html1, html2];
+		res.send(result);
+	});
+
+	ep.fail(function (err){
+		next(err);
+	});
+
+	biz.zone.findRegions(zone_code, function (err, docs){
+		if(err) return ep.emit('error', err);
+		var citys = [{
+			id: zone_code,
+			regions: docs
+		}]
+		ep.emit('citys', citys);
+	});
+
+	biz.mobile_type.findByZone(zone_code, function (err, docs){
+		if(err) return ep.emit('error', err);
+		docs = treeNode(docs);
+		ep.emit('mobile_type', docs);
+	});
+
+	exports.getTemplate(function (err, template){
+		if(err) return ep.emit('error', err);
+		ep.emit('template1', template);
+	});
+
+	exports.getTemplate2(function (err, template){
+		if(err) return ep.emit('error', err);
+		ep.emit('template2', template);
 	});
 };
 
@@ -138,6 +160,31 @@ exports.changeZone = function(req, res, next){
 		if(temp) return cb(null, temp);
 
 		fs.readFile(path.join(cwd, 'views', 'back', '_pagelet', 'Side.Zone_CheckboxList.html'), 'utf8', function (err, template){
+			if(err) return cb(err);
+			temp = template;
+			cb(null, temp);
+		});
+	};
+})(exports);
+
+/**
+ *
+ * @params
+ * @return
+ */
+(function (exports){
+	var temp = null;
+
+	/**
+	 * 获取模板
+	 *
+	 * @params
+	 * @return
+	 */
+	exports.getTemplate2 = function(cb){
+		if(temp) return cb(null, temp);
+
+		fs.readFile(path.join(cwd, 'views', 'back', '_pagelet', 'Side.Mobile_Type_CheckboxList.html'), 'utf8', function (err, template){
 			if(err) return cb(err);
 			temp = template;
 			cb(null, temp);
