@@ -345,11 +345,20 @@ function startSend(data, res, mobiles){
 exports.sendSMS = function(req, res, next){
 	var result = { success: false },
 		data = req._data;
-	// console.log(data)
 
-	result.data = data;
-	result.success = true;
-	res.send(result);
+	var user = req.session.user;
+
+	biz.send_plan.findFirstByUser(user.id, function (err, doc){
+		if(err) return next(err);
+		if(!!doc) return next(new Error('今日您的预约发送量为0条，请联系客服！'));
+
+
+		data.Content = data.Content.substring(0, 70);
+
+		result.data = data;
+		result.success = true;
+		res.send(result);
+	});
 
 	// data = {
 	// 	Account: 'leiguang0371',
