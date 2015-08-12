@@ -20,3 +20,17 @@ exports.indexUI = function(req, res, next){
 		keywords: ',后台管理,Blog,Bootstrap3,nodejs,express,css,javascript,java,aspx,html5'
 	});
 };
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.sendRecordUI = function(req, res, next){
+	res.render('manage/sms/SendRecord', {
+		conf: conf,
+		title: '发送记录 | 短信管理 | 后台管理 | '+ conf.corp.name,
+		description: '',
+		keywords: ',后台管理,Blog,Bootstrap3,nodejs,express,css,javascript,java,aspx,html5'
+	});
+};

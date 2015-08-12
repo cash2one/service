@@ -47,6 +47,8 @@ module.exports = function(app){
 
 	// manager login
 	app.get('/manage/', manage.manager.login_validate, manage.site.indexUI);
+
+	app.get('/manage/sms/sendRecord$', manage.manager.login_validate, manage.site.sendRecordUI);
 };
 
 /**
