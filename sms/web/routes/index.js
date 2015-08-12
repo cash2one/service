@@ -10,6 +10,11 @@ var back = {
 	user: require('../controllers/back/user')
 };
 
+var manage = {
+	site: require('../controllers/manage/site'),
+	manager: require('../controllers/manage/manager')
+};
+
 var str1 = '参数异常';
 
 module.exports = function(app){
@@ -30,6 +35,18 @@ module.exports = function(app){
 	// changePwd
 	app.get('/u/changePwd$', back.user.login_validate, back.user.changePwdUI);
 	app.post('/u/changePwd$', valiPostData, back.user.login_validate, back.user.changePwd);
+
+	/* manage */
+	app.get('/manager/login$', manage.manager.loginUI);
+	app.post('/manager/login$', valiPostData, manage.manager.login);
+	app.get('/manager/logout$', manage.manager.logoutUI);
+
+	// changePwd
+	app.get('/manager/changePwd$', manage.manager.login_validate, manage.manager.changePwdUI);
+	app.post('/manager/changePwd$', valiPostData, manage.manager.login_validate, manage.manager.changePwd);
+
+	// manager login
+	app.get('/manage/', manage.manager.login_validate, manage.site.indexUI);
 };
 
 /**
