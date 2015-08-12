@@ -13,7 +13,22 @@ var util = require('speedt-utils'),
 var conf = require('../../settings');
 
 var biz = {
+	send_plan: require('../../biz/send_plan'),
 	user: require('../../biz/user')
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
+function getTopMessage(req){
+	var user = req.session.user;
+	var t = new Date();
+	var y = t.getFullYear();
+	var m = util.padLeft(t.getMonth() + 1, '0', 2);
+	var d = util.padLeft(t.getDate(), '0', 2);
+	return '欢迎您，'+ user.CORP_NAME +'。今天是'+ y +'年'+ m +'月'+ d +'日。';
 };
 
 /**
@@ -121,7 +136,14 @@ exports.edit = function(req, res, next){
  * @return
  */
 exports.changePwdUI = function(req, res, next){
-	// TODO
+	res.render('back/user/ChangePwd', {
+		conf: conf,
+		title: conf.corp.name,
+		topMessage: getTopMessage(req),
+		description: '',
+		keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
+		loginState: 2 === req.session.lv
+	});
 };
 
 /**
@@ -131,4 +153,29 @@ exports.changePwdUI = function(req, res, next){
  */
 exports.changePwd = function(req, res, next){
 	// TODO
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.sendRecordUI = function(req, res, next){
+	var user = req.session.user;
+
+	biz.send_plan.findSendRecordByUser(user.id, function (err, docs){
+		if(err) return next(err);
+
+		res.render('back/user/SendRecord', {
+			conf: conf,
+			title: conf.corp.name,
+			topMessage: getTopMessage(req),
+			description: '',
+			keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
+			loginState: 2 === req.session.lv,
+			data: {
+				sendRecord: docs
+			}
+		});
+	});
 };

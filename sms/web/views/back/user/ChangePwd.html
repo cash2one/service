@@ -2,22 +2,27 @@
 <html lang='zh-CN'>
 	<head>
 		#parse('front/_pagelet/Common.IndexHeader.html')
+		<link rel='stylesheet' type='text/css' media='screen' href='$!{conf.html.external_res}assets/css/olx/olx.css?v3' />
 	</head>
 	<body>
-		#parse('front/_pagelet/Side.TopBanner.html')
+		#parse('back/_pagelet/Side.TopBanner.html')
 		<header id='header'></header>
 		<div class='container'>
 			<div class='row'>
-				#parse('back/_pagelet/Side.Bar3.html')
-				<div class='col-sm-12 col-md-9'>
+				<div class='col-sm-12 col-md-12'>
+					#parse('front/_pagelet/Side.TopMessage.html')
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-12 col-md-12'>
 					<div class='panel panel-default'>
 						<div class='panel-body'>
 							<ol class='breadcrumb'>
 								<li>
 									<i class='fa fa-home fa-fw'></i>
-									<a href='../../'>空间</a></li>
-								<li class='active'><a href='javascript:;'>管理</a></li>
-								<li class='active'><a href='javascript:;'>修改登录密码</a></li>
+									<a href='/'>SMS 短信</a></li>
+								<li class='active'><a href='javascript:;'>我的@</a></li>
+								<li class='active'><a href='/u/changePwd'>修改密码</a></li>
 							</ol>
 							<form class='form-horizontal' id='chpwdFrm' role='form' onsubmit='return false;' data-url=''>
 								<div class='form-group'>
@@ -40,7 +45,7 @@
 								</div>
 								<div class='form-group'>
 									<div class='col-sm-offset-4 col-sm-4'>
-										<button id='chpwdFrm_btn_sub' type='button' class='btn btn-primary'>修改密码</button>
+										<button id='chpwdFrm_ok' type='button' class='btn btn-primary'>修改密码</button>
 									</div>
 								</div>
 							</form>
@@ -52,12 +57,11 @@
 		#parse('front/_pagelet/Side.IndexFooter.html')
 		#parse('front/_pagelet/Side.BackTop.html')
 		#parse('front/_pagelet/Common.IndexJs.html')
-		<!-- Own -->
+		#parse('front/_pagelet/Common.LastJs.html')
 		<script type='text/javascript'>
 			function showVali(valiResu){
 				alert(valiResu[0]);
 			}
-
 			function subFrm(){
 				$('#chpwdFrm').olxForm('submit', [function(){
 				}, function (valiResu){
@@ -67,8 +71,7 @@
 					alert('修改密码成功!')
 				}]);
 			}
-			$('#chpwdFrm_btn_sub').click(subFrm);
+			$('#chpwdFrm_ok').click(subFrm);
 		</script>
-		#parse('front/_pagelet/Common.LastJs.html')
 	</body>
 </html>

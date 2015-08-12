@@ -33,3 +33,16 @@ exports.editUsedStatus = function(data, cb){
 		cb(null, status.changedRows);
 	});
 };
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.findSendRecordByUser = function(user_id, cb){
+	var sql = 'SELECT * FROM m_send_plan WHERE IS_USED=1 AND USER_ID=? ORDER BY SEND_TIME DESC';
+	mysqlUtil.query(sql, [user_id], function (err, docs){
+		if(err) return cb(err);
+		cb(null, docs);
+	});
+};

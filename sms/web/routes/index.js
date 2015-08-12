@@ -24,6 +24,12 @@ module.exports = function(app){
 	app.post('/user/login$', valiPostData, back.user.login);
 	app.get('/user/login/success$', back.user.login_validate, back.user.login_success);
 	app.get('/user/logout$', back.user.logoutUI);
+
+	// sendRecord
+	app.get('/u/sendRecord$', back.user.login_validate, back.user.sendRecordUI);
+	// changePwd
+	app.get('/u/changePwd$', back.user.login_validate, back.user.changePwdUI);
+	app.post('/u/changePwd$', back.user.login_validate, back.user.changePwd);
 };
 
 /**
