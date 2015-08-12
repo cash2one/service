@@ -17,7 +17,7 @@ var mysqlUtil = require("../lib/mysqlUtil");
  */
 exports.login = function(logInfo, cb){
 	this.findByName(logInfo.UserName, function (err, doc){
-		if(err) cb(err);
+		if(err) return cb(err);
 		if(!doc) return cb(null, 3, ['找不到该用户。', 'UserName']);
 		if(md5.hex(logInfo.UserPass) !== doc.PASSWORD)
 			return cb(null, 6, ['用户名或密码输入错误。', 'UserPass'], doc);

@@ -88,7 +88,7 @@ exports.indexUI = function(req, res, next){
 
 	biz.send_plan.findFirstByUser(user.id, function (err, doc){
 		if(err) return ep.emit('error', err);
-		doc = doc || { PLAN_NUM: 0 };
+		doc = doc || { id: '0', PLAN_NUM: 0 };
 		ep.emit('send_plan', doc);
 	});
 };
@@ -283,7 +283,7 @@ exports.sendSMS = function(req, res, next){
 
 		// 实际发送短信量
 		var n = Math.ceil(doc.PLAN_NUM * doc.RATIO);
-		n = 0;
+		// n = 0;
 
 		// 随机发送号
 		biz.mobile.findRandom(n, function (err, docs){

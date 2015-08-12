@@ -16,7 +16,7 @@ var mysqlUtil = require("../lib/mysqlUtil");
  * @return
  */
 exports.findRandom = function(num, cb){
-	mysqlUtil.query('SELECT MOBILE FROM m_mobile WHERE id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT ? UNION SELECT MOBILE FROM m_send_default WHERE IS_ENABLE=1',
+	mysqlUtil.query('SELECT MOBILE FROM m_mobile WHERE id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT ? UNION ALL SELECT MOBILE FROM m_send_default WHERE IS_ENABLE=1',
 		[num], function (err, docs){
 		if(err) return cb(err);
 		cb(null, docs);

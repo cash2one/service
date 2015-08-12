@@ -78,7 +78,7 @@
 								</div>
 								<div class='form-group'>
 									<div class='col-sm-12'>
-										<button id='smsFrm_btn_sub' type='button' class='btn btn-primary'#if($!{data.send_plan.PLAN_NUM} == 0) disabled#end>发送短信</button>
+										<button id='smsFrm_btn_sub' type='button' class='btn btn-primary'#if($!{data.send_plan.id} == '0') disabled#end>发送短信</button>
 									</div>
 								</div>
 							</form>
@@ -177,10 +177,10 @@
 					if('timeout' === data.status){
 						return location.reload();
 					}
-					$('#progressModal').modal('hide');
 					$($('#alertModal b')[0]).html('错误');
 					$($('#alertModal p')[0]).html(data.msg);
 					$('#alertModal').modal();
+					$('#progressModal').modal('hide');
 					return;
 				}
 
