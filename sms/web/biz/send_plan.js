@@ -14,6 +14,18 @@ var mysqlUtil = require("../lib/mysqlUtil");
  * @params
  * @return
  */
+exports.getAll = function(cb){
+	mysqlUtil.query('SELECT * FROM m_send_plan ORDER BY PLAN_TIME DESC', null, function (err, docs){
+		if(err) return cb(err);
+		cb(null, docs);
+	});
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
 exports.findFirstByUser = function(user_id, cb){
 	mysqlUtil.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? ORDER BY PLAN_TIME LIMIT 1', [user_id], function (err, docs){
 		if(err) return cb(err);

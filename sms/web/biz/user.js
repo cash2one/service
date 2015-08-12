@@ -10,6 +10,19 @@ var md5 = require('speedt-utils').md5;
 var mysqlUtil = require("../lib/mysqlUtil");
 
 /**
+ * 获取全部
+ *
+ * @params
+ * @return
+ */
+exports.getAll = function(cb){
+	mysqlUtil.query('SELECT a.* FROM s_user a ORDER BY a.CREATE_TIME DESC', null, function (err, rows){
+		if(err) return cb(err);
+		cb(null, rows);
+	});
+};
+
+/**
  * 用户登陆验证
  *
  * @params
@@ -34,7 +47,7 @@ exports.login = function(logInfo, cb){
 exports.findByName = function(name, cb){
 	mysqlUtil.query('SELECT a.* FROM s_user a WHERE a.USER_NAME=?', [name], function (err, rows){
 		if(err) return cb(err);
-		return cb(null, (1 === rows.length) ? rows[0] : null);
+		cb(null, (1 === rows.length) ? rows[0] : null);
 	});
 };
 
@@ -46,7 +59,7 @@ exports.findByName = function(name, cb){
 exports.findById = function(id, cb){
 	mysqlUtil.query('SELECT a.* FROM s_user a WHERE a.id=?', [id], function (err, rows){
 		if(err) return cb(err);
-		return cb(null, (1 === rows.length) ? rows[0] : null);
+		cb(null, (1 === rows.length) ? rows[0] : null);
 	});
 };
 

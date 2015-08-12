@@ -1,0 +1,30 @@
+<table id='table1' data-olx-type='olx.grid' class='table table-bordered table-hover table-condensed table-striped' data-url='' data-current='1' data-pagesize='20' data-count='561'>
+	<thead>
+		<tr>
+			<th class='ta'><input type='checkbox' title='全选/取消'></th>
+			<th style='color:red'>计划名称</th>
+			<th style='color:red'>计发（条）</th>
+			<th style='color:red'>计划时间</th>
+			<th style='color:red'>比率（%）</th>
+			<th style='color:blue'>发送时间</th>
+			<th style='color:blue'>发送内容</th>
+			<th style='color:blue'>实发（条）</th>
+			<th style='color:blue'>手机号</th>
+			<th>已使用</th>
+		</tr>
+	</thead>
+	<tbody>
+		#foreach($doc in $!{data.send_plan})<tr>
+			<td class='ta'><input type='checkbox' value='$!{doc.id}'></td>
+			<td>$!doc.PLAN_NAME</td>
+			<td>$!doc.PLAN_NUM</td>
+			<td>#formatDate($!{doc.PLAN_TIME})</td>
+			<td>$!doc.RATIO</td>
+			<td>#formatDate($!{doc.SEND_TIME})</td>
+			<td>发送内容</td>
+			<td>$!doc.SEND_COUNT</td>
+			<td>手机号</td>
+			<td style='text-align:center'>#if($!doc.IS_USED == '1')是#else否#end</td>
+		</tr>#end
+	</tbody>
+</table>
