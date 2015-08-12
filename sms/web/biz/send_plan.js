@@ -20,3 +20,16 @@ exports.findFirstByUser = function(user_id, cb){
 		cb(null, 1 === docs.length ? docs[0] : null);
 	});
 };
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.editUsedStatus = function(data, cb){
+	mysqlUtil.query('UPDATE m_send_plan SET IS_USED=1, SEND_TIME=?, SEND_CONTENT=?, SEND_COUNT=?, SEND_MOBILE=? WHERE id=?',
+		[new Date(), data.Content, data.Count, data.Mobiles, data.id], function (err, status){
+		if(err) return cb(err);
+		cb(null, status.changedRows);
+	});
+};

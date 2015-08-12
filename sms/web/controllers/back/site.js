@@ -267,7 +267,9 @@ exports.sendSMS = function(req, res, next){
 	var result = { success: false },
 		data = req._data;
 
-	if('' === data.Content.trim()) return next(new Error('短信内容不能为空，请填写！'));
+	data.Content = data.Content.trim();
+
+	if('' === data.Content) return next(new Error('短信内容不能为空，请填写！'));
 
 	var user = req.session.user;
 
@@ -275,6 +277,7 @@ exports.sendSMS = function(req, res, next){
 	biz.send_plan.findFirstByUser(user.id, function (err, doc){
 		if(err) return next(err);
 		if(!doc) return next(new Error('今日您的预约发送量为0条，请联系客服！'));
+		var send_plan = doc;
 
 		data.Content = data.Content.substring(0, 70);
 
@@ -286,20 +289,38 @@ exports.sendSMS = function(req, res, next){
 		biz.mobile.findRandom(n, function (err, docs){
 			if(err) return next(err);
 
-			var testMobile = data.TestMobile.toString().replaceAll('\r\n', ',').split(',');
-
-			for(var i in testMobile){
-				var mobile = checkMobile(testMobile[i]);
-				if('' !== mobile){
-					docs.push({ MOBILE: mobile });
-				}
+			var mobiles = [];
+			// 从db中提取的手机号
+			for(var i in docs){
+				var doc = docs[i];
+				mobiles.push(doc.MOBILE);
 			}
 
-			console.log(docs);
+			var testMobile = data.TestMobile.toString().replaceAll('\r\n', ',').split(',');
+			// 从测试号中提取的手机号
+			for(var i in testMobile){
+				var mobile = checkMobile(testMobile[i]);
+				if('' !== mobile) mobiles.push(mobile);
+			}
 
-			result.data = data;
-			result.success = true;
-			res.send(result);
+			// 修改发送计划的状态
+			biz.send_plan.editUsedStatus({
+				Content: data.Content,
+				Count: mobiles.length,
+				Mobiles: mobiles.join(','),
+				id: send_plan.id
+			}, function (err, count){
+				if(err) return next(err);
+				// 真正的发送开始了
+				// startSend_2(data.Content, mobiles, function (err, resu){
+				// 	console.log('--------')
+				// 	console.log(resu);
+				// 	console.log('--------')
+
+					result.success = true;
+					res.send(result);
+				// });
+			});
 		});
 	});
 };
@@ -351,9 +372,14 @@ function startSend_2(content, mobiles, cb){
 			parseString(chunk, function (err, result) {
 				if(err) return cb(err);
 
-				result.msg = result;
-				result.success = true;
-				res.send(result);
+				// 格式化后的结果
+				result = formatSendResult2(result);
+
+				if(!result.success){
+					return cb(new Error(result.msg));
+				}
+
+				cb(null, result);
 			});
 		});
 	});
@@ -365,4 +391,21 @@ function startSend_2(content, mobiles, cb){
 	// write data to request body
 	req.write(postData);
 	req.end();
+}
+
+/**
+ *
+ * @params
+ * @return
+ */
+function formatSendResult2(data){
+	var result = {
+		success: 'Success' === data.returnsms.returnstatus[0],
+		msg: data.returnsms.message[0],
+		data: {
+			successCount: data.returnsms.successCounts[0],
+			remainpoint: data.returnsms.remainpoint[0]
+		}
+	};
+	return result;
 }
