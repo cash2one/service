@@ -152,7 +152,26 @@ exports.changePwdUI = function(req, res, next){
  * @return
  */
 exports.changePwd = function(req, res, next){
-	// TODO
+	var result = { success: false },
+		data = req._data;
+	var user = req.session.user;
+
+	if(!data.NewPass || 0 === data.NewPass.trim().length){
+		result.msg = ['新密码不能为空。', 'NewPass'];
+		return res.send(result);
+	}
+
+	if(data.NewPass !== data.NewPass2){
+		result.msg = ['两次输入的新密码不一致。', 'NewPass'];
+		return res.send(result);
+	}
+
+	biz.user.changePwd(user.id, data.OldPass, data.NewPass, function (err, status, msg, count){
+		if(err) return next(err);
+		result.success = !status;
+		result.msg = msg;
+		res.send(result);
+	});
 };
 
 /**

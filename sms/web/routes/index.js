@@ -29,7 +29,7 @@ module.exports = function(app){
 	app.get('/u/sendRecord$', back.user.login_validate, back.user.sendRecordUI);
 	// changePwd
 	app.get('/u/changePwd$', back.user.login_validate, back.user.changePwdUI);
-	app.post('/u/changePwd$', back.user.login_validate, back.user.changePwd);
+	app.post('/u/changePwd$', valiPostData, back.user.login_validate, back.user.changePwd);
 };
 
 /**

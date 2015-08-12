@@ -40,7 +40,7 @@
 								<div class='form-group'>
 									<label class='col-sm-4 control-label' for='chpwdFrm_NewPass2'>再次输入新密码</label>
 									<div class='col-sm-4'>
-										<input type='password' class='form-control' id='chpwdFrm_NewPass2' placeholder='再次输入新密码'>
+										<input type='password' class='form-control' name='NewPass2' id='chpwdFrm_NewPass2' placeholder='再次输入新密码'>
 									</div>
 								</div>
 								<div class='form-group'>
@@ -54,13 +54,16 @@
 				</div>
 			</div>
 		</div>
+		#include('_pagelet/Modal.Alert.html')
 		#parse('front/_pagelet/Side.IndexFooter.html')
 		#parse('front/_pagelet/Side.BackTop.html')
 		#parse('front/_pagelet/Common.IndexJs.html')
 		#parse('front/_pagelet/Common.LastJs.html')
 		<script type='text/javascript'>
 			function showVali(valiResu){
-				alert(valiResu[0]);
+				$($('#alertModal b')[0]).html('警告');
+				$($('#alertModal p')[0]).html(valiResu[0]);
+				$('#alertModal').modal();
 			}
 			function subFrm(){
 				$('#chpwdFrm').olxForm('submit', [function(){
@@ -68,7 +71,9 @@
 					showVali(valiResu);
 				}, function (data){
 					if(!data.success) return showVali(data.msg);
-					alert('修改密码成功!')
+					$($('#alertModal b')[0]).html('提示');
+					$($('#alertModal p')[0]).html('修改密码成功！');
+					$('#alertModal').modal();
 				}]);
 			}
 			$('#chpwdFrm_ok').click(subFrm);

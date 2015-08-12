@@ -44,7 +44,10 @@ exports.findByName = function(name, cb){
  * @return
  */
 exports.findById = function(id, cb){
-	// TODO
+	mysqlUtil.query('SELECT a.* FROM s_user a WHERE a.id=?', [id], function (err, rows){
+		if(err) return cb(err);
+		return cb(null, (1 === rows.length) ? rows[0] : null);
+	});
 };
 
 /**
@@ -64,7 +67,18 @@ exports.register = function(newInfo, cb){
  * @return
  */
 exports.changePwd = function(user_id, oldPass, newPass, cb){
-	// TODO
+	this.findById(user_id, function (err, doc){
+		if(err) return cb(err);
+		if(!doc) return cb(null, 3, ['找不到该用户。', 'UserName']);
+		if(md5.hex(oldPass) !== doc.PASSWORD)
+			return cb(null, 6, ['原始密码输入错误。', 'OldPass'], doc);
+		// 开始更新密码
+		mysqlUtil.query('UPDATE s_user SET PASSWORD=? WHERE id=?',
+			[md5.hex(newPass), user_id], function (err, status){
+			if(err) return cb(err);
+			cb(null, null, null, status.changedRows);
+		});
+	});
 };
 
 /**
