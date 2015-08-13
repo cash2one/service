@@ -34,10 +34,15 @@
 					</div>
 					<div class='panel panel-default table-responsive'>
 						<div class='panel-heading'>
-							<div class='btn-group btn-group-sm'>
-								<button class='btn btn-primary glyphicon glyphicon-plus-sign' data-toggle='modal' data-target='#addModal'>新增发送计划</button>
-								<button id='btn_edit' class='btn btn-default glyphicon glyphicon-edit' data-toggle='modal' data-target='#editModal'>编辑发送计划</button>
-								<button id='btn_del' class='btn btn-danger glyphicon glyphicon-remove-sign'>删除</button>
+							<div class="btn-group btn-group-sm">
+								<button type="button" class="btn btn-primary dropdown-toggle glyphicon glyphicon-plus-sign" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 发送计划 <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="javascript:;">新增</a></li>
+									<li><a href="javascript:;">编辑</a></li>
+									<li role="separator" class="divider"></li>
+									<li><a href="javascript:;">删除</a></li>
+								</ul>
 							</div>
 						</div>
 						#parse('manage/sms/SendRecord/_pagelet/Side.List.html')
@@ -213,20 +218,20 @@
 			}]);
 		});
 		$('#delConfirmModal_btn_submit').click(function(){
-			var selIds = $('#table1').olxGrid('getCheckedRowsValue', 1);
-			var data = {
-				data: JSON.stringify({
-					ids: selIds
-				})
-			};
-			$.ajax({
-				url: 'remove',
-				type: 'POST',
-				dataType: 'json',
-				data: data
-			}).done(function (data) {
-				location.reload();
-			});
+			// var selIds = $('#table1').olxGrid('getCheckedRowsValue', 1);
+			// var data = {
+			// 	data: JSON.stringify({
+			// 		ids: selIds
+			// 	})
+			// };
+			// $.ajax({
+			// 	url: 'remove',
+			// 	type: 'POST',
+			// 	dataType: 'json',
+			// 	data: data
+			// }).done(function (data) {
+			// 	location.reload();
+			// });
 		});
 		</script>
 	</body>

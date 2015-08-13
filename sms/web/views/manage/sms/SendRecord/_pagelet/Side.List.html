@@ -3,28 +3,35 @@
 		<tr>
 			<th class='ta'><input type='checkbox' title='全选/取消'></th>
 			<th style='color:red'>计划名称</th>
-			<th style='color:red'>计发（条）</th>
 			<th style='color:red'>计划时间</th>
+			<th style='color:red'>计发（条）</th>
 			<th style='color:red'>比率（%）</th>
 			<th style='color:blue'>发送时间</th>
-			<th style='color:blue'>发送内容</th>
 			<th style='color:blue'>实发（条）</th>
-			<th style='color:blue'>手机号</th>
-			<th>已使用</th>
+			<th style='color:green'>已发送</th>
 		</tr>
 	</thead>
 	<tbody>
 		#foreach($doc in $!{data.send_plan})<tr>
 			<td class='ta'><input type='checkbox' value='$!{doc.id}'></td>
 			<td>$!doc.PLAN_NAME</td>
-			<td>$!doc.PLAN_NUM</td>
 			<td>#formatDate($!{doc.PLAN_TIME})</td>
+			<td>$!doc.PLAN_NUM</td>
 			<td>$!doc.RATIO</td>
 			<td>#formatDate($!{doc.SEND_TIME})</td>
-			<td>发送内容</td>
 			<td>$!doc.SEND_COUNT</td>
-			<td>手机号</td>
 			<td style='text-align:center'>#if($!doc.IS_USED == '1')是#else否#end</td>
-		</tr>#end
+		</tr>
+		#if($!doc.IS_USED == '1')
+			<tr>
+				<td> </td>
+				<td colspan='9'>$!doc.SEND_CONTENT</td>
+			</tr>
+			#*<tr>
+				<td> </td>
+				<td colspan='9' style='word-break:break-all;'>$!doc.SEND_MOBILE</td>
+			</tr>*#
+		#end
+		#end
 	</tbody>
 </table>

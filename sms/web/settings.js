@@ -9,7 +9,7 @@ module.exports = {
 	cookie: {
 		secret: 'hnzswh'
 	}, corp: {
-		name: '河南正森文化传媒有限公司',
+		name: 'SMS 短信',
 		website: 'http://www.dolalive.com/'
 	}, db: {
 		database: 'sms',
