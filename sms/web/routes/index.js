@@ -53,6 +53,7 @@ module.exports = function(app){
 	app.get('/manage/sms/sendRecord/', manage.manager.login_validate, manage.site.sendRecordUI);
 
 	app.get('/manage/user/', manage.manager.login_validate, manage.user.indexUI);
+	app.get('/manage/user/:id$', manage.manager.login_validate, manage.user.id);
 	app.post('/manage/user/create$', valiPostData, manage.manager.login_validate, manage.user.create);
 	app.post('/manage/user/remove$', valiPostData, manage.manager.login_validate, manage.user.remove);
 

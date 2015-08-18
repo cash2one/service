@@ -122,11 +122,12 @@
 						<h4 id='editModalLabel' class='modal-title'><b>编辑</b></h4>
 					</div>
 					<form id='editFrm' data-olx-type='olx.form' class='form-horizontal' role='form' data-url='edit'>
+						<input type='hidden' id='editFrm_id' name='id'>
 						<div class='modal-body'>
 							<div class='form-group'>
 								<label for='editFrm_USER_NAME' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>用户名</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='editFrm_USER_NAME' name='USER_NAME' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
+									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='editFrm_USER_NAME' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
 								</div>
 							</div>
 							<div class='form-group'>
@@ -182,6 +183,18 @@
 				$('#alertModal').modal();
 				return e.preventDefault();
 			}
+			$.ajax({
+				url: vals[0],
+				type: 'GET',
+				dataType: 'json'
+			}).done(function (data) {
+				if(!data.success) alert(data.msg);
+				var dd = data.data;
+				$('#editFrm_id').val(dd.id);
+				$('#editFrm_USER_NAME').val(dd.USER_NAME);
+				$('#editFrm_CORP_NAME').val(dd.CORP_NAME);
+				$('#editFrm_IS_ENABLE').val(dd.IS_ENABLE);
+			});
 		});
 		$('#btn_del').click(function(){
 			$('#delConfirmModal').modal();

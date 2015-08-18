@@ -78,7 +78,15 @@ exports.remove = function(req, res, next){
  * @return
  */
 exports.id = function(req, res, next){
-	// TODO
+	var result = { success: false },
+		id = req.params.id;
+	biz.user.findById(id, function (err, doc){
+		if(err) return next(err);
+		/* result */
+		result.success = !!doc;
+		result.data = doc;
+		res.send(result);
+	});
 };
 
 /**
