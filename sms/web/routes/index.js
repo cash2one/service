@@ -56,6 +56,7 @@ module.exports = function(app){
 	app.get('/manage/user/:id$', manage.manager.login_validate, manage.user.id);
 	app.post('/manage/user/create$', valiPostData, manage.manager.login_validate, manage.user.create);
 	app.post('/manage/user/remove$', valiPostData, manage.manager.login_validate, manage.user.remove);
+	app.post('/manage/user/edit$', valiPostData, manage.manager.login_validate, manage.user.edit);
 
 	app.get('/manage/send_default/', manage.manager.login_validate, manage.send_default.indexUI);
 };

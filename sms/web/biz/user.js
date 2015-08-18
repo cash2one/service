@@ -111,7 +111,11 @@ exports.changePwd = function(user_id, oldPass, newPass, cb){
  * @return
  */
 exports.editInfo = function(newInfo, cb){
-	// TODO
+	var sql = 'UPDATE s_user SET CORP_NAME=?, IS_ENABLE=? WHERE id=?';
+	mysql.query(sql, [newInfo.CORP_NAME, newInfo.IS_ENABLE, newInfo.id], function (err, result){
+		if(err) return cb(err);
+		cb(null, result.changedRows);
+	});
 };
 
 /**

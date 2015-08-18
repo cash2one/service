@@ -95,5 +95,11 @@ exports.id = function(req, res, next){
  * @return
  */
 exports.edit = function(req, res, next){
-	// TODO
+	var result = { success: false },
+		data = req._data;
+	biz.user.editInfo(data, function (err, count){
+		if(err) return next(err);
+		result.success = !!count;
+		res.send(result);
+	});
 };

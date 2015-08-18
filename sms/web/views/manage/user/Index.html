@@ -127,7 +127,7 @@
 							<div class='form-group'>
 								<label for='editFrm_USER_NAME' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>用户名</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='editFrm_USER_NAME' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
+									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='editFrm_USER_NAME' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus readonly>
 								</div>
 							</div>
 							<div class='form-group'>
@@ -149,7 +149,7 @@
 						<div class='modal-footer'>
 							<button class='btn btn-default' data-dismiss='modal' type='button'>关闭</button>
 							<button class='btn btn-warning' type='reset'>重置</button>
-							<button id='editFrm_btn_submit' class='btn btn-primary' type='button'>保存</button>
+							<button id='editFrm_btn_ok' class='btn btn-primary' type='button'>保存</button>
 						</div>
 					</form>
 				</div>
@@ -203,6 +203,12 @@
 			$('#addFrm').olxForm('submit', [function(){}, null, function (data){
 				if(300 === data.code) return top.location.href = '/manager/login';
 				if(!data.success) return alert(data.msg[0]);
+				location.reload();
+			}]);
+		});
+		$('#editFrm_btn_ok').click(function(){
+			$('#editFrm').olxForm('submit', [function(){}, null, function (data){
+				if(300 === data.code) return top.location.href = '/manager/login';
 				location.reload();
 			}]);
 		});
