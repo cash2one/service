@@ -35,7 +35,7 @@ exports.login = function(logInfo, cb){
 exports.findByName = function(name, cb){
 	mysql.query('SELECT a.* FROM s_manager a WHERE a.USER_NAME=?', [name], function (err, rows){
 		if(err) return cb(err);
-		return cb(null, (1 === rows.length) ? rows[0] : null);
+		cb(null, (1 === rows.length) ? rows[0] : null);
 	});
 };
 
@@ -47,7 +47,7 @@ exports.findByName = function(name, cb){
 exports.findById = function(id, cb){
 	mysql.query('SELECT a.* FROM s_manager a WHERE a.id=?', [id], function (err, rows){
 		if(err) return cb(err);
-		return cb(null, (1 === rows.length) ? rows[0] : null);
+		cb(null, (1 === rows.length) ? rows[0] : null);
 	});
 };
 
@@ -63,7 +63,7 @@ exports.changePwd = function(user_id, oldPass, newPass, cb){
 		if(md5.hex(oldPass) !== doc.PASSWORD)
 			return cb(null, 6, ['原始密码输入错误。', 'OldPass'], doc);
 		// 开始更新密码
-		mysql.query('UPDATE s_user SET PASSWORD=? WHERE id=?',
+		mysql.query('UPDATE s_manager SET PASSWORD=? WHERE id=?',
 			[md5.hex(newPass), user_id], function (err, status){
 			if(err) return cb(err);
 			cb(null, null, null, status.changedRows);
