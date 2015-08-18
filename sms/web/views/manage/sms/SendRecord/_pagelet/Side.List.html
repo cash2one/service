@@ -20,7 +20,7 @@
 			<td>$!doc.RATIO</td>
 			<td>#formatDate($!{doc.SEND_TIME})</td>
 			<td>$!doc.SEND_COUNT</td>
-			<td style='text-align:center'>#if($!doc.IS_USED == '1')是#else否#end</td>
+			<td>#if($!doc.IS_USED == '1')是#else否#end</td>
 		</tr>
 		#if($!doc.IS_USED == '1')
 			<tr>
