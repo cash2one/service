@@ -5,9 +5,9 @@
  */
 'use strict';
 
-var md5 = require('speedt-utils').md5;
-
-var mysqlUtil = require("../lib/mysqlUtil");
+var util = require('speedt-utils'),
+	md5 = util.md5,
+	mysql = util.mysql;
 
 /**
  * 用户登陆
@@ -33,7 +33,7 @@ exports.login = function(logInfo, cb){
  * @return
  */
 exports.findByName = function(name, cb){
-	mysqlUtil.query('SELECT a.* FROM s_manager a WHERE a.USER_NAME=?', [name], function (err, rows){
+	mysql.query('SELECT a.* FROM s_manager a WHERE a.USER_NAME=?', [name], function (err, rows){
 		if(err) return cb(err);
 		return cb(null, (1 === rows.length) ? rows[0] : null);
 	});
@@ -45,7 +45,7 @@ exports.findByName = function(name, cb){
  * @return
  */
 exports.findById = function(id, cb){
-	mysqlUtil.query('SELECT a.* FROM s_manager a WHERE a.id=?', [id], function (err, rows){
+	mysql.query('SELECT a.* FROM s_manager a WHERE a.id=?', [id], function (err, rows){
 		if(err) return cb(err);
 		return cb(null, (1 === rows.length) ? rows[0] : null);
 	});
@@ -63,7 +63,7 @@ exports.changePwd = function(user_id, oldPass, newPass, cb){
 		if(md5.hex(oldPass) !== doc.PASSWORD)
 			return cb(null, 6, ['原始密码输入错误。', 'OldPass'], doc);
 		// 开始更新密码
-		mysqlUtil.query('UPDATE s_user SET PASSWORD=? WHERE id=?',
+		mysql.query('UPDATE s_user SET PASSWORD=? WHERE id=?',
 			[md5.hex(newPass), user_id], function (err, status){
 			if(err) return cb(err);
 			cb(null, null, null, status.changedRows);

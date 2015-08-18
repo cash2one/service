@@ -1,6 +1,6 @@
 /*!
- * hnzswh-portal
- * Copyright(c) 2015 hnzswh-portal <3203317@qq.com>
+ * hnzswh-sms
+ * Copyright(c) 2015 hnzswh-sms <3203317@qq.com>
  * MIT Licensed
  */
 'use strict';
@@ -11,12 +11,13 @@ module.exports = {
 	}, corp: {
 		name: 'SMS 短信',
 		website: 'http://www.dolalive.com/'
-	}, db: {
+	}, mysql: {
 		database: 'sms',
 		host: '127.0.0.1',
 		port: 22306,
 		user: 'root',
-		pass: 'password'
+		password: 'password',
+		connectionLimit: 50
 	}, html: {
 		cdn: 'http://www.foreworld.net/js/',
 		static_res: '/public/',

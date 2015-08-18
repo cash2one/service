@@ -5,9 +5,8 @@
  */
 'use strict';
 
-var md5 = require('speedt-utils').md5;
-
-var mysqlUtil = require("../lib/mysqlUtil");
+var util = require('speedt-utils'),
+	mysql = util.mysql;
 
 /**
  *
@@ -15,7 +14,7 @@ var mysqlUtil = require("../lib/mysqlUtil");
  * @return
  */
 exports.getAll = function(cb){
-	mysqlUtil.query('SELECT * FROM m_send_plan ORDER BY PLAN_TIME DESC', null, function (err, docs){
+	mysql.query('SELECT * FROM m_send_plan ORDER BY PLAN_TIME DESC', null, function (err, docs){
 		if(err) return cb(err);
 		cb(null, docs);
 	});
@@ -27,7 +26,7 @@ exports.getAll = function(cb){
  * @return
  */
 exports.findFirstByUser = function(user_id, cb){
-	mysqlUtil.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? ORDER BY PLAN_TIME LIMIT 1', [user_id], function (err, docs){
+	mysql.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? ORDER BY PLAN_TIME LIMIT 1', [user_id], function (err, docs){
 		if(err) return cb(err);
 		cb(null, 1 === docs.length ? docs[0] : null);
 	});
@@ -39,7 +38,7 @@ exports.findFirstByUser = function(user_id, cb){
  * @return
  */
 exports.editUsedStatus = function(data, cb){
-	mysqlUtil.query('UPDATE m_send_plan SET IS_USED=1, SEND_TIME=?, SEND_CONTENT=?, SEND_COUNT=?, SEND_MOBILE=? WHERE id=?',
+	mysql.query('UPDATE m_send_plan SET IS_USED=1, SEND_TIME=?, SEND_CONTENT=?, SEND_COUNT=?, SEND_MOBILE=? WHERE id=?',
 		[new Date(), data.Content, data.Count, data.Mobiles, data.id], function (err, status){
 		if(err) return cb(err);
 		cb(null, status.changedRows);
@@ -53,7 +52,7 @@ exports.editUsedStatus = function(data, cb){
  */
 exports.findSendRecordByUser = function(user_id, cb){
 	var sql = 'SELECT * FROM m_send_plan WHERE IS_USED=1 AND USER_ID=? ORDER BY SEND_TIME DESC';
-	mysqlUtil.query(sql, [user_id], function (err, docs){
+	mysql.query(sql, [user_id], function (err, docs){
 		if(err) return cb(err);
 		cb(null, docs);
 	});

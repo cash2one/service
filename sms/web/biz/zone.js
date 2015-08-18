@@ -5,9 +5,8 @@
  */
 'use strict';
 
-var md5 = require('speedt-utils').md5;
-
-var mysqlUtil = require("../lib/mysqlUtil");
+var util = require('speedt-utils'),
+	mysql = util.mysql;
 
 /**
  * 获取区列表
@@ -29,7 +28,7 @@ exports.findRegions = function(city_code, cb){
  * @return
  */
 exports.findCitys = function(province_code, cb){
-	mysqlUtil.query('SELECT a.* FROM m_zone a WHERE a.PID=? ORDER BY SORT', [province_code], function (err, docs){
+	mysql.query('SELECT a.* FROM m_zone a WHERE a.PID=? ORDER BY SORT', [province_code], function (err, docs){
 		if(err) return cb(err);
 		cb(null, docs);
 	});
