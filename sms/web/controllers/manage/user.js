@@ -103,3 +103,20 @@ exports.edit = function(req, res, next){
 		res.send(result);
 	});
 };
+
+/**
+ * 重置密码
+ *
+ * @params
+ * @return
+ */
+exports.resetPwd = function(req, res, next){
+	var result = { success: false },
+		data = req._data;
+	// 开始重置
+	biz.user.resetPwd(data.ids, function (err, count){
+		if(err) return next(err);
+		result.success = true;
+		res.send(result);
+	});
+};

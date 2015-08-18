@@ -136,3 +136,22 @@ exports.remove = function(ids, cb){
 		cb(null, result.affectedRows);
 	});
 };
+
+/**
+ * 编辑
+ *
+ * @params
+ * @return
+ */
+exports.resetPwd = function(ids, cb){
+	var sql = 'UPDATE s_user SET PASSWORD="e10adc3949ba59abbe56e057f20f883e" where id IN (""';
+	for(var i in ids){
+		sql += ', ?'
+	}
+	sql += ')';
+	// 开始删除
+	mysql.query(sql, ids, function (err, result){
+		if(err) return cb(err);
+		cb(null, result.affectedRows);
+	});
+};

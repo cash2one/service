@@ -33,7 +33,7 @@
 								<button class='btn btn-primary glyphicon glyphicon-plus-sign' data-toggle='modal' data-target='#addModal'>新增</button>
 								<button id='btn_edit' class='btn btn-default glyphicon glyphicon-edit' data-toggle='modal' data-target='#editModal'>编辑</button>
 								<button id='btn_del' class='btn btn-warning glyphicon glyphicon-remove-sign'>删除</button>
-								<button id='btn_resetpwd' class='btn btn-danger glyphicon glyphicon-asterisk'>密码重置</button>
+								<button id='btn_resetPwd' class='btn btn-danger glyphicon glyphicon-asterisk'>密码重置</button>
 							</div>
 						</div>
 						#parse('manage/user/_pagelet/Side.List.html')
@@ -225,6 +225,28 @@
 				dataType: 'json',
 				data: data
 			}).done(function (data) {
+				location.reload();
+			});
+		});
+
+		// 重置密码
+		$('#btn_resetPwd').click(function(){
+			var selIds = $('#table1').olxGrid('getCheckedRowsValue', 1);
+			if(!selIds.length){
+				return $('#alertModal').modal();
+			}
+			var data = {
+				data: JSON.stringify({
+					ids: selIds
+				})
+			};
+			$.ajax({
+				url: 'resetPwd',
+				type: 'POST',
+				dataType: 'json',
+				data: data
+			}).done(function (data) {
+				alert('密码重置为：123456');
 				location.reload();
 			});
 		});
