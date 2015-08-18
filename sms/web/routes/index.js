@@ -11,6 +11,7 @@ var back = {
 };
 
 var manage = {
+	user: require('../controllers/manage/user'),
 	site: require('../controllers/manage/site'),
 	manager: require('../controllers/manage/manager')
 };
@@ -49,6 +50,8 @@ module.exports = function(app){
 	app.get('/manage/', manage.manager.login_validate, manage.site.indexUI);
 
 	app.get('/manage/sms/sendRecord$', manage.manager.login_validate, manage.site.sendRecordUI);
+
+	app.get('/manage/user/', manage.manager.login_validate, manage.user.indexUI);
 };
 
 /**

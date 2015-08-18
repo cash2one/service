@@ -64,6 +64,11 @@ exports.login = function(req, res, next){
 			result.msg = msg;
 			return res.send(result);
 		}
+		// 判断是否禁用
+		if(0 === doc.IS_ENABLE){
+			result.msg = '用户登陆已被禁用，请与管理员联系!';
+			return res.send(result);
+		}
 		/* session */
 		req.session.lv = 2;
 		req.session.userId = doc.id;
