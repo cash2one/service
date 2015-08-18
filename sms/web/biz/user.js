@@ -70,7 +70,17 @@ exports.findById = function(id, cb){
  * @return
  */
 exports.register = function(newInfo, cb){
-	// TODO
+	this.findByName(newInfo.USER_NAME, function (err, doc){
+		if(err) return cb(err);
+		if(!!doc) return cb(null, 3, ['用户名已经存在', 'USER_NAME'], doc);
+		// 开始添加
+		mysql.query('INSERT INTO s_user (id, USER_NAME, PASSWORD, CORP_NAME, CREATE_TIME, IS_ENABLE) VALUES (?, ?, ?, ?, ?, ?)',
+			[util.uuid(), newInfo.USER_NAME, md5.hex('123456'), newInfo.CORP_NAME, new Date(), newInfo.IS_ENABLE],
+			function (err, status){
+				if(err) return cb(err);
+				cb(null, null, null, status.changedRows);
+		});
+	});
 };
 
 /**
@@ -102,4 +112,23 @@ exports.changePwd = function(user_id, oldPass, newPass, cb){
  */
 exports.editInfo = function(newInfo, cb){
 	// TODO
+};
+
+/**
+ * 编辑
+ *
+ * @params
+ * @return
+ */
+exports.remove = function(ids, cb){
+	var sql = 'DELETE FROM s_user where id IN (""';
+	for(var i in ids){
+		sql += ', ?'
+	}
+	sql += ')';
+	// 开始删除
+	mysql.query(sql, ids, function (err, result){
+		if(err) return cb(err);
+		cb(null, result.affectedRows);
+	});
 };

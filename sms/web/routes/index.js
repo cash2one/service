@@ -50,9 +50,12 @@ module.exports = function(app){
 	// manager login
 	app.get('/manage/', manage.manager.login_validate, manage.site.indexUI);
 
-	app.get('/manage/sms/sendRecord$', manage.manager.login_validate, manage.site.sendRecordUI);
+	app.get('/manage/sms/sendRecord/', manage.manager.login_validate, manage.site.sendRecordUI);
 
 	app.get('/manage/user/', manage.manager.login_validate, manage.user.indexUI);
+	app.post('/manage/user/create$', valiPostData, manage.manager.login_validate, manage.user.create);
+	app.post('/manage/user/remove$', valiPostData, manage.manager.login_validate, manage.user.remove);
+
 	app.get('/manage/send_default/', manage.manager.login_validate, manage.send_default.indexUI);
 };
 

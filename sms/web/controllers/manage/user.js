@@ -33,3 +33,59 @@ exports.indexUI = function(req, res, next){
 		});
 	});
 };
+
+/**
+ * 新增
+ *
+ * @params
+ * @return
+ */
+exports.create = function(req, res, next){
+	var result = { success: false },
+		data = req._data;
+	// 开始注册
+	biz.user.register(data, function (err, status, msg, count){
+		if(err) return next(err);
+		if(!!status){
+			result.msg = msg;
+			return res.send(result);
+		}
+		result.success = true;
+		res.send(result);
+	});
+};
+
+/**
+ * 删除
+ *
+ * @params
+ * @return
+ */
+exports.remove = function(req, res, next){
+	var result = { success: false },
+		data = req._data;
+	// 开始删除
+	biz.user.remove(data.ids, function (err, count){
+		if(err) return next(err);
+		result.success = true;
+		res.send(result);
+	});
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.id = function(req, res, next){
+	// TODO
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.edit = function(req, res, next){
+	// TODO
+};

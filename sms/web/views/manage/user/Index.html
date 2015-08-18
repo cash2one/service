@@ -67,23 +67,23 @@
 					<form id='addFrm' data-olx-type='olx.form' class='form-horizontal' role='form' data-url='create'>
 						<div class='modal-body'>
 							<div class='form-group'>
-								<label for='addFrm_CateName' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>用户名</label>
+								<label for='addFrm_USER_NAME' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>用户名</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='addFrm_CateName' name='CateName' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
+									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='addFrm_USER_NAME' name='USER_NAME' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label for='addFrm_Intro' class='col-sm-3 control-label'>企业名称</label>
+								<label for='addFrm_CORP_NAME' class='col-sm-3 control-label'>企业名称</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_Intro' name='Intro' placeholder='企业名称'>
+									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_CORP_NAME' name='CORP_NAME' placeholder='企业名称'>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label for='addFrm_Intro' class='col-sm-3 control-label'>状态</label>
+								<label for='addFrm_IS_ENABLE' class='col-sm-3 control-label'>状态</label>
 								<div class='col-sm-7'>
-									<select class='form-control'>
-										<option>启用</option>
-										<option>禁用</option>
+									<select class='form-control' name='IS_ENABLE' id='addFrm_IS_ENABLE'>
+										<option value='1'>启用</option>
+										<option value='0'>禁用</option>
 									</select>
 								</div>
 							</div>
@@ -124,23 +124,23 @@
 					<form id='editFrm' data-olx-type='olx.form' class='form-horizontal' role='form' data-url='edit'>
 						<div class='modal-body'>
 							<div class='form-group'>
-								<label for='editFrm_CateName' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>用户名</label>
+								<label for='editFrm_USER_NAME' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>用户名</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='editFrm_CateName' name='CateName' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
+									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='editFrm_USER_NAME' name='USER_NAME' placeholder='用户名' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label for='editFrm_Intro' class='col-sm-3 control-label'>企业名称</label>
+								<label for='editFrm_CORP_NAME' class='col-sm-3 control-label'>企业名称</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' class='form-control' id='editFrm_Intro' name='Intro' placeholder='企业名称'>
+									<input type='text' data-olx-type='olx.form.input' class='form-control' id='editFrm_CORP_NAME' name='CORP_NAME' placeholder='企业名称'>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label for='addFrm_Intro' class='col-sm-3 control-label'>状态</label>
+								<label for='editFrm_IS_ENABLE' class='col-sm-3 control-label'>状态</label>
 								<div class='col-sm-7'>
-									<select class='form-control'>
-										<option>启用</option>
-										<option>禁用</option>
+									<select class='form-control' name='IS_ENABLE' id='editFrm_IS_ENABLE'>
+										<option value='1'>启用</option>
+										<option value='0'>禁用</option>
 									</select>
 								</div>
 							</div>
@@ -189,24 +189,25 @@
 		$('#addFrm_btn_submit').click(function(){
 			$('#addFrm').olxForm('submit', [function(){}, null, function (data){
 				if(300 === data.code) return top.location.href = '/manager/login';
+				if(!data.success) return alert(data.msg[0]);
 				location.reload();
 			}]);
 		});
 		$('#delConfirmModal_btn_submit').click(function(){
-			// var selIds = $('#table1').olxGrid('getCheckedRowsValue', 1);
-			// var data = {
-			// 	data: JSON.stringify({
-			// 		ids: selIds
-			// 	})
-			// };
-			// $.ajax({
-			// 	url: 'remove',
-			// 	type: 'POST',
-			// 	dataType: 'json',
-			// 	data: data
-			// }).done(function (data) {
-			// 	location.reload();
-			// });
+			var selIds = $('#table1').olxGrid('getCheckedRowsValue', 1);
+			var data = {
+				data: JSON.stringify({
+					ids: selIds
+				})
+			};
+			$.ajax({
+				url: 'remove',
+				type: 'POST',
+				dataType: 'json',
+				data: data
+			}).done(function (data) {
+				location.reload();
+			});
 		});
 		</script>
 	</body>
