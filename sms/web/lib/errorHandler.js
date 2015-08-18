@@ -1,6 +1,6 @@
 /*!
- * hnzswh-portal
- * Copyright(c) 2015 hnzswh-portal <3203317@qq.com>
+ * hnzswh-sms
+ * Copyright(c) 2015 hnzswh-sms <3203317@qq.com>
  * MIT Licensed
  */
 'use strict';

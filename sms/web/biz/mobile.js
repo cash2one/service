@@ -1,6 +1,6 @@
 /*!
- * blog
- * Copyright(c) 2015 foreworld.net <3203317@qq.com>
+ * hnzswh-sms
+ * Copyright(c) 2015 hnzswh-sms <3203317@qq.com>
  * MIT Licensed
  */
 'use strict';
