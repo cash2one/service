@@ -13,6 +13,19 @@ var util = require('speedt-utils'),
  * @params
  * @return
  */
+exports.getAllByUser = function(user_id, cb){
+
+	mysql.query('SELECT * FROM m_send_plan WHERE USER_ID=? ORDER BY PLAN_TIME DESC', [user_id], function (err, docs){
+		if(err) return cb(err);
+		cb(null, docs);
+	});
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
 exports.getAll = function(cb){
 	mysql.query('SELECT * FROM m_send_plan ORDER BY PLAN_TIME DESC', null, function (err, docs){
 		if(err) return cb(err);

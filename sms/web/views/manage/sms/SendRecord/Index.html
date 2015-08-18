@@ -19,16 +19,16 @@
 							<h3 class='panel-title'><strong>查询条件</strong></h3>
 						</div>
 						<div class='panel-body'>
-							<form class='form-inline' role='form'>
+							<form class='form-inline' role='form' id='searchFrm'>
 								<div class='form-group'>
-									<select class='form-control'>
+									<select class='form-control' name='USER_ID' id='searchFrm_USER_ID'>
 										<option value='' selected>[全部]</option>
 										#foreach($user in $!{data.users})
 										<option value='$!user.id'>$!user.CORP_NAME</option>
 										#end
 									</select>
 								</div>
-								<button type='button' class='btn btn-default glyphicon glyphicon-search'>&#8201;查询</button>
+								<button type='button' class='btn btn-default glyphicon glyphicon-search' id='searchFrm_btn'>&#8201;查询</button>
 							</form>
 						</div>
 					</div>
@@ -38,10 +38,10 @@
 								<button type="button" class="btn btn-primary dropdown-toggle glyphicon glyphicon-plus-sign" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 发送计划 <span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu">
-									<li><a href="javascript:;">新增</a></li>
-									<li><a href="javascript:;">编辑</a></li>
-									<li role="separator" class="divider"></li>
-									<li><a href="javascript:;">删除</a></li>
+									<li><a href='javascript:;' onclick="$('#addModal').modal()">新增</a></li>
+									<li><a href='javascript:;'>编辑</a></li>
+									<li role='separator' class='divider'></li>
+									<li><a href='javascript:;'>删除</a></li>
 								</ul>
 							</div>
 						</div>
@@ -76,32 +76,32 @@
 					<form id='addFrm' data-olx-type='olx.form' class='form-horizontal' role='form' data-url='create'>
 						<div class='modal-body'>
 							<div class='form-group'>
-								<label for='addFrm_CateName' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>分类名称</label>
+								<label for='addFrm_PLAN_NAME' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>计划名称</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='addFrm_CateName' name='CateName' placeholder='分类名称' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
+									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='addFrm_PLAN_NAME' name='PLAN_NAME' placeholder='计划名称' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label for='addFrm_Intro' class='col-sm-3 control-label'>分类描述</label>
+								<label for='addFrm_PLAN_NUM' class='col-sm-3 control-label'>计发（条）</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_Intro' name='Intro' placeholder='分类描述'>
+									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_PLAN_NUM' name='PLAN_NUM' placeholder='计发（条）' value='5000'>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label for='addFrm_Sort' class='col-sm-3 control-label'>排序</label>
+								<label for='addFrm_RATIO' class='col-sm-3 control-label'>比率（%）</label>
 								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_Sort' name='Sort' placeholder='排序' value='1'>
+									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_RATIO' name='RATIO' placeholder='比率（%）' value='0.1'>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label for='addFrm_shadow_PostTime' class='col-sm-3 control-label'>创建时间</label>
+								<label for='addFrm_shadow_PLAN_TIME' class='col-sm-3 control-label'>计划时间</label>
 								<div class='col-sm-7'>
-									<div class='input-group date form_date col-md-12' data-date='' data-date-format='yyyy/mm/dd' data-link-field='addFrm_PostTime' data-link-format='yyyy/mm/dd'>
-										<input class='form-control' id='addFrm_shadow_PostTime' type='text' value='' readonly placeholder='创建时间'>
+									<div class='input-group date form_date col-md-12' data-date='' data-date-format='yyyy/mm/dd' data-link-field='addFrm_PLAN_TIME' data-link-format='yyyy/mm/dd'>
+										<input class='form-control' id='addFrm_shadow_PLAN_TIME' type='text' value='' readonly placeholder='计划时间'>
 										<span class='input-group-addon'><span class='glyphicon glyphicon-remove'></span></span>
 										<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
 									</div>
-									<input type='hidden' data-olx-type='olx.form.input' class='form-control' id='addFrm_PostTime' name='CreateTime' placeholder='创建时间'>
+									<input type='hidden' data-olx-type='olx.form.input' class='form-control' id='addFrm_PLAN_TIME' name='PLAN_TIME' placeholder='计划时间'>
 								</div>
 							</div>
 						</div>
@@ -131,54 +131,6 @@
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
-		<div id='editModal' class='modal fade' aria-hidden='true' aria-labelledby='editModalLabel' role='dialog' tabindex='-1'>
-			<div class='modal-dialog'>
-				<div class='modal-content'>
-					<div class='modal-header'>
-						<button class='close' aria-hidden='true' data-dismiss='modal' type='button'>×</button>
-						<h4 id='editModalLabel' class='modal-title'><b>编辑</b></h4>
-					</div>
-					<form id='editFrm' data-olx-type='olx.form' class='form-horizontal' role='form' data-url='edit'>
-						<div class='modal-body'>
-							<div class='form-group'>
-								<label for='editFrm_CateName' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>分类名称</label>
-								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' data-required='true' class='form-control' id='editFrm_CateName' name='CateName' placeholder='分类名称' data-placement='bottom' data-original-title='请输入正确的格式。' autofocus>
-								</div>
-							</div>
-							<div class='form-group'>
-								<label for='editFrm_Intro' class='col-sm-3 control-label'>分类描述</label>
-								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' class='form-control' id='editFrm_Intro' name='Intro' placeholder='分类描述'>
-								</div>
-							</div>
-							<div class='form-group'>
-								<label for='editFrm_Sort' class='col-sm-3 control-label'>排序</label>
-								<div class='col-sm-7'>
-									<input type='text' data-olx-type='olx.form.input' class='form-control' id='editFrm_Sort' name='Sort' placeholder='排序' value='1'>
-								</div>
-							</div>
-							<div class='form-group'>
-								<label for='editFrm_shadow_PostTime' class='col-sm-3 control-label'>创建时间</label>
-								<div class='col-sm-7'>
-									<div class='input-group date form_date col-md-12' data-date='' data-date-format='yyyy/mm/dd' data-link-field='editFrm_PostTime' data-link-format='yyyy/mm/dd'>
-										<input class='form-control' id='editFrm_shadow_PostTime' type='text' value='' readonly placeholder='创建时间'>
-										<span class='input-group-addon'><span class='glyphicon glyphicon-remove'></span></span>
-										<span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
-									</div>
-									<input type='hidden' data-olx-type='olx.form.input' class='form-control' id='editFrm_PostTime' name='CreateTime' placeholder='创建时间'>
-								</div>
-							</div>
-						</div>
-						<div class='modal-footer'>
-							<button class='btn btn-default' data-dismiss='modal' type='button'>关闭</button>
-							<button class='btn btn-warning' type='reset'>重置</button>
-							<button id='editFrm_btn_submit' class='btn btn-primary' type='button'>保存</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
 		#parse('front/_pagelet/Common.IndexJs.html')
 		<script type='text/javascript' src='$!{conf.html.cdn}bootstrap-datetimepicker/2.2.0/js/bootstrap-datetimepicker.js' charset='UTF-8'></script>
 		<script type='text/javascript' src='$!{conf.html.cdn}bootstrap-datetimepicker/2.2.0/js/locales/bootstrap-datetimepicker.zh-CN.js' charset='UTF-8'></script>
@@ -197,13 +149,6 @@
 		$('#delConfirmModal').on('show.bs.modal', function (e){
 			var vals = $('#table1').olxGrid('getCheckedRowsValue', 1);
 			if(!vals.length){
-				$('#alertModal').modal();
-				return e.preventDefault();
-			}
-		});
-		$('#editModal').on('show.bs.modal', function (e){
-			var vals = $('#table1').olxGrid('getCheckedRowsValue', 1);
-			if(1 !== vals.length){
 				$('#alertModal').modal();
 				return e.preventDefault();
 			}
@@ -233,6 +178,33 @@
 			// 	location.reload();
 			// });
 		});
+		$('#searchFrm_btn').click(function(){
+			var user_id = $('#searchFrm_USER_ID').val();
+			if('' === user_id) return location.reload();
+			$.ajax({
+				url: user_id,
+				type: 'GET',
+				dataType: 'json'
+			}).done(function (data){
+				var parent = $('#table1').parent();
+				$('#table1').remove()
+				parent.append(data.data);
+			});
+		});
+		// 默认刷新效果
+		(function(){
+			var user_id = $('#searchFrm_USER_ID').val();
+			if('' === user_id) return;
+			$.ajax({
+				url: user_id,
+				type: 'GET',
+				dataType: 'json'
+			}).done(function (data){
+				var parent = $('#table1').parent();
+				$('#table1').remove()
+				parent.append(data.data);
+			});
+		})();
 		</script>
 	</body>
 </html>

@@ -7,8 +7,14 @@
 
 var conf = require('../../settings');
 
+var path = require('path'),
+	fs = require('fs'),
+	velocity = require('velocityjs'),
+	cwd = process.cwd();
 
 var EventProxy = require('eventproxy');
+
+var macros = require('../../lib/macro');
 
 var biz = {
 	user: require('../../biz/user'),
@@ -62,3 +68,54 @@ exports.sendRecordUI = function(req, res, next){
 		ep.emit('send_plan', docs);
 	});
 };
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.sendRecordUI_ByUser = function(req, res, next){
+	var result = { success: false },
+		user_id = req.params.user_id;
+
+	// 查找该用户的发送计划
+	biz.send_plan.getAllByUser(user_id, function (err, docs){
+		if(err){
+			result.msg = err;
+			return res.send(result);
+		}
+
+		exports.getTemplate(function (err, template){
+			if(err){
+				result.msg = err;
+				return res.send(result);
+			}
+
+			var html = velocity.render(template, {
+				conf: conf,
+				data: {
+					send_plan: docs
+				}
+			}, macros);
+
+			result.success = true;
+			result.data = html;
+			res.send(result);
+		});
+	});
+};
+
+(function (exports){
+	/**
+	 * 获取模板
+	 *
+	 * @params
+	 * @return
+	 */
+	exports.getTemplate = function(cb){
+		fs.readFile(path.join(cwd, 'views', 'manage', 'sms', 'SendRecord', '_pagelet', 'Side.List.html'), 'utf8', function (err, template){
+			if(err) return cb(err);
+			cb(null, template);
+		});
+	};
+})(exports);

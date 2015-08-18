@@ -51,6 +51,7 @@ module.exports = function(app){
 	app.get('/manage/', manage.manager.login_validate, manage.site.indexUI);
 
 	app.get('/manage/sms/sendRecord/', manage.manager.login_validate, manage.site.sendRecordUI);
+	app.get('/manage/sms/sendRecord/:user_id$', manage.manager.login_validate, manage.site.sendRecordUI_ByUser);
 
 	app.get('/manage/user/', manage.manager.login_validate, manage.user.indexUI);
 	app.get('/manage/user/:id$', manage.manager.login_validate, manage.user.id);
