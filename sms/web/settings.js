@@ -24,5 +24,14 @@ module.exports = {
 		external_res: 'http://www.foreworld.net/public/',
 		pagesize: 10,
 		cache_time: 1000 * 60 * 60
+	}, mail: {
+		secureConnection: true,
+		host: 'smtp.163.com',
+		port: 465,
+		to: ['huangxin@foreworld.net'],
+		auth: {
+			user: 'firefrog@163.com',
+			pass: ''
+		}
 	}
 };

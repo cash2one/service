@@ -5,6 +5,13 @@
  */
 'use strict';
 
+var path = require('path'),
+	cwd = process.cwd(),
+	macros = require('./macro');
+
+var util = require('speedt-utils'),
+	mailService = util.service.mail;
+
 exports.appErrorProcess = function(app){
 
 	app.configure(function(){
@@ -18,6 +25,7 @@ exports.appErrorProcess = function(app){
 
 		app.use(function (err, req, res, next){
 			if(!err) return next();
+			// res send
 			if(req.xhr){
 				return res.send({ success: false, msg: err.message });
 			}
@@ -25,8 +33,20 @@ exports.appErrorProcess = function(app){
 		});
 
 		process.on('uncaughtException', function (err){
-			// TODO: send email
-			console.log(err);
+			// send mail
+			mailService.sendMail({
+				subject: 'dolalive.com [SMS Error]',
+				template: [
+					path.join(cwd, 'lib', 'ErrorMail.vm.html'), {
+						data: {
+							error: err,
+							time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+						}
+					}, macros
+				]
+			}, function (err, info){
+				if(err) console.log(arguments);
+			});
 		});
 	});
 };
