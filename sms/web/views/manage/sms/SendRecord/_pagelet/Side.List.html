@@ -18,8 +18,8 @@
 			<td>#formatDate($!{doc.PLAN_TIME})</td>
 			<td>$!doc.PLAN_NUM</td>
 			<td>$!doc.RATIO</td>
-			<td>#formatDate($!{doc.SEND_TIME})</td>
-			<td>$!doc.SEND_COUNT</td>
+			<td>#if($!doc.IS_USED == '1')#formatDate($!{doc.SEND_TIME})#else#end</td>
+			<td>#if($!doc.IS_USED == '1')$!doc.SEND_COUNT#else#end</td>
 			<td>#if($!doc.IS_USED == '1')是#else否#end</td>
 		</tr>
 		#if($!doc.IS_USED == '1')

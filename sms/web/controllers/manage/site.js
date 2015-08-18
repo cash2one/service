@@ -119,3 +119,38 @@ exports.sendRecordUI_ByUser = function(req, res, next){
 		});
 	};
 })(exports);
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.create = function(req, res, next){
+	var result = { success: false },
+		data = req._data;
+	var user = req.session.user;
+
+	data.PLAN_TIME = data.PLAN_TIME || new Date();
+	// 开始注册
+	biz.send_plan.create(data, function (err, count){
+		if(err) return next(err);
+		result.success = true;
+		res.send(result);
+	});
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.remove = function(req, res, next){
+	var result = { success: false },
+		data = req._data;
+	// 开始删除
+	biz.send_plan.remove(data.ids, function (err, count){
+		if(err) return next(err);
+		result.success = true;
+		res.send(result);
+	});
+};

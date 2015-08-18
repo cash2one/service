@@ -52,6 +52,8 @@ module.exports = function(app){
 
 	app.get('/manage/sms/sendRecord/', manage.manager.login_validate, manage.site.sendRecordUI);
 	app.get('/manage/sms/sendRecord/:user_id$', manage.manager.login_validate, manage.site.sendRecordUI_ByUser);
+	app.post('/manage/sms/sendRecord/create$', valiPostData, manage.manager.login_validate, manage.site.create);
+	app.post('/manage/sms/sendRecord/remove$', valiPostData, manage.manager.login_validate, manage.site.remove);
 
 	app.get('/manage/user/', manage.manager.login_validate, manage.user.indexUI);
 	app.get('/manage/user/:id$', manage.manager.login_validate, manage.user.id);

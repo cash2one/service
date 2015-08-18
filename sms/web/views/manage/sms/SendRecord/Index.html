@@ -41,7 +41,7 @@
 									<li><a href='javascript:;' onclick="$('#addModal').modal()">新增</a></li>
 									<li><a href='javascript:;'>编辑</a></li>
 									<li role='separator' class='divider'></li>
-									<li><a href='javascript:;'>删除</a></li>
+									<li><a href='javascript:;' onclick="$('#delConfirmModal').modal()">删除</a></li>
 								</ul>
 							</div>
 						</div>
@@ -75,6 +75,16 @@
 					</div>
 					<form id='addFrm' data-olx-type='olx.form' class='form-horizontal' role='form' data-url='create'>
 						<div class='modal-body'>
+							<div class='form-group'>
+								<label for='addFrm_RATIO' class='col-sm-3 control-label'>选择用户</label>
+								<div class='col-sm-7'>
+									<select class='form-control' name='USER_ID' id='addFrm_USER_ID'>
+										#foreach($user in $!{data.users})
+										<option value='$!user.id'>$!user.CORP_NAME</option>
+										#end
+									</select>
+								</div>
+							</div>
 							<div class='form-group'>
 								<label for='addFrm_PLAN_NAME' class='col-sm-3 control-label'><span class='olx-form-required'>*</span>计划名称</label>
 								<div class='col-sm-7'>
@@ -163,21 +173,22 @@
 			}]);
 		});
 		$('#delConfirmModal_btn_submit').click(function(){
-			// var selIds = $('#table1').olxGrid('getCheckedRowsValue', 1);
-			// var data = {
-			// 	data: JSON.stringify({
-			// 		ids: selIds
-			// 	})
-			// };
-			// $.ajax({
-			// 	url: 'remove',
-			// 	type: 'POST',
-			// 	dataType: 'json',
-			// 	data: data
-			// }).done(function (data) {
-			// 	location.reload();
-			// });
+			var selIds = $('#table1').olxGrid('getCheckedRowsValue', 1);
+			var data = {
+				data: JSON.stringify({
+					ids: selIds
+				})
+			};
+			$.ajax({
+				url: 'remove',
+				type: 'POST',
+				dataType: 'json',
+				data: data
+			}).done(function (data) {
+				location.reload();
+			});
 		});
+		// 搜索功能
 		$('#searchFrm_btn').click(function(){
 			var user_id = $('#searchFrm_USER_ID').val();
 			if('' === user_id) return location.reload();

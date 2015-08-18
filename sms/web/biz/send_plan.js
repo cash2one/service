@@ -70,3 +70,36 @@ exports.findSendRecordByUser = function(user_id, cb){
 		cb(null, docs);
 	});
 };
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.create = function(newInfo, cb){
+	// 开始添加
+	mysql.query('INSERT INTO m_send_plan (id, PLAN_NAME, PLAN_NUM, PLAN_TIME, RATIO, USER_ID, IS_USED) VALUES (?, ?, ?, ?, ?, ?, 0)',
+		[util.uuid(), newInfo.PLAN_NAME, newInfo.PLAN_NUM, newInfo.PLAN_TIME, newInfo.RATIO, newInfo.USER_ID],
+		function (err, status){
+			if(err) return cb(err);
+			cb(null, null, null, status.changedRows);
+	});
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.remove = function(ids, cb){
+	var sql = 'DELETE FROM m_send_plan where id IN (""';
+	for(var i in ids){
+		sql += ', ?'
+	}
+	sql += ')';
+	// 开始删除
+	mysql.query(sql, ids, function (err, result){
+		if(err) return cb(err);
+		cb(null, result.affectedRows);
+	});
+};
