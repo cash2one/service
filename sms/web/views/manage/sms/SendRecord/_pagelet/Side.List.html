@@ -8,6 +8,7 @@
 			<th style='color:red'>比率（%）</th>
 			<th style='color:blue'>发送时间</th>
 			<th style='color:blue'>实发（条）</th>
+			<th style='color:blue'>测试号（条）</th>
 			<th style='color:green'>已发送</th>
 		</tr>
 	</thead>
@@ -20,16 +21,17 @@
 			<td>$!doc.RATIO</td>
 			<td>#if($!doc.IS_USED == '1')#formatDate($!{doc.SEND_TIME})#else#end</td>
 			<td>#if($!doc.IS_USED == '1')$!doc.SEND_COUNT#else#end</td>
+			<td>#if($!doc.IS_USED == '1')$!doc.SEND_TEST_COUNT#else#end</td>
 			<td>#if($!doc.IS_USED == '1')是#else否#end</td>
 		</tr>
 		#if($!doc.IS_USED == '1')
 			<tr>
 				<td> </td>
-				<td colspan='9'>$!doc.SEND_CONTENT</td>
+				<td colspan='8'>$!doc.SEND_CONTENT</td>
 			</tr>
 			#*<tr>
 				<td> </td>
-				<td colspan='9' style='word-break:break-all;'>$!doc.SEND_MOBILE</td>
+				<td colspan='8' style='word-break:break-all;'>$!doc.SEND_MOBILE</td>
 			</tr>*#
 		#end
 		#end

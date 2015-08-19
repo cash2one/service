@@ -220,9 +220,7 @@
 		}
 		$('#smsFrm_content').bind('input propertychange', function(){
 			var val = $(this).val().trim();
-			val = val.substring(0, 70);
 			$('#content_size').html(70 - val.length);
-			$(this).val(val);
 		});
 		</script>
 	</body>

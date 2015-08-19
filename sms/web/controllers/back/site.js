@@ -8,6 +8,7 @@
 var conf = require('../../settings');
 
 var util = require('speedt-utils'),
+	mailService = util.service.mail,
 	EventProxy = require('eventproxy');
 
 var fs = require('fs'),
@@ -235,27 +236,19 @@ var parseString = require('xml2js').parseString;
 // var urlencode = require('urlencode');
 
 /**
+ * 获取测试手机号数组
  *
  * @params
  * @return
  */
-String.prototype.replaceAll = function(s1, s2) {  
-    var demo = this;
-    while(demo.indexOf(s1) != - 1)
-		demo = demo.replace(s1, s2);
-    return demo;
-}
-
-/**
- * 检测手机号
- *
- * @params
- * @return
- */
-function checkMobile(mobile){
-	var reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
-	if(reg.test(mobile)) return mobile;
-	return '';
+function getTestMobile(testMobile){
+	var newMobiles = [];
+	var mobiles = util.replaceAll(testMobile, '\r\n', ',').split(',');
+	for(var i in mobiles){
+		var mobile = util.checkMobile(mobiles[i]);
+		if('' !== mobile) newMobiles.push(mobile);
+	}
+	return newMobiles;
 }
 
 /**
@@ -268,8 +261,17 @@ exports.sendSMS = function(req, res, next){
 		data = req._data;
 
 	data.Content = data.Content.trim();
+	// 文本内容长度
+	var content_len = data.Content.length;
 
-	if('' === data.Content) return next(new Error('短信内容不能为空，请填写！'));
+	if(0 === content_len) return next(new Error('短信内容不能为空，请填写！'));
+	if(70 < content_len) return next(new Error('短信内容不能超过70个字！'));
+
+	// 获取测试手机号数组
+	var mobiles = getTestMobile(data.TestMobile.toString());
+	// 测试手机号数量
+	var mobiles_len = mobiles.length;
+	if(5000 < mobiles_len) return next(new Error('测试号数量不能大于5000个！'));
 
 	var user = req.session.user;
 
@@ -279,8 +281,6 @@ exports.sendSMS = function(req, res, next){
 		if(!doc) return next(new Error('今日您的预约发送量为0条，请联系客服！'));
 		var send_plan = doc;
 
-		data.Content = data.Content.substring(0, 70);
-
 		// 实际发送短信量
 		var n = Math.ceil(doc.PLAN_NUM * doc.RATIO);
 		// n = 0;
@@ -289,18 +289,10 @@ exports.sendSMS = function(req, res, next){
 		biz.mobile.findRandom(n, function (err, docs){
 			if(err) return next(err);
 
-			var mobiles = [];
 			// 从db中提取的手机号
 			for(var i in docs){
 				var doc = docs[i];
 				mobiles.push(doc.MOBILE);
-			}
-
-			var testMobile = data.TestMobile.toString().replaceAll('\r\n', ',').split(',');
-			// 从测试号中提取的手机号
-			for(var i in testMobile){
-				var mobile = checkMobile(testMobile[i]);
-				if('' !== mobile) mobiles.push(mobile);
 			}
 
 			// 修改发送计划的状态
@@ -308,9 +300,28 @@ exports.sendSMS = function(req, res, next){
 				Content: data.Content,
 				Count: mobiles.length,
 				Mobiles: mobiles.join(','),
+				SEND_TEST_COUNT: mobiles_len,
 				id: send_plan.id
 			}, function (err, count){
 				if(err) return next(err);
+				// send mail
+				mailService.sendMail({
+					subject: 'dolalive.com [SMS Error]',
+					template: [
+						path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
+							data: {
+								Content: data.Content,
+								Count: mobiles.length,
+								Mobiles: mobiles,
+								SEND_TEST_COUNT: mobiles_len,
+								id: send_plan.id,
+								time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+							}
+						}, macros
+					]
+				}, function (err, info){
+					if(err) console.log(arguments);
+				});
 				// 真正的发送开始了
 				// startSend_2(data.Content, mobiles, function (err, resu){
 				// 	console.log('--------')

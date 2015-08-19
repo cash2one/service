@@ -1,0 +1,10 @@
+<p>发送计划：$!data.id</p>
+<p>发送时间：$!data.time</p>
+<p>发送内容：$!data.Content</p>
+<p>实发（条）：$!data.Count</p>
+<p>测试号（条）：$!data.SEND_TEST_COUNT</p>
+<p>手机号：</p>
+<p>
+#foreach($doc in $!{data.Mobiles})
+$doc<br/>#end
+</p>
