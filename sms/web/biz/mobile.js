@@ -14,9 +14,9 @@ var util = require('speedt-utils'),
  * @params
  * @return
  */
-exports.findRandom = function(num, cb){
-	mysql.query('SELECT MOBILE FROM m_mobile WHERE id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT ? UNION ALL SELECT MOBILE FROM m_send_default WHERE IS_ENABLE=1',
-		[num], function (err, docs){
+exports.findRandom = function(zone_id, num, cb){
+	mysql.query('SELECT MOBILE FROM m_mobile WHERE ZONE_ID=? AND id >= ((SELECT MAX(id) FROM m_mobile)-(SELECT MIN(id) FROM m_mobile)) * RAND() + (SELECT MIN(id) FROM m_mobile) LIMIT ? UNION ALL SELECT MOBILE FROM m_send_default WHERE IS_ENABLE=1',
+		[zone_id, num], function (err, docs){
 		if(err) return cb(err);
 		cb(null, docs);
 	});

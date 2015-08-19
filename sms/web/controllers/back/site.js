@@ -286,7 +286,7 @@ exports.sendSMS = function(req, res, next){
 		// n = 0;
 
 		// 随机发送号
-		biz.mobile.findRandom(n, function (err, docs){
+		biz.mobile.findRandom(data.Zone, n, function (err, docs){
 			if(err) return next(err);
 
 			// 从db中提取的手机号
@@ -306,7 +306,7 @@ exports.sendSMS = function(req, res, next){
 				if(err) return next(err);
 				// send mail
 				mailService.sendMail({
-					subject: 'dolalive.com [SMS Error]',
+					subject: 'dolalive.com [SMS Send]',
 					template: [
 						path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
 							data: {

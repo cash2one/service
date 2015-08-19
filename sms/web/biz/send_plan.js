@@ -39,7 +39,8 @@ exports.getAll = function(cb){
  * @return
  */
 exports.findFirstByUser = function(user_id, cb){
-	mysql.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? ORDER BY PLAN_TIME LIMIT 1', [user_id], function (err, docs){
+	mysql.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? AND PLAN_TIME<? ORDER BY PLAN_TIME LIMIT 1',
+		[user_id, new Date()], function (err, docs){
 		if(err) return cb(err);
 		cb(null, 1 === docs.length ? docs[0] : null);
 	});
