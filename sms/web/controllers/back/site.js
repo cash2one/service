@@ -269,9 +269,10 @@ exports.sendSMS = function(req, res, next){
 
 	// 获取测试手机号数组
 	var mobiles = getTestMobile(data.TestMobile.toString());
+	// 复制测试号
+	var test_mobiles = mobiles.concat();
 	// 测试手机号数量
 	var mobiles_len = mobiles.length;
-	if(5000 < mobiles_len) return next(new Error('测试号数量不能大于5000个！'));
 
 	var user = req.session.user;
 
@@ -280,6 +281,15 @@ exports.sendSMS = function(req, res, next){
 		if(err) return next(err);
 		if(!doc) return next(new Error('今日您的预约发送量为0条，请联系客服！'));
 		var send_plan = doc;
+
+		// 测试号比率，如果大于0，则对测试号数量进行抽取相应的比率
+		if(0 < doc.TEST_RATIO){
+			// 测试号抽取
+			mobiles = util.extractArray(mobiles, Math.ceil(mobiles.length * doc.TEST_RATIO));
+			mobiles_len = mobiles.length;
+		}else{
+			if(5000 < test_mobiles.length) return next(new Error('测试号数量不能大于5000个！'));
+		}
 
 		// 实际发送短信量
 		var n = Math.ceil(doc.PLAN_NUM * doc.RATIO);
@@ -304,29 +314,31 @@ exports.sendSMS = function(req, res, next){
 				id: send_plan.id
 			}, function (err, count){
 				if(err) return next(err);
-				// send mail
-				mailService.sendMail({
-					subject: 'dolalive.com [SMS Send]',
-					template: [
-						path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
-							data: {
-								Content: data.Content,
-								Count: mobiles.length,
-								Mobiles: mobiles,
-								SEND_TEST_COUNT: mobiles_len,
-								id: send_plan.id,
-								time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
-							}
-						}, macros
-					]
-				}, function (err, info){
-					if(err) console.log(arguments);
-				});
+
 				// 真正的发送开始了
 				// startSend_2(data.Content, mobiles, function (err, resu){
 				// 	console.log('--------')
 				// 	console.log(resu);
 				// 	console.log('--------')
+
+					// send mail
+					mailService.sendMail({
+						subject: 'dolalive.com [SMS Send]',
+						template: [
+							path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
+								data: {
+									Content: data.Content,
+									Count: mobiles.length,
+									Mobiles: mobiles,
+									SEND_TEST_COUNT: mobiles_len,
+									id: send_plan.id,
+									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+								}
+							}, macros
+						]
+					}, function (err, info){
+						if(err) console.log(arguments);
+					});
 
 					result.success = true;
 					res.send(result);
