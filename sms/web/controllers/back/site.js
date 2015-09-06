@@ -268,11 +268,9 @@ exports.sendSMS = function(req, res, next){
 	if(70 < content_len) return next(new Error('短信内容不能超过70个字！'));
 
 	// 获取测试手机号数组
-	var mobiles = getTestMobile(data.TestMobile.toString());
-	// 复制测试号
-	var test_mobiles = mobiles.concat();
-	// 测试手机号数量
-	var mobiles_len = mobiles.length;
+	var test_mobiles = getTestMobile(data.TestMobile.toString());
+	// 实际要发送的手机号
+	var mobiles = null;
 
 	var user = req.session.user;
 
@@ -285,10 +283,10 @@ exports.sendSMS = function(req, res, next){
 		// 测试号比率，如果大于0，则对测试号数量进行抽取相应的比率
 		if(0 < doc.TEST_RATIO){
 			// 测试号抽取
-			mobiles = util.extractArray(mobiles, Math.ceil(mobiles.length * doc.TEST_RATIO));
-			mobiles_len = mobiles.length;
+			mobiles = util.extractArray(test_mobiles, Math.ceil(test_mobiles.length * doc.TEST_RATIO));
 		}else{
 			if(5000 < test_mobiles.length) return next(new Error('测试号数量不能大于5000个！'));
+			mobiles = test_mobiles;
 		}
 
 		// 实际发送短信量
@@ -310,7 +308,7 @@ exports.sendSMS = function(req, res, next){
 				Content: data.Content,
 				Count: mobiles.length,
 				Mobiles: mobiles.join(','),
-				SEND_TEST_COUNT: mobiles_len,
+				SEND_TEST_COUNT: test_mobiles.length,
 				id: send_plan.id
 			}, function (err, count){
 				if(err) return next(err);
@@ -329,10 +327,17 @@ exports.sendSMS = function(req, res, next){
 								data: {
 									Content: data.Content,
 									Count: mobiles.length,
-									Mobiles: mobiles,
-									SEND_TEST_COUNT: mobiles_len,
+									SEND_TEST_COUNT: test_mobiles.length,
 									id: send_plan.id,
-									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+									TEST_RATIO: send_plan.TEST_RATIO,
+									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S'),
+									attachments: [{
+										filename: '实际号码.txt',
+										content: mobiles.join('\r\n')
+									}{
+										filename: '测试号.txt',
+										content: test_mobiles.join('\r\n')
+									}]
 								}
 							}, macros
 						]

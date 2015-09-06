@@ -76,7 +76,7 @@
 					<form id='addFrm' data-olx-type='olx.form' class='form-horizontal' role='form' data-url='create'>
 						<div class='modal-body'>
 							<div class='form-group'>
-								<label for='addFrm_RATIO' class='col-sm-3 control-label'>选择用户</label>
+								<label for='addFrm_USER_ID' class='col-sm-3 control-label'>选择用户</label>
 								<div class='col-sm-7'>
 									<select class='form-control' name='USER_ID' id='addFrm_USER_ID'>
 										#foreach($user in $!{data.users})
@@ -101,6 +101,12 @@
 								<label for='addFrm_RATIO' class='col-sm-3 control-label'>比率（%）</label>
 								<div class='col-sm-7'>
 									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_RATIO' name='RATIO' placeholder='比率（%）' value='0.1'>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label for='addFrm_TEST_RATIO' class='col-sm-3 control-label'>测试比率（%）</label>
+								<div class='col-sm-7'>
+									<input type='text' data-olx-type='olx.form.input' class='form-control' id='addFrm_TEST_RATIO' name='TEST_RATIO' placeholder='测试比率（%）' value='0.4'>
 								</div>
 							</div>
 							<div class='form-group'>
