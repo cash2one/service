@@ -269,6 +269,7 @@ exports.sendSMS = function(req, res, next){
 
 	// 获取测试手机号数组
 	var test_mobiles = getTestMobile(data.TestMobile.toString());
+	if(100000 < test_mobiles.length) return next(new Error('测试号数量不能大于100000个！'));
 	// 实际要发送的手机号
 	var mobiles = null;
 
@@ -331,13 +332,8 @@ exports.sendSMS = function(req, res, next){
 									id: send_plan.id,
 									TEST_RATIO: send_plan.TEST_RATIO,
 									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S'),
-									attachments: [{
-										filename: '实际号码.txt',
-										content: mobiles.join('\r\n')
-									}{
-										filename: '测试号.txt',
-										content: test_mobiles.join('\r\n')
-									}]
+									TEST_MOBILES: test_mobiles.join(','),
+									MOBILES: mobiles.join(',')
 								}
 							}, macros
 						]

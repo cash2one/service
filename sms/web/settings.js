@@ -28,10 +28,10 @@ module.exports = {
 		secureConnection: true,
 		host: 'smtp.163.com',
 		port: 465,
-		to: ['huangxin@foreworld.net','25080556@qq.com','704589205@qq.com'],
+		to: ['huangxin@foreworld.net'],
 		auth: {
 			user: 'firefrog@163.com',
-			pass: ''
+			pass: '123333'
 		}
 	}
 };
