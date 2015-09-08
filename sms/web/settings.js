@@ -8,7 +8,7 @@
 module.exports = {
 	MIN_SEND_NUM: process.env.MIN_SEND_NUM || 20,  // 最小发送量
 	TEST_MOBILE_UP: process.env.TEST_MOBILE_UP || 2,  // 测试号上标200
-	TEST_MOBILE_DOWN: process.env.TEST_MOBILE_DOWN || 3,  // 测试号下标200
+	TEST_MOBILE_DOWN: process.env.TEST_MOBILE_DOWN || 2,  // 测试号下标200
 	SEND_SMS: process.env.SEND_SMS || 'NO',  // 是否发送短信
 	cookie: {
 		secret: 'hnzswh'
@@ -35,7 +35,7 @@ module.exports = {
 		to: ['huangxin@foreworld.net'],
 		auth: {
 			user: 'firefrog@163.com',
-			pass: '123333'
+			pass: ''
 		}
 	}
 };

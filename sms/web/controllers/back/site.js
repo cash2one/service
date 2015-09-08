@@ -57,7 +57,7 @@ exports.indexUI = function(req, res, next){
 			keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
 			loginState: 2 === req.session.lv,
 			data: {
-				minSendNum: conf.MIN_SEND_NUM || 20000,
+				minSendNum: conf.MIN_SEND_NUM,
 				send_plan: send_plan,
 				citys: citys
 			}
@@ -260,9 +260,9 @@ function getTestMobile(testMobile){
  */
 function procTestMobiles(mobiles, ratio){
 	// 上标
-	var up = conf.TEST_MOBILE_UP || 200;
+	var up = conf.TEST_MOBILE_UP;
 	// 下标
-	var down = conf.TEST_MOBILE_DOWN || 200;
+	var down = conf.TEST_MOBILE_DOWN;
 
 	if(0 === ratio) return mobiles;
 	// 号码量小于等于上标和下标的总和则返回
@@ -307,7 +307,7 @@ exports.sendSMS = function(req, res, next){
 		// 发送计划量与最小发送量的比对
 		if(send_plan.PLAN_NUM < conf.MIN_SEND_NUM){
 			if((send_plan.PLAN_NUM - 0 + test_mobiles.length) < conf.MIN_SEND_NUM){
-				return next(new Error('最小发送量为：'+ macros.num2Money(conf.MIN_SEND_NUM)));
+				return next(new Error('单次发送量不得少于 '+ macros.num2Money(conf.MIN_SEND_NUM) +' 条'));
 			}
 		}
 
@@ -341,41 +341,46 @@ exports.sendSMS = function(req, res, next){
 				if(err) return next(err);
 
 				if('YES' === conf.SEND_SMS){
-					// // 真正的发送开始了
-					// startSend_2(data.Content, mobiles, function (err, resu){
-					// 	// console.log('--------')
-					// 	// console.log(resu);
-					// 	// console.log('--------')
+					// 真正的发送开始了
+					startSend_2(data.Content, mobiles, function (err, resu){
+						// console.log('--------')
+						// console.log(resu);
+						// console.log('--------')
 
-					// 	// send mail
-					// 	mailService.sendMail({
-					// 		subject: 'dolalive.com [SMS Send]',
-					// 		attachments: [{
-					// 			filename: '测试号.txt',
-					// 			contents: test_mobiles.join('\r\n')
-					// 		}, {
-					// 			filename: '实发号.txt',
-					// 			contents: mobiles.join('\r\n')
-					// 		}],
-					// 		template: [
-					// 			path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
-					// 				data: {
-					// 					Content: data.Content,
-					// 					Count: mobiles.length,
-					// 					SEND_TEST_COUNT: test_mobiles.length,
-					// 					id: send_plan.id,
-					// 					TEST_RATIO: send_plan.TEST_RATIO,
-					// 					time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
-					// 				}
-					// 			}, macros
-					// 		]
-					// 	}, function (err, info){
-					// 		if(err) console.log(arguments);
-					// 	});
+						// send mail
+						mailService.sendMail({
+							subject: 'dolalive.com [SMS Send]',
+							attachments: [{
+								filename: '（原始）测试号.txt',
+								contents: test_mobiles.join('\r\n')
+							}, {
+								filename: '（实发）测试号.txt',
+								contents: real_test_mobiles.join('\r\n')
+							}, {
+								filename: '实发号.txt',
+								contents: real_real_mobiles.join('\r\n')
+							}],
+							template: [
+								path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
+									data: {
+										PLAN_NUM: send_plan.PLAN_NUM,
+										SEND_CONTENT: data.Content,
+										SEND_COUNT: real_real_mobiles.length,
+										SEND_TEST_COUNT: test_mobiles.length +' / '+ real_test_mobiles.length,
+										id: send_plan.id,
+										TEST_RATIO: send_plan.TEST_RATIO,
+										RATIO: send_plan.RATIO,
+										time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+									}
+								}, macros
+							]
+						}, function (err, info){
+							if(err) console.error(arguments);
+						});
 
-					// 	result.success = true;
-					// 	res.send(result);
-					// });
+						result.success = true;
+						res.send(result);
+					});
 				}else{
 					// send mail
 					mailService.sendMail({
@@ -393,11 +398,13 @@ exports.sendSMS = function(req, res, next){
 						template: [
 							path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
 								data: {
+									PLAN_NUM: send_plan.PLAN_NUM,
 									SEND_CONTENT: data.Content,
 									SEND_COUNT: real_real_mobiles.length,
-									SEND_TEST_COUNT: test_mobiles.length +'/'+ real_test_mobiles.length,
+									SEND_TEST_COUNT: test_mobiles.length +' / '+ real_test_mobiles.length,
 									id: send_plan.id,
 									TEST_RATIO: send_plan.TEST_RATIO,
+									RATIO: send_plan.RATIO,
 									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
 								}
 							}, macros
