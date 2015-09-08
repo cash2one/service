@@ -57,6 +57,7 @@ exports.indexUI = function(req, res, next){
 			keywords: ',Bootstrap3,nodejs,express,javascript,java,xhtml,html5',
 			loginState: 2 === req.session.lv,
 			data: {
+				minSendNum: conf.MIN_SEND_NUM || 20000,
 				send_plan: send_plan,
 				citys: citys
 			}
@@ -252,6 +253,31 @@ function getTestMobile(testMobile){
 }
 
 /**
+ * 处理测试号，并过滤抽取
+ *
+ * @params
+ * @return
+ */
+function procTestMobiles(mobiles, ratio){
+	// 上标
+	var up = conf.TEST_MOBILE_UP || 200;
+	// 下标
+	var down = conf.TEST_MOBILE_DOWN || 200;
+
+	if(0 === ratio) return mobiles;
+	// 号码量小于等于上标和下标的总和则返回
+	if(mobiles.length <= (up - 0 + down)) return mobiles;
+
+	var up_mobiles = mobiles.slice(0, up);
+	var center_mobiles = mobiles.slice(up, mobiles.length - down);
+	var down_mobiles = mobiles.slice(mobiles.length - down, mobiles.length);
+
+	center_mobiles = util.extractArray(center_mobiles, Math.ceil(center_mobiles.length * ratio));
+
+	return up_mobiles.concat(center_mobiles, down_mobiles);
+}
+
+/**
  *
  * @params
  * @return
@@ -259,91 +285,130 @@ function getTestMobile(testMobile){
 exports.sendSMS = function(req, res, next){
 	var result = { success: false },
 		data = req._data;
-
-	data.Content = data.Content.trim();
-	// 文本内容长度
-	var content_len = data.Content.length;
-
-	if(0 === content_len) return next(new Error('短信内容不能为空，请填写！'));
-	if(70 < content_len) return next(new Error('短信内容不能超过70个字！'));
-
-	// 获取测试手机号数组
-	var test_mobiles = getTestMobile(data.TestMobile.toString());
-	if(100000 < test_mobiles.length) return next(new Error('测试号数量不能大于100000个！'));
-	// 实际要发送的手机号
-	var mobiles = null;
-
+	// 用户会话
 	var user = req.session.user;
+
+	// 短信内容去两边空格
+	data.Content = data.Content.trim();
+	// 短信内容长度检测
+	if(70 < data.Content.length || 0 === data.Content.length){
+		return next(new Error('短信内容不能为空并且不能超过 70 个字！'));
+	}
 
 	// 获取发送计划
 	biz.send_plan.findFirstByUser(user.id, function (err, doc){
 		if(err) return next(err);
-		if(!doc) return next(new Error('今日您的预约发送量为0条，请联系客服！'));
+		if(!doc) return next(new Error('今日您的预约发送量为 0 条，请联系客服！'));
 		var send_plan = doc;
 
-		// 测试号比率，如果大于0，则对测试号数量进行抽取相应的比率
-		if(0 < doc.TEST_RATIO){
-			// 测试号抽取
-			mobiles = util.extractArray(test_mobiles, Math.ceil(test_mobiles.length * doc.TEST_RATIO));
-		}else{
-			if(5000 < test_mobiles.length) return next(new Error('测试号数量不能大于5000个！'));
-			mobiles = test_mobiles;
+		// 获取测试手机号数组
+		var test_mobiles = getTestMobile(data.TestMobile.toString());
+
+		// 发送计划量与最小发送量的比对
+		if(send_plan.PLAN_NUM < conf.MIN_SEND_NUM){
+			if((send_plan.PLAN_NUM - 0 + test_mobiles.length) < conf.MIN_SEND_NUM){
+				return next(new Error('最小发送量为：'+ macros.num2Money(conf.MIN_SEND_NUM)));
+			}
 		}
 
 		// 实际发送短信量
-		var n = Math.ceil(doc.PLAN_NUM * doc.RATIO);
+		var n = Math.ceil(send_plan.PLAN_NUM * send_plan.RATIO);
 		// n = 0;
-
-		// 随机发送号
+		// 随机抽取 mysql 中的发送号
 		biz.mobile.findRandom(data.Zone, n, function (err, docs){
 			if(err) return next(err);
 
-			// 从db中提取的手机号
+			// mysql 中抽取的手机号
+			var real_db_mobiles = [];
 			for(var i in docs){
 				var doc = docs[i];
-				mobiles.push(doc.MOBILE);
+				real_db_mobiles.push(doc.MOBILE);
 			}
+
+			// 真实要发送的测试号
+			var real_test_mobiles = procTestMobiles(test_mobiles, send_plan.TEST_RATIO);
+			// 最终真正要发送的 mysql 和 测试号集合
+			var real_real_mobiles = real_test_mobiles.concat(real_db_mobiles);
 
 			// 修改发送计划的状态
 			biz.send_plan.editUsedStatus({
-				Content: data.Content,
-				Count: mobiles.length,
-				Mobiles: mobiles.join(','),
-				SEND_TEST_COUNT: test_mobiles.length,
+				SEND_CONTENT: data.Content,  // 发送内容
+				SEND_COUNT: real_real_mobiles.length,  // 实际发送数量
+				SEND_MOBILE: real_real_mobiles.join(','),  // 实际发送手机号
+				SEND_TEST_COUNT: test_mobiles.length,  // 发送测试号数量
 				id: send_plan.id
 			}, function (err, count){
 				if(err) return next(err);
 
-				// 真正的发送开始了
-				// startSend_2(data.Content, mobiles, function (err, resu){
-				// 	console.log('--------')
-				// 	console.log(resu);
-				// 	console.log('--------')
+				if('YES' === conf.SEND_SMS){
+					// // 真正的发送开始了
+					// startSend_2(data.Content, mobiles, function (err, resu){
+					// 	// console.log('--------')
+					// 	// console.log(resu);
+					// 	// console.log('--------')
 
+					// 	// send mail
+					// 	mailService.sendMail({
+					// 		subject: 'dolalive.com [SMS Send]',
+					// 		attachments: [{
+					// 			filename: '测试号.txt',
+					// 			contents: test_mobiles.join('\r\n')
+					// 		}, {
+					// 			filename: '实发号.txt',
+					// 			contents: mobiles.join('\r\n')
+					// 		}],
+					// 		template: [
+					// 			path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
+					// 				data: {
+					// 					Content: data.Content,
+					// 					Count: mobiles.length,
+					// 					SEND_TEST_COUNT: test_mobiles.length,
+					// 					id: send_plan.id,
+					// 					TEST_RATIO: send_plan.TEST_RATIO,
+					// 					time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+					// 				}
+					// 			}, macros
+					// 		]
+					// 	}, function (err, info){
+					// 		if(err) console.log(arguments);
+					// 	});
+
+					// 	result.success = true;
+					// 	res.send(result);
+					// });
+				}else{
 					// send mail
 					mailService.sendMail({
-						subject: 'dolalive.com [SMS Send]',
+						subject: 'dolalive.com [SMS Send TESTING]',
+						attachments: [{
+							filename: '（原始）测试号.txt',
+							contents: test_mobiles.join('\r\n')
+						}, {
+							filename: '（实发）测试号.txt',
+							contents: real_test_mobiles.join('\r\n')
+						}, {
+							filename: '实发号.txt',
+							contents: real_real_mobiles.join('\r\n')
+						}],
 						template: [
 							path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
 								data: {
-									Content: data.Content,
-									Count: mobiles.length,
-									SEND_TEST_COUNT: test_mobiles.length,
+									SEND_CONTENT: data.Content,
+									SEND_COUNT: real_real_mobiles.length,
+									SEND_TEST_COUNT: test_mobiles.length +'/'+ real_test_mobiles.length,
 									id: send_plan.id,
 									TEST_RATIO: send_plan.TEST_RATIO,
-									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S'),
-									TEST_MOBILES: test_mobiles.join(','),
-									MOBILES: mobiles.join(',')
+									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
 								}
 							}, macros
 						]
 					}, function (err, info){
-						if(err) console.log(arguments);
+						if(err) console.error(arguments);
 					});
 
 					result.success = true;
 					res.send(result);
-				// });
+				}
 			});
 		});
 	});

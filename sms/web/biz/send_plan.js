@@ -53,7 +53,7 @@ exports.findFirstByUser = function(user_id, cb){
  */
 exports.editUsedStatus = function(data, cb){
 	mysql.query('UPDATE m_send_plan SET IS_USED=1, SEND_TIME=?, SEND_CONTENT=?, SEND_COUNT=?, SEND_MOBILE=?, SEND_TEST_COUNT=? WHERE id=?',
-		[new Date(), data.Content, data.Count, data.Mobiles, data.SEND_TEST_COUNT, data.id], function (err, status){
+		[new Date(), data.SEND_CONTENT, data.SEND_COUNT, data.SEND_MOBILE, data.SEND_TEST_COUNT, data.id], function (err, status){
 		if(err) return cb(err);
 		cb(null, status.changedRows);
 	});

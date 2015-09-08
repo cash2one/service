@@ -79,6 +79,7 @@
 								<div class='form-group'>
 									<div class='col-sm-12'>
 										<button id='smsFrm_btn_sub' type='button' class='btn btn-primary'#if($!{data.send_plan.id} == '0') disabled#end>发送短信</button>
+										<label style='font-size:12px'>提示：一次提交量最少 <span style='color:red'>#num2Money($!data.minSendNum)</span> 条</label>
 									</div>
 								</div>
 							</form>
