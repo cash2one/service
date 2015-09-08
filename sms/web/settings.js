@@ -35,7 +35,7 @@ module.exports = {
 		to: ['huangxin@foreworld.net'],
 		auth: {
 			user: 'firefrog@163.com',
-			pass: ''
+			pass: '123333'
 		}
 	}
 };

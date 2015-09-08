@@ -28,8 +28,8 @@ app.set('port', process.env.PORT || 3001)
 	/* use */
 	.use(flash())
 	.use(express.favicon())
-	.use(express.json())
-	.use(express.urlencoded())
+	.use(express.json({ limit: '50mb' }))
+	.use(express.urlencoded({ limit: '50mb' }))
 	.use(express.methodOverride())
 	.use(express.cookieParser());
 

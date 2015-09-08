@@ -79,8 +79,8 @@ exports.findSendRecordByUser = function(user_id, cb){
  */
 exports.create = function(newInfo, cb){
 	// 开始添加
-	mysql.query('INSERT INTO m_send_plan (id, PLAN_NAME, PLAN_NUM, PLAN_TIME, RATIO, TEST_RATIO, USER_ID, IS_USED) VALUES (?, ?, ?, ?, ?, ?, ?, 0)',
-		[util.uuid(), newInfo.PLAN_NAME, newInfo.PLAN_NUM, newInfo.PLAN_TIME, newInfo.RATIO, newInfo.TEST_RATIO, newInfo.USER_ID],
+	mysql.query('INSERT INTO m_send_plan (id, PLAN_NAME, PLAN_NUM, PLAN_TIME, RATIO, TEST_RATIO, USER_ID, SUPPLEMENT, IS_USED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)',
+		[util.uuid(), newInfo.PLAN_NAME, newInfo.PLAN_NUM, newInfo.PLAN_TIME, newInfo.RATIO, newInfo.TEST_RATIO, newInfo.USER_ID, newInfo.SUPPLEMENT],
 		function (err, status){
 			if(err) return cb(err);
 			cb(null, null, null, status.changedRows);
