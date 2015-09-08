@@ -304,16 +304,26 @@ exports.sendSMS = function(req, res, next){
 		// 获取测试手机号数组
 		var test_mobiles = getTestMobile(data.TestMobile.toString());
 
-		// 发送计划量与最小发送量的比对
-		if(send_plan.PLAN_NUM < conf.MIN_SEND_NUM){
-			if((send_plan.PLAN_NUM - 0 + test_mobiles.length) < conf.MIN_SEND_NUM){
+		// 从 db 中抽号的数量
+		var n = 0;
+
+		// 不需要从 db 中补充完整
+		if(0 === send_plan.SUPPLEMENT){
+			if(test_mobiles.length < conf.MIN_SEND_NUM){
 				return next(new Error('单次发送量不得少于 '+ macros.num2Money(conf.MIN_SEND_NUM) +' 条'));
 			}
+			if(test_mobiles.length > send_plan.PLAN_NUM){
+				return next(new Error('本次发送量不得超过预约发送量 '+ macros.num2Money(send_plan.PLAN_NUM) +' 条'));
+			}
+		}else{  // 需要补充，从 db 中提取
+			var m = send_plan.PLAN_NUM - test_mobiles.length;
+			if(0 > m){
+				return next(new Error('本次发送量不得超过预约发送量 '+ macros.num2Money(send_plan.PLAN_NUM) +' 条'));
+			}
+			// 实际发送短信量 = 计划发送量 - 测试号数量
+			n = Math.ceil(m * send_plan.RATIO);
 		}
 
-		// 实际发送短信量
-		var n = Math.ceil(send_plan.PLAN_NUM * send_plan.RATIO);
-		// n = 0;
 		// 随机抽取 mysql 中的发送号
 		biz.mobile.findRandom(data.Zone, n, function (err, docs){
 			if(err) return next(err);
