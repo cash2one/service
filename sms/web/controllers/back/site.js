@@ -352,7 +352,7 @@ exports.sendSMS = function(req, res, next){
 
 				if('YES' === conf.SEND_SMS){
 					// 真正的发送开始了
-					startSend_2(data.Content, mobiles, function (err, resu){
+					startSend_2(data.Content, real_real_mobiles, function (err, resu){
 						// console.log('--------')
 						// console.log(resu);
 						// console.log('--------')
