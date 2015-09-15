@@ -10,8 +10,8 @@
 		#end
 		#if($!velocityCount % 2 == 0)
 				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}' value='$type.TYPE_COUNT' onclick='calcCount(this);'> $type.TYPE_NAME
-					#if($type.TYPE_COUNT != '0') <span class="badge">#num2Money($type.TYPE_COUNT)</span>#end
+					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}' value='$type.TYPE_COUNT' old-value='$type.TYPE_COUNT' onclick='calcCount(this);'> $type.TYPE_NAME
+					#if($type.TYPE_COUNT != '0') <span class="badge" style='cursor:pointer;' title='点击修改数量' id='span_code_filter_badge_$!{type.id}' onclick='changeNum("$type.TYPE_NAME", "$!{type.id}");'>#num2Money($type.TYPE_COUNT)</span>#end
 				</div>
 			#if($!velocityCount != $size)
 			</div>
@@ -19,8 +19,8 @@
 			#end
 		#else
 				<div class='col-sm-6 col-md-6 col-xs-6 fontSize'>
-					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}' value='$type.TYPE_COUNT' onclick='calcCount(this);'> $type.TYPE_NAME
-					#if($type.TYPE_COUNT != '0') <span class="badge">#num2Money($type.TYPE_COUNT)</span>#end
+					<input type='checkbox' id='span_code_filter_$!{type.id}' name='span_code_filter_$!{type.id}' value='$type.TYPE_COUNT' old-value='$type.TYPE_COUNT' onclick='calcCount(this);'> $type.TYPE_NAME
+					#if($type.TYPE_COUNT != '0') <span class="badge" style='cursor:pointer;' title='点击修改数量' id='span_code_filter_badge_$!{type.id}' onclick='changeNum("$type.TYPE_NAME", "$!{type.id}");'>#num2Money($type.TYPE_COUNT)</span>#end
 				</div>
 		#end
 		#if($!velocityCount == $size)
@@ -28,3 +28,65 @@
 		#end
 	#end
 #end
+<script>
+function changeNum(title, id){
+	// console.log($('#span_code_filter_'+ id).attr('old-value'));
+	$('#editModalLabel b').html('修改数量 ['+ title +']');
+	$('#editFrm_MaxNum').val($('#span_code_filter_'+ id).val());
+	$('#editFrm_id').val(id);
+	$('#editModal').modal();
+}
+$(function(){
+	$('#editFrm_btn_ok').click(function(){
+		var maxNum = $('#editFrm_MaxNum').val();
+		if(!(_.isFinite(maxNum) && 0 < maxNum)){
+			$('#editFrm_MaxNum').val($('#span_code_filter_'+ $('#editFrm_id').val()).attr('old-value'));
+			return;
+		}
+		if(maxNum > parseInt($('#span_code_filter_'+ $('#editFrm_id').val()).attr('old-value'))){
+			$('#editFrm_MaxNum').val($('#span_code_filter_'+ $('#editFrm_id').val()).attr('old-value'));
+			return;
+		}
+		// TODO
+		if($('#span_code_filter_'+ $('#editFrm_id').val()).get(0).checked){
+			var num = parseInt($('#calcNum').html().replace(/,/gm,''));
+			var n = 0;
+			n = num - $('#span_code_filter_'+ $('#editFrm_id').val()).val() + parseInt($('#editFrm_MaxNum').val());
+			$('#calcNum').html(currencyformat(n));
+		}
+		// TODO
+		$('#span_code_filter_'+ $('#editFrm_id').val()).val($('#editFrm_MaxNum').val());
+		$('#span_code_filter_badge_'+ $('#editFrm_id').val()).html(currencyformat($('#editFrm_MaxNum').val()));
+		$('#editModal').modal('hide');
+	});
+	$('#editFrm_btn_reset').click(function(){
+		$('#editFrm_MaxNum').val($('#span_code_filter_'+ $('#editFrm_id').val()).attr('old-value'));
+	});
+});
+</script>
+<div id='editModal' class='modal fade' aria-hidden='true' aria-labelledby='editModalLabel' role='dialog' tabindex='-1'>
+	<div class='modal-dialog'>
+		<div class='modal-content'>
+			<div class='modal-header'>
+				<button class='close' aria-hidden='true' data-dismiss='modal' type='button'>×</button>
+				<h4 id='editModalLabel' class='modal-title'><b>修改数量</b></h4>
+			</div>
+			<form id='editFrm' class='form-horizontal' onsubmit='return false;'>
+				<input type='hidden' id='editFrm_id' name='id'>
+				<div class='modal-body'>
+					<div class='form-group'>
+						<label for='editFrm_MaxNum' class='col-sm-3 control-label'>数量</label>
+						<div class='col-sm-7'>
+							<input type='text' data-olx-type='olx.form.input' class='form-control' id='editFrm_MaxNum' name='MaxNum' placeholder='0'>
+						</div>
+					</div>
+				</div>
+				<div class='modal-footer'>
+					<button class='btn btn-default' data-dismiss='modal' type='button'>关闭</button>
+					<button class='btn btn-warning' id='editFrm_btn_reset' type='button'>重置</button>
+					<button class='btn btn-primary' id='editFrm_btn_ok' type='button'>确认</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
