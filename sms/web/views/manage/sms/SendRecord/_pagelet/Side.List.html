@@ -5,13 +5,17 @@
 			<th style='color:red'>计划名称</th>
 			<th style='color:red'>计划时间</th>
 			<th style='color:red'>计发（条）</th>
-			<th style='color:red'>比率（%）</th>
-			<th style='color:red'>测试比率（%）</th>
-			<th style='color:red'>补充（DB）</th>
+			#*<!-- <th style='color:red'>比率（%）</th> -->*#
+			<th style='color:red'>运营商</th>
+			#*<!-- <th style='color:red'>测试比率（%）</th> -->*#
+			<th style='color:red'>带宽</th>
+			#*<!-- <th style='color:red'>补充（DB）</th> -->*#
+			<th style='color:red'>补发</th>
 			<th style='color:blue'>发送时间</th>
 			<th style='color:blue'>实发（条）</th>
 			<th style='color:blue'>测试号（条）</th>
-			<th style='color:green'>已发送</th>
+			#*<!-- <th style='color:green'>已发送</th> -->*#
+			<th style='color:green'>已补发</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -20,13 +24,16 @@
 			<td>$!doc.PLAN_NAME</td>
 			<td>#formatDate($!{doc.PLAN_TIME})</td>
 			<td>$!doc.PLAN_NUM</td>
-			<td>$!doc.RATIO</td>
+			#*<!-- <td>$!doc.RATIO</td> -->*#
+			<td>三网</td>
 			<td>$!doc.TEST_RATIO</td>
 			<td>#if($!doc.SUPPLEMENT == '1')是#else否#end</td>
 			<td>#if($!doc.IS_USED == '1')#formatDate($!{doc.SEND_TIME})#else#end</td>
-			<td>#if($!doc.IS_USED == '1')$!doc.SEND_COUNT#else#end</td>
+			#*<!-- <td>#if($!doc.IS_USED == '1')$!doc.SEND_COUNT#else#end</td> -->*#
+			<td>$!doc.PLAN_NUM</td>
 			<td>#if($!doc.IS_USED == '1')$!doc.SEND_TEST_COUNT#else#end</td>
-			<td>#if($!doc.IS_USED == '1')是#else否#end</td>
+			#*<!-- <td>#if($!doc.IS_USED == '1')是#else否#end</td> -->*#
+			<td>$!doc.REISSUE</td>
 		</tr>
 		#if($!doc.IS_USED == '1')
 			<tr>
