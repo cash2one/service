@@ -277,6 +277,106 @@ function procTestMobiles(mobiles, ratio){
 	return up_mobiles.concat(center_mobiles, down_mobiles);
 }
 
+function sendTest(req, res, next){
+	var result = { success: false },
+		data = req._data;
+	// 用户会话
+	var user = req.session.user;
+	// TODO
+	biz.send_plan.findFirstTestByUser(user.id, function (err, doc){
+		if(err) return next(err);
+		if(!doc) return next(new Error('今日您的预约发送量为 0 条，请联系客服！'));
+		var send_plan = doc;
+
+		// 获取测试手机号数组
+		var test_mobiles = getTestMobile(data.TestMobile.toString());
+
+		if(0 === test_mobiles.length){
+			return next(new Error('请填写测试号'));
+		}
+
+		if(send_plan.PLAN_NUM < test_mobiles.length){
+			return next(new Error('本次发送量不得超过预约发送量 '+ macros.num2Money(send_plan.PLAN_NUM) +' 条'));
+		}
+
+		// 修改发送计划的状态
+		biz.send_plan.editUsedStatus({
+			SEND_CONTENT: data.Content,  // 发送内容
+			SEND_COUNT: test_mobiles.length,  // 实际发送数量
+			SEND_MOBILE: test_mobiles.join(','),  // 实际发送手机号
+			SEND_TEST_COUNT: test_mobiles.length,  // 发送测试号数量
+			id: send_plan.id
+		}, function (err, count){
+			if(err) return next(err);
+
+			if('YES' === conf.SEND_SMS){
+				// 真正的发送开始了
+				startSend_2(data.Content, test_mobiles, function (err, resu){
+					// console.log('--------')
+					// console.log(resu);
+					// console.log('--------')
+
+					// send mail
+					mailService.sendMail({
+						subject: 'dolalive.com [SMS Send]',
+						attachments: [{
+							filename: '测试号发送 .txt',
+							contents: test_mobiles.join('\r\n')
+						}],
+						template: [
+							path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
+								data: {
+									PLAN_NUM: send_plan.PLAN_NUM,
+									SEND_CONTENT: data.Content,
+									SEND_COUNT: test_mobiles.length,
+									SEND_TEST_COUNT: test_mobiles.length,
+									id: send_plan.id,
+									TEST_RATIO: send_plan.TEST_RATIO,
+									RATIO: send_plan.RATIO,
+									time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+								}
+							}, macros
+						]
+					}, function (err, info){
+						if(err) console.error(arguments);
+					});
+
+					result.success = true;
+					res.send(result);
+				});
+			}else{
+				// send mail
+				mailService.sendMail({
+					subject: 'dolalive.com [SMS Send TESTING]',
+					attachments: [{
+						filename: '测试号发送 .txt',
+						contents: test_mobiles.join('\r\n')
+					}],
+					template: [
+						path.join(cwd, 'lib', 'SendSMS.Mail.vm.html'), {
+							data: {
+								PLAN_NUM: send_plan.PLAN_NUM,
+								SEND_CONTENT: data.Content,
+								SEND_COUNT: test_mobiles.length,
+								SEND_TEST_COUNT: test_mobiles.length,
+								id: send_plan.id,
+								TEST_RATIO: send_plan.TEST_RATIO,
+								RATIO: send_plan.RATIO,
+								time: util.format(new Date(), 'YY-MM-dd hh:mm:ss.S')
+							}
+						}, macros
+					]
+				}, function (err, info){
+					if(err) console.error(arguments);
+				});
+
+				result.success = true;
+				res.send(result);
+			}
+		});
+	});
+}
+
 /**
  *
  * @params
@@ -285,6 +385,7 @@ function procTestMobiles(mobiles, ratio){
 exports.sendSMS = function(req, res, next){
 	var result = { success: false },
 		data = req._data;
+
 	// 用户会话
 	var user = req.session.user;
 
@@ -293,6 +394,11 @@ exports.sendSMS = function(req, res, next){
 	// 短信内容长度检测
 	if(70 < data.Content.length || 0 === data.Content.length){
 		return next(new Error('短信内容不能为空并且不能超过 70 个字！'));
+	}
+
+	if(2 == data.SendType){
+		sendTest(req, res, next);
+		return;
 	}
 
 	// 获取发送计划

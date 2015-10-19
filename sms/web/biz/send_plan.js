@@ -39,7 +39,20 @@ exports.getAll = function(cb){
  * @return
  */
 exports.findFirstByUser = function(user_id, cb){
-	mysql.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? AND PLAN_TIME<? ORDER BY PLAN_TIME LIMIT 1',
+	mysql.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? AND PLAN_TIME<? AND SEND_TYPE=1 ORDER BY PLAN_TIME LIMIT 1',
+		[user_id, new Date()], function (err, docs){
+		if(err) return cb(err);
+		cb(null, 1 === docs.length ? docs[0] : null);
+	});
+};
+
+/**
+ *
+ * @params
+ * @return
+ */
+exports.findFirstTestByUser = function(user_id, cb){
+	mysql.query('SELECT * FROM m_send_plan WHERE IS_USED=0 AND USER_ID=? AND PLAN_TIME<? AND SEND_TYPE=2 ORDER BY PLAN_TIME LIMIT 1',
 		[user_id, new Date()], function (err, docs){
 		if(err) return cb(err);
 		cb(null, 1 === docs.length ? docs[0] : null);
@@ -79,8 +92,8 @@ exports.findSendRecordByUser = function(user_id, cb){
  */
 exports.create = function(newInfo, cb){
 	// 开始添加
-	mysql.query('INSERT INTO m_send_plan (id, PLAN_NAME, PLAN_NUM, PLAN_TIME, RATIO, TEST_RATIO, USER_ID, SUPPLEMENT, IS_USED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)',
-		[util.uuid(), newInfo.PLAN_NAME, newInfo.PLAN_NUM, newInfo.PLAN_TIME, newInfo.RATIO, newInfo.TEST_RATIO, newInfo.USER_ID, newInfo.SUPPLEMENT],
+	mysql.query('INSERT INTO m_send_plan (id, PLAN_NAME, PLAN_NUM, PLAN_TIME, RATIO, TEST_RATIO, USER_ID, SUPPLEMENT, SEND_TYPE, IS_USED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)',
+		[util.uuid(), newInfo.PLAN_NAME, newInfo.PLAN_NUM, newInfo.PLAN_TIME, newInfo.RATIO, newInfo.TEST_RATIO, newInfo.USER_ID, newInfo.SUPPLEMENT, newInfo.SEND_TYPE],
 		function (err, status){
 			if(err) return cb(err);
 			cb(null, null, null, status.changedRows);

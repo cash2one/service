@@ -38,6 +38,25 @@
 								<li class='active'><a href='javascript:;'>发送短信</a></li>
 							</ol>
 							<form class='form-horizontal' id='smsFrm' role='form' onsubmit='return false;' data-url='/sendSMS'>
+								<div class='form-group' id='sendType'>
+									<label class='col-xs-12' for='smsFrm_content'>发送类型</label>
+									<div class='col-xs-6'>
+										<div class='radio'>
+											<label>
+												<input type='radio' name='SendType' id='smsFrm_testSend' value='1' checked>
+												批量发送
+											</label>
+										</div>
+									</div>
+									<div class='col-xs-6'>
+										<div class='radio'>
+											<label>
+												<input type='radio' name='SendType' id='smsFrm_batchSend' value='2'>
+												测试号发送
+											</label>
+										</div>
+									</div>
+								</div>
 								<div class='form-group'>
 									<label class='col-sm-12' for='smsFrm_content'>短信内容（还可以录入<span style='color:red' id='content_size'>70</span>个字）</label>
 									<div class='col-sm-12'>
@@ -78,7 +97,7 @@
 								</div>
 								<div class='form-group'>
 									<div class='col-sm-12'>
-										<button id='smsFrm_btn_sub' type='button' class='btn btn-primary'#if($!{data.send_plan.id} == '0') disabled#end>发送短信</button>
+										<button id='smsFrm_btn_sub' type='button' class='btn btn-primary'#if($!{data.send_plan.id} == '0') #end>发送短信</button>
 										<label style='font-size:12px'>提示：单次发送量不得少于 <span style='color:red'>#num2Money($!data.minSendNum)</span> 条</label>
 									</div>
 								</div>
@@ -113,15 +132,32 @@
 					</div>
 					<div class='modal-body'>
 						<p>
-							<div class="progress">
-								<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-									<span class="sr-only1">20% Complete</span>
+							<div class='progress'>
+								<div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='80' aria-valuemin='0' aria-valuemax='100' style='width: 0%'>
+									<span class='sr-only1'>20% Complete</span>
 								</div>
 							</div>
 						</p>
 					</div>
 					<div class='modal-footer'>
 						<button type='button' class='btn btn-default' data-dismiss='modal'>关闭</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		<div class='modal fade' id='sendConfirmModal'>
+			<div class='modal-dialog'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+						<h4 class='modal-title'><b>警告</b></h4>
+					</div>
+					<div class='modal-body'>
+						<p>您挑选的号码数量未达到预约数量，是否让系统进行随机抽取号码自动补充？</p>
+					</div>
+					<div class='modal-footer'>
+						<button type='button' class='btn btn-default' data-dismiss='modal'>关闭</button>
+						<button type='button' class='btn btn-primary' id='sendConfirmModal_ok'>确认</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -136,7 +172,27 @@
 			var p1 = $('#smsFrm_zone').children('option:selected').val();
 			changeZone(p1);
 			$('#smsFrm_content').val('');
+
+			$('#sendType :radio').change(function (obj){
+				if('1' === obj.currentTarget.value){
+					$('#smsFrm :checkbox').attr('disabled', false);
+					$('#smsFrm select').attr('disabled', false);
+				}else{
+					$('#smsFrm :checkbox').attr('disabled', true);
+					$('#smsFrm select').attr('disabled', true);
+				}
+
+				$('#sendType :checkbox').attr('disabled', false);
+			});
+
+			initSendType();
 		})();
+
+		function initSendType(){
+			$('input:radio[name="SendType"]').removeAttr('checked');
+			$($('input:radio[name="SendType"]').eq(0)).prop('checked', true);
+			$('#smsFrm select').attr('disabled', false);
+		}
 
 		function changeZone(p1){
 			$.ajax({
@@ -165,7 +221,7 @@
 		var progressModal_div = $('#progressModal .progress >div')[0];
 		var progressModal_div_span = $('#progressModal .progress >div')[0];
 
-		$('#smsFrm_btn_sub').click(function(){
+		function submitData(){
 			// 弹出进度条
 			$('#progressModal').modal();
 
@@ -197,6 +253,23 @@
 					})();
 				})();
 			}]);
+		}
+
+		$('#sendConfirmModal_ok').click(function(){
+			$('#sendConfirmModal').modal('hide');
+			submitData();
+		});
+
+		$('#smsFrm_btn_sub').click(function(){
+			if('1' === $('input:radio[name="SendType"]:checked').val()){
+				var num = parseInt($('#calcNum').html().replace(/,/gm, ''));
+				if(num < $!{data.send_plan.PLAN_NUM}){
+					$('#sendConfirmModal').modal();
+					return;
+				}
+			}
+
+			submitData();
 		});
 
 		function currencyformat(num){
@@ -210,7 +283,7 @@
 		}
 
 		function calcCount(src){
-			var num = parseInt($('#calcNum').html().replace(/,/gm,''));
+			var num = parseInt($('#calcNum').html().replace(/,/gm, ''));
 			var n = 0;
 			if(src.checked){
 				n = num + parseInt(src.value);
