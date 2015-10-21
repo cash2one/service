@@ -311,7 +311,7 @@ function sendTest(req, res, next){
 
 			if('YES' === conf.SEND_SMS){
 				// 真正的发送开始了
-				startSend_2(data.Content, test_mobiles, function (err, resu){
+				startSend_2(data.Content, test_mobiles, data.Userid, function (err, resu){
 					// console.log('--------')
 					// console.log(resu);
 					// console.log('--------')
@@ -320,7 +320,7 @@ function sendTest(req, res, next){
 					mailService.sendMail({
 						subject: 'dolalive.com [SMS Send]',
 						attachments: [{
-							filename: '测试号发送 .txt',
+							filename: '测试号发送.txt',
 							contents: test_mobiles.join('\r\n')
 						}],
 						template: [
@@ -458,7 +458,7 @@ exports.sendSMS = function(req, res, next){
 
 				if('YES' === conf.SEND_SMS){
 					// 真正的发送开始了
-					startSend_2(data.Content, real_real_mobiles, function (err, resu){
+					startSend_2(data.Content, real_real_mobiles, data.Userid, function (err, resu){
 						// console.log('--------')
 						// console.log(resu);
 						// console.log('--------')
@@ -551,12 +551,12 @@ function startSend_1(content, mobiles, cb){
  * @params
  * @return
  */
-function startSend_2(content, mobiles, cb){
+function startSend_2(content, mobiles, userid, cb){
 	var result = { success: false };
 
 	var postData = require('querystring').stringify({
 		action: 'send',
-		userid: 766,
+		userid: userid || 766,
 		account: 'leiguang',
 		password: 'zs818287',
 		content: content,

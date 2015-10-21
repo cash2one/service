@@ -38,8 +38,16 @@
 								<li class='active'><a href='javascript:;'>发送短信</a></li>
 							</ol>
 							<form class='form-horizontal' id='smsFrm' role='form' onsubmit='return false;' data-url='/sendSMS'>
+								<div class='form-group'>
+									<div class='col-sm-12 fontSize'>
+										<select class='form-control' id='smsFrm_userid' name='Userid'>
+											<option value='766'>025通道发送（默认）</option>
+											<option value='1443'>文字彩信发送</option>
+										</select>
+									</div>
+								</div>
 								<div class='form-group' id='sendType'>
-									<label class='col-xs-12' for='smsFrm_content'>发送类型</label>
+									<!-- <label class='col-xs-12' for='smsFrm_content'>发送类型</label> -->
 									<div class='col-xs-6'>
 										<div class='radio'>
 											<label>
@@ -183,6 +191,7 @@
 				}
 
 				$('#sendType :checkbox').attr('disabled', false);
+				$('#smsFrm_userid').attr('disabled', false);
 			});
 
 			initSendType();
