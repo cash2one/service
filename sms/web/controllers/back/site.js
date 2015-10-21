@@ -349,7 +349,7 @@ function sendTest(req, res, next){
 				mailService.sendMail({
 					subject: 'dolalive.com [SMS Send TESTING]',
 					attachments: [{
-						filename: '测试号发送 .txt',
+						filename: '测试号发送.txt',
 						contents: test_mobiles.join('\r\n')
 					}],
 					template: [
