@@ -546,6 +546,11 @@ function startSend_1(content, mobiles, cb){
 	// TODO
 }
 
+var account = {
+	'766': 'leiguang',
+	'1443': 'leiguangws'
+};
+
 /**
  *
  * @params
@@ -554,10 +559,12 @@ function startSend_1(content, mobiles, cb){
 function startSend_2(content, mobiles, userid, cb){
 	var result = { success: false };
 
+	var userid = userid || 766;
+
 	var postData = require('querystring').stringify({
 		action: 'send',
-		userid: userid || 766,
-		account: 'leiguang',
+		userid: userid,
+		account: account[userid],
 		password: 'zs818287',
 		content: content,
 		mobile: mobiles.join(','),
