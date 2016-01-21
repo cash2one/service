@@ -63,10 +63,12 @@ exports.sendRecordUI = function(req, res, next){
 		ep.emit('users', docs);
 	});
 
-	biz.send_plan.getAll(function (err, docs){
-		if(err) return ep.emit('error', err);
-		ep.emit('send_plan', docs);
-	});
+//	biz.send_plan.getAll(function (err, docs){
+//		if(err) return ep.emit('error', err);
+//		ep.emit('send_plan', docs);
+//	});
+
+	ep.emit('send_plan', null);
 };
 
 /**
