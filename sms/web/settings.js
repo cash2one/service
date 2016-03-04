@@ -6,10 +6,10 @@
 'use strict';
 
 module.exports = {
-	MIN_SEND_NUM: process.env.MIN_SEND_NUM || 20,  // 最小发送量
-	TEST_MOBILE_UP: process.env.TEST_MOBILE_UP || 2,  // 测试号上标200
-	TEST_MOBILE_DOWN: process.env.TEST_MOBILE_DOWN || 2,  // 测试号下标200
-	SEND_SMS: process.env.SEND_SMS || 'NO',  // 是否发送短信
+	MIN_SEND_NUM: process.env.MIN_SEND_NUM || 20000,  // 最小发送量
+	TEST_MOBILE_UP: process.env.TEST_MOBILE_UP || 200,  // 测试号上标200
+	TEST_MOBILE_DOWN: process.env.TEST_MOBILE_DOWN || 200,  // 测试号下标200
+	SEND_SMS: process.env.SEND_SMS || 'NO',  // 是否发送短信 YES
 	cookie: {
 		secret: 'hnzswh'
 	}, corp: {
