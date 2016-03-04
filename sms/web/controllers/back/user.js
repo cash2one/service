@@ -88,7 +88,7 @@ exports.login = function(req, res, next){
  */
 exports.login_success = function(req, res, next){
 	var user = req.session.user;
-	res.redirect('/');
+	res.redirect('/sms/');
 };
 
 /**
@@ -104,7 +104,7 @@ exports.login_validate = function(req, res, next){
 		result.status = 'timeout';
 		return res.send(result);
 	}
-	res.redirect('/user/login?refererUrl='+ req.url);
+	res.redirect('/sms/user/login?refererUrl='+ req.url);
 };
 
 /**
@@ -114,7 +114,7 @@ exports.login_validate = function(req, res, next){
  */
 exports.logoutUI = function(req, res, next){
 	req.session.destroy();
-	res.redirect('/user/login');
+	res.redirect('/sms/user/login');
 };
 
 /**

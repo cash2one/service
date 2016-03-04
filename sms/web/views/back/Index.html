@@ -34,10 +34,10 @@
 							<ol class='breadcrumb'>
 								<li>
 									<i class='fa fa-home fa-fw'></i>
-									<a href='/'>SMS 短信</a></li>
+									<a href='${conf_html_virtualPath}'>SMS 短信</a></li>
 								<li class='active'><a href='javascript:;'>发送短信</a></li>
 							</ol>
-							<form class='form-horizontal' id='smsFrm' role='form' onsubmit='return false;' data-url='/sendSMS'>
+							<form class='form-horizontal' id='smsFrm' role='form' onsubmit='return false;' data-url='${conf_html_virtualPath}sendSMS'>
 								<div class='form-group'>
 									<div class='col-sm-12 fontSize'>
 										<select class='form-control' id='smsFrm_userid' name='Userid'>
@@ -205,7 +205,7 @@
 
 		function changeZone(p1){
 			$.ajax({
-				url: '/changeZone/'+ p1,
+				url: '${conf_html_virtualPath}changeZone/'+ p1,
 				type: 'GET',
 				dataType: 'json'
 			}).done(function (data){
@@ -254,7 +254,7 @@
 				(function(){
 					var i = 0;
 					(function countSecond(){
-						if(i > 4) return location.href = '/u/sendRecord';
+						if(i > 4) return location.href = '${conf_html_virtualPath}u/sendRecord';
 						i++;
 						$(progressModal_div).width(i * 20 +'%');
 						$(progressModal_div_span).html(i * 20 +'% Complete');
